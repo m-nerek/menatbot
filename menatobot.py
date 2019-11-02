@@ -1,12 +1,14 @@
 import discord
 import os
 import random
+import sosmarkov
 
 # todo set up logging
 
 # Obtaining the discord key from the deployment machine
 client_token = os.environ['MENAT_TOKEN']
 
+text_model = sosmarkov.getmodel("general")
 
 class Menato(discord.Client):
 
@@ -28,6 +30,10 @@ class Menato(discord.Client):
         if message.mentions:
             pass
         if self.user in message.mentions:
+            if "?" in message.content:
+                
+                to_send = sosmarkov.answer(text_model, message.content)
+                
             if "frames" in message.content:
                 funny_responses = [
                     "Too bloody fast",
@@ -43,6 +49,7 @@ class Menato(discord.Client):
                     "just react bro lol",
                     "Message me later when aster bothers to add the frama data functionality"
                 ]
+                to_send = random.choice(funny_responses)
             else:
                 funny_responses = [
                     "menat is bottom 5",
@@ -57,7 +64,8 @@ class Menato(discord.Client):
                     "I'm bottom 5",
                     "I'm bottom 4",
                 ]
-            to_send = random.choice(funny_responses)
+                to_send = random.choice(funny_responses)
+
             await message.channel.send(to_send)
 
 if __name__ =="__main__":
