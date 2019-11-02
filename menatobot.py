@@ -30,10 +30,6 @@ class Menato(discord.Client):
         if message.mentions:
             pass
         if self.user in message.mentions:
-            if "?" in message.content:
-                
-                to_send = sosmarkov.answer(text_model, message.content)
-                
             if "frames" in message.content:
                 funny_responses = [
                     "Too bloody fast",
@@ -49,7 +45,49 @@ class Menato(discord.Client):
                     "just react bro lol",
                     "Message me later when aster bothers to add the frama data functionality"
                 ]
-                to_send = random.choice(funny_responses)
+            elif "menat op" in message.content:
+                funny_responses = [
+                    "can you not"
+                ]
+            elif "crystal ball" in message.content or "!cb" in message.content:
+                funny_responses=[
+                    "yes",
+                    "no",
+                    "It is certain",
+                    "Certainly not",
+                    "Maybe",
+                    "Maybe not",
+                    "When pigs fly",
+                    "Hmm, sorry to say, it looks bad.",
+                    "Yes, but you already know that",
+                    "No, but you already know that",
+                    "As I see it, yes",
+                    "Most likely",
+                    "Outlook good",
+                    "ok boomer",
+                    "Reply hazy, try again",
+                    "Ask again later",
+                    "Better not tell you now",
+                    "Cannot predict now",
+                    "Concentrate harder, and ask AGAIN",
+                    "Don't count on it",
+                    "nope",
+                    "nada",
+                    "nu-uh",
+                    "Very doubtful",
+                    "yup",
+                    "Obviously, are you daft?",
+                    "maybe, maybe not",
+                    "only if you sacrifice your first born child",
+                    "Only if you win your next ranked game",
+                    "never in a thousand years",
+                    "Post in nsfw, and it shall be true",
+                    "Stay away from nsfw for a week, and it shall be true",
+                    "hmm... I'm looking, and I'm struggling to see what the crystal ball is trying to show me about "
+                    "your question... what is that blurry image... hmmm, is that...? OH GOD ITS POWAH BAWM, RUN"
+                ]
+            elif "?" == message.content[:-1]:
+                funny_responses = [sosmarkov.answer(text_model, message.content)]
             else:
                 funny_responses = [
                     "menat is bottom 5",
@@ -64,7 +102,7 @@ class Menato(discord.Client):
                     "I'm bottom 5",
                     "I'm bottom 4",
                 ]
-                to_send = random.choice(funny_responses)
+            to_send = random.choice(funny_responses)
 
             await message.channel.send(to_send)
 
