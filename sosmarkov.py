@@ -14,7 +14,7 @@ def sentence(text_model = None, subject = ""):
     
     for i in range(50):
 
-        if subject!="":
+        if subject!="" and i<40:
             try:
                 txt = text_model.make_sentence_with_start(beginning=subject, strict=False)
             except:
