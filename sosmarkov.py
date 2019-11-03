@@ -5,7 +5,7 @@ def answer(text_model = None, question = ""):
     try:
         return sentence(text_model, question.split()[-1][:-1])
     except:
-        return sentence(text_model, "I Failed to generate a markov chain :c")
+        return sentence(text_model, "")
 
 
 def sentence(text_model = None, subject = ""):
@@ -32,6 +32,7 @@ def sentence(text_model = None, subject = ""):
         c = txt.count('.')
         if c<4 and len(txt)>40:
             return txt.strip('.')
+    return "I Failed to generate a markov chain :c";
 
 def getmodel(channel = "general"):
     with open(f"{channel}_all.json") as f:
