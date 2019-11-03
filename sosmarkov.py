@@ -1,17 +1,22 @@
 import markovify
 
+
 def answer(text_model = None, question = ""):
     try:
         return sentence(text_model, question.split()[-1][:-1])
     except:
-        return sentence(text_model, "")
+        return sentence(text_model, "I Failed to generate a markov chain :c")
+
 
 def sentence(text_model = None, subject = ""):
 
     if subject == "me": subject = "you"
     elif subject == "you": subject = "I"
     elif subject == "I": subject = "you"
-    
+    try:
+        text_model = models[text_model]
+    except KeyError:
+        text_model = models['general']
     for i in range(50):
 
         if subject!="" and i<40:
@@ -25,20 +30,17 @@ def sentence(text_model = None, subject = ""):
         txt = txt.replace("?.",".")
         txt = txt.replace("@","")
         c = txt.count('.')
-        if(c<4 and len(txt)>40):
+        if c<4 and len(txt)>40:
             return txt.strip('.')
-            break;
 
 def getmodel(channel = "general"):
-    chain_data = "general_1year"
-    if channel == "salt":
-        chain_data = "salt_all"
-    if channel == "lobbies":
-        chain_data = "lobbies_all"
-    if channel == "nsfw":
-        chain_data = "nsfw_all"
-    
-    with open(chain_data+".json") as f:
-        text_model = markovify.Text.from_json(f.read());
-        
+    with open(f"{channel}_all.json") as f:
+        text_model = markovify.Text.from_json(f.read())
     return text_model
+
+models = {
+    "general": getmodel("general"),
+    "lobbies": getmodel("lobbies"),
+    "salt": getmodel("salt"),
+    "nsfw": getmodel("nsfw")
+}
