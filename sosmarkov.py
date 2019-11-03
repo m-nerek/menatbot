@@ -7,6 +7,11 @@ def answer(text_model = None, question = ""):
         return sentence(text_model, "")
 
 def sentence(text_model = None, subject = ""):
+
+    if subject == "me": subject = "you"
+    elif subject == "you": subject = "I"
+    elif subject == "I": subject = "you"
+    
     for i in range(50):
 
         if subject!="":

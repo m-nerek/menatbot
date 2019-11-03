@@ -8,7 +8,11 @@ import sosmarkov
 # Obtaining the discord key from the deployment machine
 client_token = os.environ['MENAT_TOKEN']
 
-text_model = sosmarkov.getmodel("general")
+text_model_general = sosmarkov.getmodel("general")
+text_model_lobbies = sosmarkov.getmodel("lobbies")
+text_model_salt = sosmarkov.getmodel("salt")
+text_model_nsfw = sosmarkov.getmodel("nsfw")
+
 
 class Menato(discord.Client):
 
@@ -87,7 +91,14 @@ class Menato(discord.Client):
                     "your question... what is that blurry image... hmmm, is that...? OH GOD ITS POWAH BAWM, RUN"
                 ]
             elif "?" == message.content[:-1]:
-                funny_responses = [sosmarkov.answer(text_model, message.content)]
+                if str(message.channel)=="lobbies":
+                    funny_responses = [sosmarkov.answer(text_model_lobbies, message.content)]
+                elif str(message.channel)=="salt":
+                    funny_responses = [sosmarkov.answer(text_model_salt, message.content)]
+                elif str(message.channel)=="nsfw":
+                    funny_responses = [sosmarkov.answer(text_model_nsfw, message.content)]
+                else:
+                    funny_responses = [sosmarkov.answer(text_model_general, message.content)]
             else:
                 funny_responses = [
                     "menat is bottom 5",
