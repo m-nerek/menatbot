@@ -1,9 +1,12 @@
 import markovify
 
 
-def answer(text_model = None, question = ""):
+def answer(text_model = None, question = "", subjectAtEnd=True):
     try:
-        return sentence(text_model, question.split()[-1][:-1])
+        if subjectAtEnd == True:
+            return sentence(text_model, question.split()[-1][:-1])
+        elif
+            return sentence(text_model, random.choice(question.split()))
     except:
         return sentence(text_model, "")
 
