@@ -8,10 +8,10 @@ def respond(message):
     except KeyError:
         text_model = models['general']
 
-    if "turtle" in message.author:
+    if "turtle" in message.author.name:
         text_model = models['general_positive']
     
-    return sosmarkov.answer(text_model,message.content)
+    return answer(text_model,message.content)
 
 
 def answer(text_model = None, question = ""):
@@ -65,9 +65,9 @@ def getmodel(channel = "general"):
     return text_model
 
 models = {
-    #"general": getmodel("general"),
-    #"general_positive": getmodel("general_positive"),
-    #"lobbies": getmodel("lobbies"),
-    #"salt": getmodel("salt"),
+    "general": getmodel("general"),
+    "general_positive": getmodel("general_positive"),
+    "lobbies": getmodel("lobbies"),
+    "salt": getmodel("salt"),
     "nsfw": getmodel("nsfw")
 }
