@@ -40,7 +40,7 @@ class Menato(discord.Client):
             elif "crystal ball" in message.content or "!cb" in message.content:
                 responses= self.responses['crystal ball']
             elif message.content.endswith('!') or message.content.endswith('?'):
-                responses = [sosmarkov.respond(message.channel)]
+                responses = [sosmarkov.respond(message)]
             else:
                 responses = self.responses['idle']
             to_send = random.choice(responses)
