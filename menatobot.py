@@ -3,6 +3,7 @@ import os
 import random
 import sosmarkov
 import json
+import frames
 dir_path = os.path.dirname(os.path.realpath(__file__))
 # todo set up logging
 
@@ -13,6 +14,13 @@ client_token = os.environ['MENAT_TOKEN']
 class Menato(discord.Client):
     def __init__(self):
         super(Menato,self).__init__()
+        self.help_string = """Commands:
+        `!frames` for SFV Frame data
+        `!help` to show this again
+        `@menato !cb` to use my crystal ball
+        `@menato` and end with`?` or `!` to have a chat with me 
+        `@menato` otherwise for a random shitpost
+        """
         with open(f'{dir_path}/responses.json', "r") as f:
             self.responses = json.load(f)
 
@@ -30,19 +38,26 @@ class Menato(discord.Client):
         :param message: The message object, see https://discordpy.readthedocs.io/en/latest/api.html#message
         """
         print(f'{message.guild}|{message.channel}|{message.author}: {message.content}')
+        responses = []
         if message.mentions:
             pass
-        if self.user in message.mentions:
-            if "!frames" in message.content:
-                responses = self.frames(message)
-            elif "menat op" in message.content:
+        if self.user == message.author:
+            return
+        if message.content.startswith("!frames"):
+            responses = self.frames(message)
+        elif message.content.startswith("!help"):
+            responses = [self.help_string]
+        elif self.user in message.mentions:
+            if "menat op" in message.content:
                 responses = ["can you not"]
             elif "crystal ball" in message.content or "!cb" in message.content:
                 responses= self.responses['crystal ball']
             elif message.content.endswith('!') or message.content.endswith('?'):
+                pass
                 responses = [sosmarkov.respond(message)]
             else:
                 responses = self.responses['idle']
+        if responses:
             to_send = random.choice(responses)
             to_send = self.prep(to_send)
             await message.channel.send(to_send)
@@ -59,9 +74,15 @@ class Menato(discord.Client):
         Hook for creating a function that will return frame data on the desired move, completely gonna steal this from
         Yarshabot, for now it just returns a short meme
         """
-        response = "can't be bothered to check, look it up yourself on FAT"
-        return [response]
+
+        text = message.content
+        text = text.replace("<@606796019346309120>","") # just in case
+        text = text.replace("!frames","")
+        text = text.strip()
+        response = framesy_boye.get_frames(text,message.author.name)
+        return response
 
 if __name__ =="__main__":
     menat = Menato()
+    framesy_boye = frames.Frames()
     menat.run(client_token)

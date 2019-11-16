@@ -57,7 +57,7 @@ def sentence(text_model = None, subject = ""):
         c = txt.count('.')
         if c<4 and len(txt)>40:
             return txt.strip('.')
-    return "I Failed to generate a markov chain :c";
+    return "I Failed to generate a markov chain :c"
 
 def getmodel(channel = "general"):
     with open(f"{channel}_all.json") as f:
