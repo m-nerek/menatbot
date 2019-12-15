@@ -11,10 +11,10 @@ def respond(message):
     if "turtle" in message.author.name:
         text_model = models['general_positive']
     
-    return answer(text_model,message.content)
+    return answer(text_model,message.content, str(message.channel))
 
 
-def answer(text_model = None, question = ""):
+def answer(text_model = None, question = "", channel = ""):
 
     question = question.rstrip()
     subject = ""
@@ -26,18 +26,14 @@ def answer(text_model = None, question = ""):
         question = question[:-1]
         subject=random.choice(question.split())
 
-    if "porn" in question:
-        subject=""
-    
     try:
-        return sentence(text_model, subject)
+        return sentence(text_model, subject, channel)
     except:
-        return sentence(text_model, "")
+        return sentence(text_model, "", channel)
 
 
-def sentence(text_model = None, subject = ""):
+def sentence(text_model = None, subject = "", channel = ""):
 
-    print("["+subject+"]")
     if subject == "me": subject = "you"
     elif subject == "you": subject = "I"
     elif subject == "I": subject = "you"
@@ -55,6 +51,16 @@ def sentence(text_model = None, subject = ""):
         txt = txt.replace("?.",".")
         txt = txt.replace("@","")
         c = txt.count('.')
+
+        if "nsfw" in channel:
+            c = 0
+            if "http" not in txt:
+                for j in range(10):
+                    txt2 = text_model.make_sentence()
+                    if "http" in txt2:
+                        txt += ". "+txt2
+                        break
+        
         if c<4 and len(txt)>40:
             return txt.strip('.')
     return "I Failed to generate a markov chain :c"
