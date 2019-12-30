@@ -52,7 +52,7 @@ def sentence(text_model = None, subject = "", channel = ""):
         txt = txt.replace("@","")
         c = txt.count('.')
 
-        if "nsfw" in channel:
+        if "nsfw" in str(channel):
             c = 0
             if "http" not in txt:
                 for j in range(10):
