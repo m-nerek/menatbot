@@ -51,13 +51,16 @@ def sentence(text_model = None, subject = "", channel = ""):
         txt = txt.replace("?.",".")
         txt = txt.replace("@","")
         c = txt.count('.')
-
-        if "nsfw" in str(channel):
+        print("test point 0")
+        if "nsfw" in channel:
             c = 0
+            print("test point 1")
             if "http" not in txt:
                 for j in range(10):
+                    print("test point 2")
                     txt2 = text_model.make_sentence()
                     if "http" in txt2:
+                        print("test point 3")
                         txt += ". "+txt2
                         break
         
