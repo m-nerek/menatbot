@@ -48,6 +48,7 @@ class Menato(discord.Client):
         self.tagged_string = f"{self.user.mention[:2]}!{self.user.mention[2:]}"
         print(f'{message.guild}|{message.channel}|{message.author}: {message.content}')
         responses = []
+        markov = False
         if message.mentions:
             pass
         if self.user == message.author:
@@ -70,11 +71,14 @@ class Menato(discord.Client):
             elif message.content.endswith('!') or message.content.endswith('?'):
                 pass
                 responses = [sosmarkov.respond(message)]
+                markov = True # shitty workaround, sue me
             else:
                 responses = self.responses['idle']
         if responses:
             to_send = random.choice(responses)
-            to_send = self.prep(to_send, message.guild)
+            if markov:
+                to_send = self.markov_emoji(to_send, message.guild)
+            to_send = self.prep(to_send)
             if isinstance(to_send, list): # in case message is too long
                 for part in to_send:
                     await message.channel.send(part) # todo I don't know if this will work :help: but that's how I think it would if it needs to
@@ -91,13 +95,14 @@ class Menato(discord.Client):
         self.get_groups()
         if group not in self.groups.keys():
             self.groups[group] = [message.author.mention]
-            response = f"You're already in {group}, I will @ you when necessary."
+            response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
+
         else:
             if message.author.mention in self.groups[group]:
-                response = f"You're added to the group {group}, I will ping you if anyone asks me to."
+                response = f"You're already in {group}, I will @ you when necessary."
             else:
                 self.groups[group].append(message.author.mention)
-                response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
+                response = f"You're added to the group {group}, I will ping you if anyone asks me to."
         self.update_groups()
         return [response]
 
@@ -161,12 +166,13 @@ class Menato(discord.Client):
         with open(f"{dir_path}/groups.json", "w") as file:
             json.dump(self.groups,file)
 
-    def prep(self, to_send, guild):
-        """
-        Hook function for later, will translate :emoji: as we type it in the bot to the appropriate <emoji:1231...>
-        code compatible with discord, need to sit down and get all the messages out first.
-        Returns a list of messages to send if the message is too long, this will break emojis, I'll fix this if it becomes an actual issue
 
+    def markov_emoji(self,to_send, guild):
+        """
+        markov chain emoji prep funciton
+        :param to_send:
+        :param guild:
+        :return:
         """
         emojis = []
         emoji_names = [x.name for x in guild.emojis]
@@ -185,6 +191,16 @@ class Menato(discord.Client):
 
         for emoji in emojis:
             to_send = to_send.replace(emoji["name"], emoji["value"])
+        return to_send
+
+
+    def prep(self, to_send):
+        """
+        Hook function for later, will translate :emoji: as we type it in the bot to the appropriate <emoji:1231...>
+        code compatible with discord, need to sit down and get all the messages out first.
+        Returns a list of messages to send if the message is too long, this will break emojis, I'll fix this if it becomes an actual issue
+
+        """
         if len(to_send) > 1999:
             to_send = to_send.split()
             to_send = [to_send[i: i+ 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
