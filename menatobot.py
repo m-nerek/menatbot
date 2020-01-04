@@ -91,10 +91,10 @@ class Menato(discord.Client):
         self.get_groups()
         if group not in self.groups.keys():
             self.groups[group] = [message.author.mention]
-            response = f"You're added to the group {group}, I will ping you if anyone asks me to."
+            response = f"You're already in {group}, I will @ you when necessary."
         else:
             if message.author.mention in self.groups[group]:
-                response = f"You're already in {group}, I will @ you when necessary."
+                response = f"You're added to the group {group}, I will ping you if anyone asks me to."
             else:
                 self.groups[group].append(message.author.mention)
                 response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
