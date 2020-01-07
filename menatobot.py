@@ -62,6 +62,11 @@ class Menato(discord.Client):
                 responses = ["can you not"]
             elif message.content.strip(f"{self.tagged_string} ").startswith("ping"):
                 responses = self.ping_function(message)
+            elif "can i have the n word pass?" in message.content.lower():
+                if message.author.mention in ["<@238240578180087808>","<@!238240578180087808>"]: # blackbeard userID
+                    responses = ["You tell me, cowboy."]
+                else:
+                    responses = ["No", "no way", "nope", "nu-uh"]
             elif message.content.strip(f"{self.tagged_string} ").startswith("add me to"):
                 responses = self.add_to_group(message)
             elif message.content.strip(f"{self.tagged_string} ").startswith("remove me from"):
