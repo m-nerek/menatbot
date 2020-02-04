@@ -21,6 +21,7 @@ class Menato(discord.Client):
         `@menato` and end with`?` or `!` to have a chat with me 
         `@menato` otherwise for a random shitpost
         `@menato quote "user"!` to get a random quote from any, past or present SoS member. 
+        `@menato groups` to list all existing groups
         `@menato ping "group"` for me to ping all the members of a group, groups can only be single words, no spaces.
         `@menato add me to "group"` to be added to a group for pings
         `@menato remove me from "group"` to be removed from a group for pings
@@ -67,12 +68,14 @@ class Menato(discord.Client):
                     responses = ["You tell me, cowboy."]
                 else:
                     responses = ["No", "no way", "nope", "nu-uh"]
+            elif "groups" in message.content.lower():
+                responses = self.groups_list()
             elif message.content.strip(f"{self.tagged_string} ").startswith("add me to"):
                 responses = self.add_to_group(message)
             elif message.content.strip(f"{self.tagged_string} ").startswith("remove me from"):
                 responses = self.remove_from_group(message)
             elif "crystal ball" in message.content or "!cb" in message.content:
-                responses= self.responses['crystal ball']
+                responses = self.responses['crystal ball']
             elif message.content.endswith('!') or message.content.endswith('?'):
                 pass
                 responses = [sosmarkov.respond(message)]
@@ -148,6 +151,15 @@ class Menato(discord.Client):
             response = f"{response} You're being pinged for {group_to_ping}"
         return [response]
 
+    def all_groups(self):
+        """
+        Lists all existing groups
+        :return:
+        """
+        self.get_groups()
+        response = f"Groups: {', '.join(sorted(self.groups.keys()))}."
+        return [response]
+
     def get_groups(self):
         """
         wrapper to read the groups database
@@ -172,7 +184,7 @@ class Menato(discord.Client):
             json.dump(self.groups,file)
 
 
-    def markov_emoji(self,to_send, guild):
+    def markov_emoji(self, to_send, guild):
         """
         markov chain emoji prep funciton
         :param to_send:
@@ -184,7 +196,7 @@ class Menato(discord.Client):
         split_send = to_send.split(":")
         i = 0
         while i < len(split_send):
-            if i%2 == 1:
+            if i % 2 == 1:
                 emoji_name = split_send[i]
                 if emoji_name in emoji_names:
                     emoji_to_add = {
@@ -192,7 +204,7 @@ class Menato(discord.Client):
                         "value": str(guild.emojis[emoji_names.index(emoji_name)])
                     }
                     emojis.append(emoji_to_add)
-            i+=1
+            i += 1
 
         for emoji in emojis:
             to_send = to_send.replace(emoji["name"], emoji["value"])
@@ -208,7 +220,7 @@ class Menato(discord.Client):
         """
         if len(to_send) > 1999:
             to_send = to_send.split()
-            to_send = [to_send[i: i+ 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
+            to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
         return to_send
 
     def frames(self, message):
