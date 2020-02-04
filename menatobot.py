@@ -61,6 +61,8 @@ class Menato(discord.Client):
         elif self.user in message.mentions:
             if "menat op" in message.content:
                 responses = ["can you not"]
+            elif "nemph stream link" in message.content:
+                responses = ["here you go you lazy degen: http://twitch.tv/nemphtis"]
             elif message.content.strip(f"{self.tagged_string} ").startswith("ping"):
                 responses = self.ping_function(message)
             elif "can i have the n word pass?" in message.content.lower():
@@ -69,7 +71,9 @@ class Menato(discord.Client):
                 else:
                     responses = ["No", "no way", "nope", "nu-uh"]
             elif "groups" in message.content.lower():
-                responses = self.groups_list()
+                responses = self.all_groups()
+            elif "!ban" in message.content:
+                responses = [f"Banning {message.content.split()[2]} from sending any messages for 30 minutes."]
             elif message.content.strip(f"{self.tagged_string} ").startswith("add me to"):
                 responses = self.add_to_group(message)
             elif message.content.strip(f"{self.tagged_string} ").startswith("remove me from"):
