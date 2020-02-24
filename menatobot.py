@@ -91,8 +91,8 @@ class Menato(discord.Client):
             to_send = random.choice(responses)
             """
             if markov:
-                to_send = self.markov_emoji(to_send, message.guild)
-            to_send = self.prep(to_send)"""
+                to_send = self.markov_emoji(to_send, message.guild)"""
+            to_send = self.prep(to_send)
             if isinstance(to_send, list): # in case message is too long
                 for part in to_send:
                     await message.channel.send(part) # todo I don't know if this will work :help: but that's how I think it would if it needs to
