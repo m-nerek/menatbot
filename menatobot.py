@@ -164,7 +164,7 @@ class Menato(discord.Client):
         """
         self.get_groups()
         clean_groups = [group.replace["@everyone", "@ everyone"] for group in self.groups.keys()]
-        response = f"Groups: {', '.join(sorted(self.groups.keys()))}.".replace("<","\<")
+        response = f"Groups: {', '.join(sorted(clean_groups))}.".replace("<","\<")
         return [response]
 
     def get_groups(self):
