@@ -161,7 +161,7 @@ class Menato(discord.Client):
         :return:
         """
         self.get_groups()
-        response = f"Groups: {', '.join(sorted(self.groups.keys()))}.".replace("<!@","<@");
+        response = f"Groups: {', '.join(sorted(self.groups.keys()))}.".replace("<","\<")
         return [response]
 
     def get_groups(self):
