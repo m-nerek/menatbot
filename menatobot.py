@@ -1,7 +1,7 @@
 import discord
 import os
 import random
-import sosmarkov
+# import sosmarkov
 import json
 import frames
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -80,17 +80,19 @@ class Menato(discord.Client):
                 responses = self.remove_from_group(message)
             elif "crystal ball" in message.content or "!cb" in message.content:
                 responses = self.responses['crystal ball']
+                """
             elif message.content.endswith('!') or message.content.endswith('?'):
                 pass
                 responses = [sosmarkov.respond(message)]
-                markov = True # shitty workaround, sue me
+                markov = True # shitty workaround, sue me"""
             else:
                 responses = self.responses['idle']
         if responses:
             to_send = random.choice(responses)
+            """
             if markov:
                 to_send = self.markov_emoji(to_send, message.guild)
-            to_send = self.prep(to_send)
+            to_send = self.prep(to_send)"""
             if isinstance(to_send, list): # in case message is too long
                 for part in to_send:
                     await message.channel.send(part) # todo I don't know if this will work :help: but that's how I think it would if it needs to
