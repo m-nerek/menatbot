@@ -163,6 +163,7 @@ class Menato(discord.Client):
         :return:
         """
         self.get_groups()
+        clean_groups = [group.replace["@everyone", "@ everyone"] for group in self.groups.keys()]
         response = f"Groups: {', '.join(sorted(self.groups.keys()))}.".replace("<","\<")
         return [response]
 
