@@ -167,6 +167,7 @@ class Menato(discord.Client):
         for group in self.groups.keys():
             if group == "@everyone":
                 group = "@ everyone"
+            group = group.replace("@", "at") # fuck you you little shits
             clean_groups.append(group)
         response = f"Groups: {', '.join(sorted(clean_groups))}.".replace("<","\<")
         return [response]
@@ -230,7 +231,6 @@ class Menato(discord.Client):
 
         """
         if len(to_send) > 1999:
-            to_send = to_send.split()
             to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
         return to_send
 
