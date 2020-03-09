@@ -70,6 +70,8 @@ class Menato(discord.Client):
                     responses = ["You tell me, cowboy."]
                 else:
                     responses = ["No", "no way", "nope", "nu-uh"]
+            elif "popular groups" in message.content.lower():
+                responses = self.popular_groups()
             elif "groups" in message.content.lower():
                 responses = self.all_groups()
             elif "!ban" in message.content:
@@ -156,7 +158,12 @@ class Menato(discord.Client):
                 response = f"{response} {member}"
             response = f"{response} You're being pinged for {group_to_ping}"
         return [response]
-
+    def clean_groupname(name):
+        if name == "@everyone":
+            name = "@ everyone"
+        name = name.replace("@", "at") # fuck you you little shits
+        name = name.replace("<","\<")
+        return name
     def all_groups(self):
         """
         Lists all existing groups
@@ -165,13 +172,21 @@ class Menato(discord.Client):
         self.get_groups()
         clean_groups = []
         for group in self.groups.keys():
-            if group == "@everyone":
-                group = "@ everyone"
-            group = group.replace("@", "at") # fuck you you little shits
-            clean_groups.append(group)
-        response = f"Groups: {', '.join(sorted(clean_groups))}.".replace("<","\<")
+            clean_groups.append(clean_groupname(group))
+        response = f"Groups: {', '.join(sorted(clean_groups))}."
         return [response]
-
+    def popular_groups(self):
+        """
+        Lists biggest groups
+        :return:
+        """
+        self.get_groups()
+        topgroups = sorted(self.groups, key=lambda x: -len(self.groups[x]))[:15]
+        clean_groups = []
+        for group in topgroups:
+            clean_groups.append("("+str(len(self.groups[group]))+") "+str(clean_groupname(group)))
+        response = f"Groups: {', '.join(clean_groups)}."
+        return [response]
     def get_groups(self):
         """
         wrapper to read the groups database
