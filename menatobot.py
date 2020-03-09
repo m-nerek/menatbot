@@ -172,7 +172,7 @@ class Menato(discord.Client):
         self.get_groups()
         clean_groups = []
         for group in self.groups.keys():
-            clean_groups.append(clean_groupname(group))
+            clean_groups.append(self.clean_groupname(group))
         response = f"Groups: {', '.join(sorted(clean_groups))}."
         return [response]
     def popular_groups(self):
@@ -184,7 +184,7 @@ class Menato(discord.Client):
         topgroups = sorted(self.groups, key=lambda x: -len(self.groups[x]))[:15]
         clean_groups = []
         for group in topgroups:
-            clean_groups.append("("+str(len(self.groups[group]))+") "+str(clean_groupname(group)))
+            clean_groups.append("("+str(len(self.groups[group]))+") "+str(self.clean_groupname(group)))
         response = f"Groups: {', '.join(clean_groups)}."
         return [response]
     def get_groups(self):
