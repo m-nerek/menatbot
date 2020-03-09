@@ -158,7 +158,7 @@ class Menato(discord.Client):
                 response = f"{response} {member}"
             response = f"{response} You're being pinged for {group_to_ping}"
         return [response]
-    def clean_groupname(name):
+    def clean_groupname(self, name):
         if name == "@everyone":
             name = "@ everyone"
         name = name.replace("@", "at") # fuck you you little shits
