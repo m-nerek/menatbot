@@ -22,6 +22,7 @@ class Menato(discord.Client):
         `@menato` otherwise for a random shitpost
         `@menato quote "user"!` to get a random quote from any, past or present SoS member. 
         `@menato groups` to list all existing groups
+        `@menato popular groups` to list the groups with the most members
         `@menato ping "group"` for me to ping all the members of a group, groups can only be single words, no spaces.
         `@menato add me to "group"` to be added to a group for pings
         `@menato remove me from "group"` to be removed from a group for pings
