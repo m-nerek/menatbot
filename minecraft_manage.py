@@ -1,6 +1,7 @@
 import requests
 import os
 from bs4 import BeautifulSoup
+import time
 
 # Remember to update these if you change your creds (unlikely)
 mc_username = os.getenv("mc_username")
@@ -38,7 +39,7 @@ class MinecraftManager:
         :return:
         """
         login_response = self.login()
-        if login_response.status_code != "200":
+        if login_response.status_code != 200:
             menato_response = "Something went wrong with the login. Ask Aster to investigate"
             return [menato_response]
         r = self.session.get(server_url)
@@ -48,7 +49,7 @@ class MinecraftManager:
             "YII_CSRF_TOKEN": soup.find("input", dict(name="YII_CSRF_TOKEN")).attrs['value']
         }
         response = self.session.post(server_url, data=server_start)
-        if response.status_code != "200":
+        if response.status_code != 200:
             menato_response = "Something went wrong with the server start request. Ask Aster to investigate"
             return [menato_response]
         menato_response = "Server start requested, please wait 5s before trying to connect"
@@ -57,9 +58,11 @@ class MinecraftManager:
     def server_status(self):
         """
         Thankfully, this nice little banner provides both IP and status, all in one, poggies!
+        Discord caches link urls, by adding a URL parameter, we bypass the cache, forcing the app to show the latest
+        image.
         :return:
         """
-        menato_response = "https://mc.ggservers.com/status/53524.png"
+        menato_response = f"https://mc.ggservers.com/status/53524.png?t={str(time.time())}"
         return [menato_response]
 
     def stop_server(self):
@@ -75,3 +78,6 @@ class MinecraftManager:
         }
         r4 = self.session.post(server_url, data=server_stop)
 
+if __name__ == "__main__":
+    client = MinecraftManager()
+    client.start_server()
