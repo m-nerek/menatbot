@@ -4,6 +4,7 @@ import random
 # import sosmarkov
 import json
 import frames
+import minecraft_manage
 dir_path = os.path.dirname(os.path.realpath(__file__))
 # todo set up logging
 
@@ -26,9 +27,13 @@ class Menato(discord.Client):
         `@menato ping "group"` for me to ping all the members of a group, groups can only be single words, no spaces.
         `@menato add me to "group"` to be added to a group for pings
         `@menato remove me from "group"` to be removed from a group for pings
+        `@menato !minecraft_info` to get the current minecraft IP address and server status
+        `@menato !minecraft_start` to remotely start the server if it's not online`
+        
         NSFW channel only:
         ||`@menato post porn!` I'll try to post porn... you filthy degenerate.||
         """
+        self.mc_handler = minecraft_manage.MinecraftManager()
         self.groups = {}
         self.tagged_string = f""
         with open(f'{dir_path}/responses.json', "r") as f:
@@ -75,6 +80,10 @@ class Menato(discord.Client):
                 responses = self.popular_groups()
             elif "groups" in message.content.lower():
                 responses = self.all_groups()
+            elif "!minecraft_info" in message.content:
+                responses = self.mc_handler.server_status()
+            elif "!minecraft_start" in message.content:
+                responses = self.mc_handler.start_server()
             elif "!ban" in message.content:
                 responses = [f"Banning {message.content.split()[2]} from sending any messages for 30 minutes."]
             elif message.content.strip(f"{self.tagged_string} ").startswith("add me to"):
