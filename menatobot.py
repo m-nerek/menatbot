@@ -105,7 +105,7 @@ class Menato(discord.Client):
                 markov = True # shitty workaround, sue me"""
             else:
                 responses = self.responses['idle']
-        if responses and "with context" in message.content.lower:
+        if responses and "with context" in message.content.lower():
             add_nemph = True
         if responses:
             to_send = random.choice(responses)
@@ -132,7 +132,7 @@ class Menato(discord.Client):
         self.get_groups()
         author = message.author.mention.replace("!", "")
         if group not in self.groups.keys():
-            self.groups[group] = [message.author.mention]
+            self.groups[group] = [author]
             response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
 
         else:
