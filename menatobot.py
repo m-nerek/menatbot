@@ -30,6 +30,8 @@ class Menato(discord.Client):
         `@menato !minecraft_info` to get the current minecraft IP address and server status
         `@menato !minecraft_start` to remotely start the server if it's not online
         
+        Feel free to ask me to reply `with context` 
+        
         NSFW channel only:
         ||`@menato post porn!` I'll try to post porn... you filthy degenerate.||
         """
@@ -38,6 +40,9 @@ class Menato(discord.Client):
         self.tagged_string = f""
         with open(f'{dir_path}/responses.json', "r") as f:
             self.responses = json.load(f)
+        with open(f'{dir_path}/nemph.txt', 'r') as f:
+            self.nemphs = f.readlines()
+
 
     async def on_ready(self):
         """
@@ -52,6 +57,7 @@ class Menato(discord.Client):
         Function that runs every time a new message is sent, basically the heart of the bot
         :param message: The message object, see https://discordpy.readthedocs.io/en/latest/api.html#message
         """
+        add_nemph = False
         self.tagged_string = f"{self.user.mention[:2]}!{self.user.mention[2:]}"
         print(f'{message.guild}|{message.channel}|{message.author}: {message.content}')
         responses = []
@@ -99,11 +105,16 @@ class Menato(discord.Client):
                 markov = True # shitty workaround, sue me"""
             else:
                 responses = self.responses['idle']
+        if responses and "with context" in message.content.lower:
+            add_nemph = True
         if responses:
             to_send = random.choice(responses)
             """
             if markov:
                 to_send = self.markov_emoji(to_send, message.guild)"""
+            if add_nemph:
+                nemph_quote = random.choice(self.nemphs)
+                to_send = f"{to_send}\n{nemph_quote}"
             to_send = self.prep(to_send)
             if isinstance(to_send, list): # in case message is too long
                 for part in to_send:
@@ -119,15 +130,16 @@ class Menato(discord.Client):
         """
         group = message.content.split()[4]
         self.get_groups()
+        author = message.author.mention.replace("!", "")
         if group not in self.groups.keys():
             self.groups[group] = [message.author.mention]
             response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
 
         else:
-            if message.author.mention in self.groups[group]:
+            if author in self.groups[group]:
                 response = f"You're already in {group}, I will @ you when necessary."
             else:
-                self.groups[group].append(message.author.mention)
+                self.groups[group].append(author)
                 response = f"You're added to the group {group}, I will ping you if anyone asks me to."
         self.update_groups()
         return [response]
@@ -140,14 +152,18 @@ class Menato(discord.Client):
         """
         group = message.content.split()[4]
         self.get_groups()
+        author = message.author.mention.replace("!","")
         if group not in self.groups.keys():
             response = ":bap: You buffoon, that is not a group!"
         else:
-            if message.author.mention not in self.groups[group]:
+            if author not in self.groups[group]:
                 response = ":bap: You buffoon, you absolute fool, you're not in that group!"
             else:
-                self.groups[group].pop(self.groups[group].index(message.author.mention))
+                self.groups[group].pop(self.groups[group].index(author))
                 response = f"You have been removed from {group} you will be no longer pinged for it."
+                if len(self.groups[group]) == 0:
+                    self.groups.pop(group)
+                    response = f"{response} I removed the group too now that it's empty."
         self.update_groups()
         return [response]
 
