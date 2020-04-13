@@ -105,7 +105,7 @@ class Menato(discord.Client):
                 markov = True # shitty workaround, sue me"""
             else:
                 responses = self.responses['idle']
-        if responses and "with context" in message.content.lower:
+        if responses and "with context" in message.content.lower():
             add_nemph = True
         if responses:
             to_send = random.choice(responses)
