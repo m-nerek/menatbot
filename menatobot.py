@@ -132,7 +132,7 @@ class Menato(discord.Client):
         self.get_groups()
         author = message.author.mention.replace("!", "")
         if group not in self.groups.keys():
-            self.groups[group] = [message.author.mention]
+            self.groups[group] = [author]
             response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
 
         else:
@@ -182,7 +182,7 @@ class Menato(discord.Client):
             response = ""
             for member in members_to_ping:
                 response = f"{response} {member}"
-            response = f"{response} You're being pinged for {group_to_ping}"
+            response = f"You're being pinged for {group_to_ping}\n\n{response}"
         return [response]
     def clean_groupname(self, name):
         if name == "@everyone":
