@@ -2,6 +2,7 @@ import discord
 import os
 import random
 # import sosmarkov
+import sosplay
 import json
 import frames
 import minecraft_manage
@@ -103,6 +104,8 @@ class Menato(discord.Client):
                 pass
                 responses = [sosmarkov.respond(message)]
                 markov = True # shitty workaround, sue me"""
+            elif "play" in message.content:
+                responses = [sosplay.respond(message)]
             else:
                 responses = self.responses['idle']
         if responses and "with context" in message.content.lower():
