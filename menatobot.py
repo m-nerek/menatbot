@@ -142,10 +142,10 @@ class Menato(discord.Client):
             response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
         else:
             if author in self.groups[group_key]:
-                response = f"You're already in {group}, I will @ you when necessary."
+                response = f"You're already in {group_key}, I will @ you when necessary."
             else:
                 self.groups[group_key].append(author)
-                response = f"You're added to the group {group} ({str(len(self.groups[group_key]))} members), I will ping you if anyone asks me to."
+                response = f"You're added to the group {group_key} ({str(len(self.groups[group_key]))} members), I will ping you if anyone asks me to."
         self.update_groups()
         return [response]
 
@@ -168,7 +168,7 @@ class Menato(discord.Client):
                 response = ":bap: You buffoon, you absolute fool, you're not in that group!"
             else:
                 self.groups[group_key].pop(self.groups[group_key].index(author))
-                response = f"You have been removed from {group} you will be no longer pinged for it."
+                response = f"You have been removed from {group_key} you will be no longer pinged for it."
                 if len(self.groups[group_key]) == 0:
                     self.groups.pop(group_key)
                     response = f"{response} I removed the group too now that it's empty."
@@ -188,13 +188,27 @@ class Menato(discord.Client):
 
         if group_key not in self.groups.keys():
             response =  ":bap: That is not a group I can ping"
+
+            matching_keys = []
+            words = group_to_ping.lower().split('_')
+
+            if len(words)<6:
+                for word in words:
+                    for key in self.lowercase_group_keys:
+                        if word in key or key in word:
+                            matching_keys.append(self.clean_groupname(self.lowercase_group_keys[key]) + " (" + str(len(self.groups[self.lowercase_group_keys[key]]))+")" )
+
+                if len(matching_keys)>1:
+                    response = f":bap: That is not a group I can ping, did you mean any of these groups? {', '.join(sorted(matching_keys))}"
+
         else:
             members_to_ping = self.groups[group_key]
             response = ""
             for member in members_to_ping:
                 response = f"{response} {member}"
-            response = f"You're being pinged for {group_to_ping}\n\n{response}"
+            response = f"You're being pinged for {group_key}\n\n{response}"
         return [response]
+
     def clean_groupname(self, name):
         if name == "@everyone":
             name = "@ everyone"
