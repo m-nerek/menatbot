@@ -195,7 +195,7 @@ class Menato(discord.Client):
             if len(words)<6:
                 for word in words:
                     for key in self.lowercase_group_keys:
-                        for keyword in key.split('_')
+                        for keyword in key.split('_'):
                             if word in keyword or keyword in word:
                                 matching_keys.append(self.clean_groupname(self.lowercase_group_keys[key]) + " (" + str(len(self.groups[self.lowercase_group_keys[key]]))+")" )
 
