@@ -134,15 +134,16 @@ class Menato(discord.Client):
         group = message.content.split()[4]
         self.get_groups()
         author = message.author.mention.replace("!", "")
-        if group not in self.groups.keys():
+        group_key = self.lowercase_group_keys.get(group.lower())
+
+        if group_key not in self.groups.keys():
             self.groups[group] = [author]
             response = f"Made a new tagging group for you; {group}, someone can now ping me for it to tag you."
-
         else:
-            if author in self.groups[group]:
+            if author in self.groups[group_key]:
                 response = f"You're already in {group}, I will @ you when necessary."
             else:
-                self.groups[group].append(author)
+                self.groups[group_key].append(author)
                 response = f"You're added to the group {group}, I will ping you if anyone asks me to."
         self.update_groups()
         return [response]
@@ -154,18 +155,21 @@ class Menato(discord.Client):
         :return:
         """
         group = message.content.split()[4]
+        
         self.get_groups()
         author = message.author.mention.replace("!","")
-        if group not in self.groups.keys():
+        group_key = self.lowercase_group_keys.get(group.lower())
+
+        if group_key not in self.groups.keys():
             response = ":bap: You buffoon, that is not a group!"
         else:
-            if author not in self.groups[group]:
+            if author not in self.groups[group_key]:
                 response = ":bap: You buffoon, you absolute fool, you're not in that group!"
             else:
-                self.groups[group].pop(self.groups[group].index(author))
+                self.groups[group_key].pop(self.groups[group_key].index(author))
                 response = f"You have been removed from {group} you will be no longer pinged for it."
-                if len(self.groups[group]) == 0:
-                    self.groups.pop(group)
+                if len(self.groups[group_key]) == 0:
+                    self.groups.pop(group_key)
                     response = f"{response} I removed the group too now that it's empty."
         self.update_groups()
         return [response]
@@ -178,10 +182,13 @@ class Menato(discord.Client):
         """
         group_to_ping = message.content.split()[2]
         self.get_groups()
+
+        group_key = self.lowercase_group_keys.get(group_to_ping.lower())
+
         if group_to_ping not in self.groups.keys():
             response =  ":bap: That is not a group I can ping"
         else:
-            members_to_ping = self.groups[group_to_ping]
+            members_to_ping = self.groups[group_key]
             response = ""
             for member in members_to_ping:
                 response = f"{response} {member}"
@@ -210,7 +217,7 @@ class Menato(discord.Client):
         :return:
         """
         self.get_groups()
-        topgroups = sorted(self.groups, key=lambda x: -len(self.groups[x]))[:15]
+        topgroups = sorted(self.groups, key=lambda x: -len(self.groups[x]))[:25]
         clean_groups = []
         for group in topgroups:
             clean_groups.append("("+str(len(self.groups[group]))+") "+str(self.clean_groupname(group)))
@@ -227,7 +234,10 @@ class Menato(discord.Client):
                     groups = json.load(file)
                 except json.decoder.JSONDecodeError:
                     groups = {}
+
             self.groups = groups
+            self.lowercase_group_keys = {k.lower():k for k,v in self.groups.items()}
+
         except FileNotFoundError:
             self.update_groups()
 

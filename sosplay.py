@@ -5,8 +5,8 @@ def respond(message):
 
 	searchTerm = str(message.content).lower().split("play",1)[1].strip()
 
-	if "CFTony" in message.author.name:
-		searchTerm="rickroll"
+	#if "CFTony" in message.author.name:
+	#	searchTerm="rickroll"
 
 	
 	results = YoutubeSearch(searchTerm, max_results=1)
