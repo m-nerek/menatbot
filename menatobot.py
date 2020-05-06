@@ -185,7 +185,7 @@ class Menato(discord.Client):
 
         group_key = self.lowercase_group_keys.get(group_to_ping.lower())
 
-        if group_to_ping not in self.groups.keys():
+        if group_key not in self.groups.keys():
             response =  ":bap: That is not a group I can ping"
         else:
             members_to_ping = self.groups[group_key]
