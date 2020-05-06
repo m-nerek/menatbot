@@ -145,7 +145,7 @@ class Menato(discord.Client):
                 response = f"You're already in {group}, I will @ you when necessary."
             else:
                 self.groups[group_key].append(author)
-                response = f"You're added to the group {group}, I will ping you if anyone asks me to."
+                response = f"You're added to the group {group} ({str(len(self.groups[group_key]))} members), I will ping you if anyone asks me to."
         self.update_groups()
         return [response]
 
