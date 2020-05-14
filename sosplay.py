@@ -12,5 +12,5 @@ def respond(message):
 	results = YoutubeSearch(searchTerm, max_results=1)
 	if len(results.videos)>0:
 		return "https://www.youtube.com"+results.videos[0].get("link")
-	else
+	else:
 		return ":guile: I can't play that Tony"
