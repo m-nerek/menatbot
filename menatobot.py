@@ -198,7 +198,10 @@ class Menato(discord.Client):
                         for keyword in key.split('_'):
                             if len(word)>2 and len(keyword)>2:
                                 if word in keyword or keyword in word:
-                                    matching_keys.append(self.clean_groupname(self.lowercase_group_keys[key]) + " (" + str(len(self.groups[self.lowercase_group_keys[key]]))+")" )
+                                    group_description = self.clean_groupname(self.lowercase_group_keys[key]) + " (" + str(len(self.groups[self.lowercase_group_keys[key]]))+")"
+
+                                    if group_description not in matching_keys:
+                                        matching_keys.append(group_description)
 
                 if len(matching_keys)>1:
                     response = f":bap: That is not a group I can ping, did you mean any of these groups? {', '.join(sorted(matching_keys))}"
