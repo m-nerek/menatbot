@@ -203,7 +203,7 @@ class Menato(discord.Client):
                                     if group_description not in matching_keys:
                                         matching_keys.append(group_description)
 
-                if len(matching_keys)>1:
+                if len(matching_keys)>0:
                     response = f":bap: That is not a group I can ping, did you mean any of these groups? {', '.join(sorted(matching_keys))}"
 
         else:
