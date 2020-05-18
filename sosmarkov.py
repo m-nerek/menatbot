@@ -36,9 +36,9 @@ def answer(text_model = None, question = "", channel = ""):
     
     
     try:
-        return sentence(text_model, subject, channel, "nsfw" in channel)
+        return sentence(text_model, subject, channel, "nsfw" in channel or "memes" in channel)
     except:
-        return sentence(text_model, "", channel, "nsfw" in channel)
+        return sentence(text_model, "", channel, "nsfw" in channel or "memes" in channel)
 
 
 
