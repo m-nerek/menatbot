@@ -30,13 +30,12 @@ class Menato(discord.Client):
         `@menato add me to "group"` to be added to a group for pings
         `@menato remove me from "group"` to be removed from a group for pings
         `@menato play "video"` to play a youtube video
+        `@menato define "term"` to find out what something is
         `@menato !minecraft_info` to get the current minecraft IP address and server status
         `@menato !minecraft_start` to remotely start the server if it's not online
         
         Feel free to ask me to reply `with context` 
         
-        NSFW channel only:
-        ||`@menato post porn!` I'll try to post porn... you filthy degenerate.||
         """
         self.mc_handler = minecraft_manage.MinecraftManager()
         self.groups = {}
