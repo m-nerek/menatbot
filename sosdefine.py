@@ -15,5 +15,9 @@ def respond(message):
 	if len(definitions)<1:
 		definitions = urbandictionary.random()
 
-	return definitions[0].definition.replace("[","").replace("]","")
+	output = definitions[0].definition.replace("[","").replace("]","")
+
+	output = output.replace(definitions[0].word, searchTerm )
+
+	return (output[:998] + '..') if len(output) > 1000 else output
 	
