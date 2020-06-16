@@ -318,7 +318,7 @@ class Menato(discord.Client):
         if len(to_send) > 1999:
             to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
 
-        to_send = markov_emoji(to_send, guild)
+        to_send = self.markov_emoji(to_send, guild)
 
         return to_send
 
