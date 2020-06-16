@@ -294,7 +294,9 @@ class Menato(discord.Client):
         while i < len(split_send):
             if i % 2 == 1:
                 emoji_name = split_send[i]
-                if emoji_name in emoji_names:
+                already_correct = split_send[i-1].endswith("<")
+
+                if already_correct==False and emoji_name in emoji_names:
                     emoji_to_add = {
                         "name": f":{emoji_name}:",
                         "value": str(guild.emojis[emoji_names.index(emoji_name)])
