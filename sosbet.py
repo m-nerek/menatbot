@@ -77,13 +77,16 @@ def processBet(user, amount, description):
 				if sign(bets[key][str(x)]['amount']) != sign(amount):
 					return f"you cannot bet against yourself"
 
-				bets[key][str(x)]['amount'] += amount
-				money[user] -= abs(amount)
-				money[user] = min(MINIMUM_FUNDS, money[user])
+				bets[key][str(x)]['amount'] += int(amount)
+				
+				money[user] = min(MINIMUM_FUNDS, int(money[user]) - abs(int(amount)))
 
-				return f"adding {CURRENCY}{abs(amount)} to existing bet [{key}], new total {CURRENCY}{abs(bets[key][str(x)]['amount'])}"
+				return f"adding {CURRENCY}{abs(int(amount))} to existing bet [{key}], new total {CURRENCY}{abs(bets[key][str(x)]['amount'])}"
 			elif str(x) not in bets[key].keys():
 				bets[key][str(x)] = {"user":user, "amount":amount}
+				
+				money[user] = min(MINIMUM_FUNDS, int(money[user]) - abs(int(amount)))
+
 				output = f"[{key}]. Will \"{bets[key]['description']}\" happen?  {user} is betting {CURRENCY}{abs(amount)}"
 				if amount>0:
 					output+=" it will!"
