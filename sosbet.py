@@ -11,6 +11,18 @@ STARTING_FUNDS = 5
 MINIMUM_FUNDS = 1
 CURRENCY = "$"
 
+help_string = f"""Betting commands:
+        `!bet [amount] on [thing]` create a new bet
+        `!bet [amount] on [ID]` place {CURRENCY} on an existing bet
+        `!bet [amount] against [ID]` place {CURRENCY} against an existing bet
+        `!concede [ID]` lost a bet? This is how you give the winners their {CURRENCY}
+        
+        `!pay [userID] [amount]` give someone your hard earned {CURRENCY}
+        `!balance [userID]` check how much {CURRENCY} someone has
+        """
+
+
+
 def load(file):
 	try:
 		with open(f"{dir_path}/{file}.json", "r") as file:
@@ -62,6 +74,13 @@ def hasMoney(user, amount):
 		money[user] = STARTING_FUNDS
 	return money[user]>=int(amount)
 
+def subtractMoney(user, amount):
+	if not user in money:
+		money[user] = STARTING_FUNDS
+	money[user] = max(MINIMUM_FUNDS, int(money[user]) - abs(int(amount)))
+
+def addMoney(user, amount):
+	money[user] = int(money[user]) + abs(int(amount))
 
 def processBet(user, amount, description):
 	
@@ -79,13 +98,13 @@ def processBet(user, amount, description):
 
 				bets[key][str(x)]['amount'] += int(amount)
 				
-				money[user] = min(MINIMUM_FUNDS, int(money[user]) - abs(int(amount)))
+				subtractMoney(user, amount)
 
 				return f"adding {CURRENCY}{abs(int(amount))} to existing bet [{key}], new total {CURRENCY}{abs(bets[key][str(x)]['amount'])}"
 			elif str(x) not in bets[key].keys():
 				bets[key][str(x)] = {"user":user, "amount":amount}
 				
-				money[user] = min(MINIMUM_FUNDS, int(money[user]) - abs(int(amount)))
+				subtractMoney(user, amount)
 
 				output = f"[{key}]. Will \"{bets[key]['description']}\" happen?  {user} is betting {CURRENCY}{abs(amount)}"
 				if amount>0:
@@ -103,6 +122,8 @@ def processBet(user, amount, description):
 			return "something went wrong UwU"
 
 		bets[key] = {"description": description, str(0):{"user":user, "amount":amount } }
+		subtractMoney(user, amount)
+
 		output = f"A new bet ID [{key}] has been created. Will \"{description}\" happen? {user} is betting {CURRENCY}{abs(amount)}"
 		if amount>0:
 			output+=" it will!"
@@ -144,16 +165,15 @@ def concedeBet(user, description):
 					amount_bet = abs(int(bets[key][str(x)]['amount']))
 					bet_user = bets[key][str(x)]['user']
 					refund = max(0, amount_bet - total_to_pay)
-
 					total_to_pay-=min(amount_bet, total_to_pay)
-					money[bet_user] += refund
+					addMoney(bet_user, refund)
 					output+=f" {bet_user} was refunded {CURRENCY}{refund} from a bet of {CURRENCY}{amount_bet}."
 				else:
 					amount_bet = abs(int(bets[key][str(x)]['amount']))
 					bet_user = bets[key][str(x)]['user']
 					payoff = min(amount_bet, total_pot)
 					total_pot -= payoff
-					money[bet_user] += payoff + amount_bet
+					addMoney(bet_user, payoff + amount_bet)
 					output+=f" {bet_user} was paid {CURRENCY}{payoff+amount_bet} from a bet of {CURRENCY}{amount_bet}."
 
 		del bets[key]
@@ -263,11 +283,18 @@ def respond(user, string):
 bets = load("bets")
 money = load("money")
 
-#print(respond("dude", "!bet 2 on asdl 1"))
-#print(respond("dude", "!bet 2 on asdl"))
 
-#print(respond("dude2", "!bet 5 against asdl"))
+#print(respond("dude", "!balance"))
+#print(respond("dude2", "!balance"))
 
-#print(command("dude2", "!concede 12345"))
-#print(respond("dude2", "!bets dude"))
+#print(respond("dude", "!bet 3 on asdl"))
+#print(respond("dude2", "!bet 2 against asdl"))
+
+#print(respond("dude", "!balance"))
+#print(respond("dude2", "!balance"))
+
+#print(respond("dude2", "!concede asdl"))
+
+#print(respond("dude", "!balance"))
+#print(respond("dude2", "!balance"))
 

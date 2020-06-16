@@ -21,6 +21,7 @@ class Menato(discord.Client):
         self.help_string = """Commands:
         `!frames` for SFV Frame data
         `!help` to show this again
+        `!bethelp` to show the betting commands
         `@menato !cb` to use my crystal ball
         `@menato` and end with`?` or `!` to have a chat with me 
         `@menato` otherwise for a random shitpost
@@ -73,6 +74,8 @@ class Menato(discord.Client):
             responses = self.frames(message)
         elif message.content.startswith("!help"):
             responses = [self.help_string]
+        elif message.content.startswith("!bethelp"):
+            responses = [sosbet.help_string]
         elif message.content.startswith("!bet") or message.content.startswith("!concede"):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif message.content.startswith("!balance") or message.content.startswith("!pay"):
