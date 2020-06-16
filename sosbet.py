@@ -187,6 +187,37 @@ def showBets(user, user_to_find):
 					output+=f"{showBet(bet)}"
 	return output
 
+def balance(user, user_to_find):
+	output = ""
+	if user_to_find == "me" or user_to_find == "":
+		user_to_find=user
+
+	key = findKey(user_to_find, money)
+
+	if key:
+		return f"{user_to_find} has {CURRENCY}{money[key]}"
+	else:
+		return "I'm not sure whose balance to show"
+
+def pay(user, user_to_find, amount):
+	amount = abs(int(amount))
+	key = findKey(user_to_find, money)
+
+	if amount<=0:
+		return "how much?"
+	if not key:
+		return "who?"
+
+	if money[user]<amount-MINIMUM_FUNDS:
+		return "you do not have the funds to pay"
+
+	money[user] -= amount;
+	money[key] += amount;
+
+	return f"{user} paid {key} {CURRENCY}{amount}"
+
+
+
 def respond(user, string):
 	
 	output = "I don't understand the instruction o_o"
@@ -202,10 +233,19 @@ def respond(user, string):
 				output = processBet(user, int(s[1]), " ".join(s[3:]))
 			else:
 				output = "you do not have the funds"
+		else:
+			if hasMoney(user,abs(int(s[1]))):
+				output = processBet(user, int(s[1]), " ".join(s[2:]))
+			else:
+				output = "you do not have the funds"
 	elif s[0] == "!concede":
 		output = concedeBet(user, " ".join(s[1:]))
 	elif s[0] == "!bets":
 		output = showBets(user," ".join(s[1:]))
+	elif s[0] == "!balance":
+		output = balance(user," ".join(s[1:]))
+	elif s[0] == "!pay":
+		output = pay(user,s[1],s[2])
 
 
 	save("bets",bets)

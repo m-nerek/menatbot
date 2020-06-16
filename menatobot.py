@@ -75,6 +75,8 @@ class Menato(discord.Client):
             responses = [self.help_string]
         elif message.content.startswith("!bet") or message.content.startswith("!concede"):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
+        elif message.content.startswith("!balance") or message.content.startswith("!pay"):
+            responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif self.user in message.mentions:
             if "menat op" in message.content:
                 responses = ["can you not"]
