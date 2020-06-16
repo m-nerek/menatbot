@@ -31,8 +31,8 @@ def getKey(dict):
 
 	for x in range(len(words)):
 		key = re.sub('[\W_]', '', words[x].word)
-		if isValidKey(key,dict):
-			return key
+		if isValidKey(key.lower(),dict):
+			return key.lower()
 	return False
 
 
@@ -93,7 +93,7 @@ def processBet(user, amount, description):
 		return "something went wrong o_o"
 	else:
 		
-		key = description
+		key = description.lower()
 		if not isValidKey(key, bets):
 			key = getKey(bets)
 		if not isValidKey(key, bets):
@@ -217,7 +217,7 @@ def respond(user, string):
 bets = load("bets")
 money = load("money")
 
-print(respond("dude", "!bet 2 on asdl 1"))
+#print(respond("dude", "!bet 2 on asdl 1"))
 #print(respond("dude", "!bet 2 on asdl"))
 
 #print(respond("dude2", "!bet 5 against asdl"))
