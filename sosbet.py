@@ -234,7 +234,7 @@ def pay(user, user_to_find, amount):
 	if key==False:
 		return "who?"
 
-	if money[user]<amount-MINIMUM_FUNDS:
+	if money[user]<amount+MINIMUM_FUNDS:
 		return "you do not have the funds to pay"
 
 	money[user] -= amount;
