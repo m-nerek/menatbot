@@ -195,7 +195,10 @@ def balance(user, user_to_find):
 	key = findKey(user_to_find, money)
 
 	if key:
-		return f"{user_to_find} has {CURRENCY}{money[key]}"
+		return f"{key} has {CURRENCY}{money[key]}"
+	elif user_to_find==user:
+		money[user] = STARTING_FUNDS
+		return f"{user} has {CURRENCY}{money[user]}"
 	else:
 		return "I'm not sure whose balance to show"
 
