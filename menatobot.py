@@ -4,6 +4,7 @@ import random
 import sosmarkov
 import sosplay
 import sosdefine
+import sosbet
 import json
 import frames
 import minecraft_manage
@@ -72,6 +73,8 @@ class Menato(discord.Client):
             responses = self.frames(message)
         elif message.content.startswith("!help"):
             responses = [self.help_string]
+        elif message.content.startswith("!bet") or message.content.startswith("!concede"):
+            responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif self.user in message.mentions:
             if "menat op" in message.content:
                 responses = ["can you not"]
