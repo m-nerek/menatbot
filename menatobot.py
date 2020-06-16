@@ -129,7 +129,7 @@ class Menato(discord.Client):
             if add_nemph:
                 nemph_quote = random.choice(self.nemphs)
                 to_send = f"{to_send}\n{nemph_quote}"
-            to_send = self.prep(to_send)
+            to_send = self.prep(to_send, message.guild)
             if isinstance(to_send, list): # in case message is too long
                 for part in to_send:
                     await message.channel.send(part) # todo I don't know if this will work :help: but that's how I think it would if it needs to
@@ -307,15 +307,19 @@ class Menato(discord.Client):
         return to_send
 
 
-    def prep(self, to_send):
+    def prep(self, to_send, guild):
         """
         Hook function for later, will translate :emoji: as we type it in the bot to the appropriate <emoji:1231...>
         code compatible with discord, need to sit down and get all the messages out first.
         Returns a list of messages to send if the message is too long, this will break emojis, I'll fix this if it becomes an actual issue
-
+        
+        Tech was here, and flicked the switch to turn on the emojis :salute:
         """
         if len(to_send) > 1999:
             to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
+
+        to_send = markov_emoji(to_send, guild)
+
         return to_send
 
     def frames(self, message):
