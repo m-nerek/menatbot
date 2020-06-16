@@ -44,7 +44,7 @@ def sign(number):
 	return 0
 
 def findKey(search_key, dict):
-	keys = [string for string in dict.keys() if search_key in string]
+	keys = [string for string in dict.keys() if search_key.lower() in string.lower()]
 	if any(keys):
 		return keys[0]
 	else:
@@ -205,7 +205,7 @@ def pay(user, user_to_find, amount):
 
 	if amount<=0:
 		return "how much?"
-	if not key:
+	if key==False:
 		return "who?"
 
 	if money[user]<amount-MINIMUM_FUNDS:
