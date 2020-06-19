@@ -10,7 +10,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 STARTING_FUNDS = 5
 MINIMUM_FUNDS = 1
-CURRENCY = ":evil:"
+CURRENCY = "$"
 
 help_string = f"""Betting commands:
         `!bet [amount] on [thing]` create a new bet
