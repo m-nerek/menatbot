@@ -2,6 +2,7 @@
 import json
 import os
 import urbandictionary
+import sosmarkov
 import re
 import string
 
@@ -15,6 +16,8 @@ help_string = f"""Betting commands:
         `!bet [amount] on [thing]` create a new bet
         `!bet [amount] on [ID]` place {CURRENCY} on an existing bet
         `!bet [amount] against [ID]` place {CURRENCY} against an existing bet
+        `!lock [ID]` once an event starts you can lock a bet to prevent further modification (if you are participating)
+        `!unlock [ID]` you can also unlock if participating
         `!concede [ID]` lost a bet? This is how you give the winners their {CURRENCY}
         
         `!pay [userID] [amount]` give someone your hard earned {CURRENCY}
@@ -38,14 +41,16 @@ def save(file, data):
 		json.dump(data ,file)
 
 def getKey(dict):
-
-	words = urbandictionary.random()
-
-	for x in range(len(words)):
-		key = re.sub('[\W_]', '', words[x].word)
-		if isValidKey(key.lower(),dict):
-			return key.lower()
+	for y in range(10):
+		#words = urbandictionary.random()
+		words = sosmarkov.sentence(sosmarkov.models['general']).split(" ")
+		for x in range(len(words)):
+			#key = re.sub('[\W_]', '', words[x].word)
+			key = re.sub('[\W_]', '', words[x])
+			if isValidKey(key.lower(),dict):
+				return key.lower()
 	return False
+
 
 
 def sign(number):
@@ -63,7 +68,7 @@ def findKey(search_key, dict):
 		return False
 
 def isValidKey(string, dict):
-	if len(string)<2 or len(string)>10:
+	if len(string)<3 or len(string)>10:
 		return False
 	if findKey(string, dict):
 		return False
@@ -89,6 +94,10 @@ def processBet(user, amount, description):
 
 	key = findKey(description, bets)
 	if key:
+
+		if 'lock' in bets[key] and bets[key]['lock']==True:
+			return f"Bet [{key}] is locked. No further betting can take place on it."
+
 		#is user already betting
 		for x in range(len(bets[key].keys())):
 			if str(x) in bets[key].keys() and user in bets[key][str(x)]["user"]:
@@ -96,12 +105,14 @@ def processBet(user, amount, description):
 				if sign(bets[key][str(x)]['amount']) != sign(amount):
 					return f"you cannot bet against yourself"
 
+				
 				bets[key][str(x)]['amount'] += int(amount)
 				
 				subtractMoney(user, amount)
 
 				return f"adding {CURRENCY}{abs(int(amount))} to existing bet [{key}], new total {CURRENCY}{abs(bets[key][str(x)]['amount'])}"
 			elif str(x) not in bets[key].keys():
+
 				bets[key][str(x)] = {"user":user, "amount":amount}
 				
 				subtractMoney(user, amount)
@@ -210,6 +221,44 @@ def showBets(user, user_to_find):
 					output+=f"{showBet(bet)}"
 	return output
 
+def lockBet(user, id):
+	
+	key = findKey(id, bets)
+
+	if key == False:
+		return "I don't recognise that bet ID"
+	
+	for x in range(len(bets[key].keys())):
+		if str(x) in bets[key].keys():
+			if (user == bets[key][str(x)]['user']):
+				if 'lock' in bets[key] and bets[key]['lock']==True:
+					return f"Bet [{key}] is already locked. No further betting can take place on it."
+
+				bets[key]['lock'] = True
+				return f"[{key}] is now locked. No further betting can take place on it."
+
+	return "You can only lock a bet if you are participating"
+
+def unlockBet(user, id):
+	
+	key = findKey(id, bets)
+
+	if key == False:
+		return "I don't recognise that bet ID"
+	
+	for x in range(len(bets[key].keys())):
+		if str(x) in bets[key].keys():
+			if (user == bets[key][str(x)]['user']):
+				if 'lock' in bets[key] and bets[key]['lock']==True:
+					bets[key]['lock'] = False
+					return f"Bet [{key}] is unlocked."
+
+				return f"[{key}] is already unlocked."
+
+	return "You can only unlock a bet if you are participating"
+
+
+
 def balance(user, user_to_find):
 	output = ""
 	if user_to_find == "me" or user_to_find == "":
@@ -272,7 +321,11 @@ def respond(user, string):
 		output = balance(user," ".join(s[1:]))
 	elif s[0] == "!pay":
 		output = pay(user,s[1],s[2])
-
+	elif s[0] == "!lock":
+		output = lockBet(user,s[1])
+	elif s[0] == "!unlock":
+		output = unlockBet(user,s[1])
+	
 
 	save("bets",bets)
 	save("money", money)
@@ -287,8 +340,11 @@ money = load("money")
 #print(respond("dude", "!balance"))
 #print(respond("dude2", "!balance"))
 
-#print(respond("dude", "!bet 3 on asdl"))
-#print(respond("dude2", "!bet 2 against asdl"))
+print(respond("dude", "!bet 1 on asdl"))
+print(respond("dude", "!lock asdl"))
+print(respond("dude", "!bet 1 on asdl"))
+print(respond("dude", "!unlock asdl"))
+print(respond("dude", "!bet 1 on asdl"))
 
 #print(respond("dude", "!balance"))
 #print(respond("dude2", "!balance"))
