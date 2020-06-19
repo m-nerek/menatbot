@@ -8,6 +8,7 @@ import sosbet
 import json
 import frames
 import minecraft_manage
+import re
 dir_path = os.path.dirname(os.path.realpath(__file__))
 # todo set up logging
 
