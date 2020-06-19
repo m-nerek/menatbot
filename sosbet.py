@@ -77,7 +77,10 @@ def isValidKey(string, dict):
 def hasMoney(user, amount):
 	if not user in money:
 		money[user] = STARTING_FUNDS
-	return money[user]>=int(amount)
+
+	if money[user] == 1 and int(amount)== 1 return True
+
+	return money[user]-1>=int(amount)
 
 def subtractMoney(user, amount):
 	if not user in money:
