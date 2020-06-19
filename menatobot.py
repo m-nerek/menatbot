@@ -318,9 +318,9 @@ class Menato(discord.Client):
         input_emojis = re.findall("(?<!<):[^:]+:", to_send)
 
         for emoji_name in input_emojis:
+            name_without_colons = emoji_name.replace(":","")
 
-            if emoji_name in guild_emoji_names:
-                name_without_colons = emoji_name.replace(":","")
+            if name_without_colons in guild_emoji_names:
                 emoji_to_add = {
                     "name": emoji_name,
                     "value": str(guild.emojis[guild_emoji_names.index(name_without_colons)])
