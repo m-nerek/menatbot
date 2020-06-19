@@ -275,7 +275,13 @@ def balance(user, user_to_find):
 		return "I'm not sure whose balance to show"
 
 def pay(user, user_to_find, amount):
-	amount = abs(int(amount))
+
+
+	try:
+		amount = abs(int(amount))
+	except:
+		return f"I need a whole number please, '{amount}' is too confusing!"
+
 	key = findKey(user_to_find, money)
 
 	if amount<=0:
@@ -298,6 +304,12 @@ def respond(user, string):
 	output = "I don't understand the instruction o_o"
 	s = string.lower().split(" ")
 	if s[0] == "!bet":
+
+		try:
+			int(s[1])
+		except:
+			return f"I need a whole number please, '{s[1]}' is too confusing!"
+
 		if s[2] == "against":
 			if hasMoney(user,abs(int(s[1]))):
 				output = processBet(user, -int(s[1]), " ".join(s[3:]))
@@ -320,7 +332,7 @@ def respond(user, string):
 	elif s[0] == "!balance":
 		output = balance(user," ".join(s[1:]))
 	elif s[0] == "!pay":
-		output = pay(user,s[1],s[2])
+		output = pay(user,s[1]," ".join(s[2:]))
 	elif s[0] == "!lock":
 		output = lockBet(user,s[1])
 	elif s[0] == "!unlock":
@@ -340,11 +352,11 @@ money = load("money")
 #print(respond("dude", "!balance"))
 #print(respond("dude2", "!balance"))
 
-print(respond("dude", "!bet 1 on asdl"))
-print(respond("dude", "!lock asdl"))
-print(respond("dude", "!bet 1 on asdl"))
-print(respond("dude", "!unlock asdl"))
-print(respond("dude", "!bet 1 on asdl"))
+#print(respond("dude", "!bet custard on asdl"))
+#print(respond("dude", "!lock asdl"))
+#print(respond("dude", "!bet 1 on asdl"))
+#print(respond("dude", "!unlock asdl"))
+#print(respond("dude", "!bet 1 on asdl"))
 
 #print(respond("dude", "!balance"))
 #print(respond("dude2", "!balance"))
