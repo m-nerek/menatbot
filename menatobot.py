@@ -310,6 +310,25 @@ class Menato(discord.Client):
         for emoji in emojis:
             to_send = to_send.replace(emoji["name"], emoji["value"])
         return to_send
+    def fix_emojis(self, to_send, guild):
+        # updated regex version that hopefully fixes the issues
+        emojis = []
+        guild_emoji_names = [x.name for x in guild.emojis]
+        input_emojis = re.findall("(?<!<):[^:]+:", to_send)
+
+        for emoji_name in input_emojis:
+
+            if emoji_name in emoji_names:
+                emoji_to_add = {
+                    "name": f":{emoji_name}:",
+                    "value": str(guild.emojis[emoji_names.index(emoji_name)])
+                }
+                emojis.append(emoji_to_add)
+
+        for emoji in emojis:
+            to_send = re.sub(f"(?<!<){emoji['name']}",emoji['value'], to_send)
+
+        return to_send
 
 
     def prep(self, to_send, guild):
@@ -323,7 +342,7 @@ class Menato(discord.Client):
         if len(to_send) > 1999:
             to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
 
-        to_send = self.markov_emoji(to_send, guild)
+        to_send = self.fix_emojis(to_send, guild)
 
         return to_send
 
