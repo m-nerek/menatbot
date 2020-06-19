@@ -78,7 +78,8 @@ def hasMoney(user, amount):
 	if not user in money:
 		money[user] = STARTING_FUNDS
 
-	if money[user] == 1 and int(amount)== 1 return True
+	if money[user] == 1 and int(amount)== 1:
+		return True
 
 	return money[user]-1>=int(amount)
 
