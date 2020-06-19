@@ -320,9 +320,10 @@ class Menato(discord.Client):
         for emoji_name in input_emojis:
 
             if emoji_name in guild_emoji_names:
+                name_without_colons = emoji_name.replace(":","")
                 emoji_to_add = {
-                    "name": f":{emoji_name}:",
-                    "value": str(guild.emojis[guild_emoji_names.index(emoji_name)])
+                    "name": emoji_name,
+                    "value": str(guild.emojis[guild_emoji_names.index(name_without_colons)])
                 }
                 emojis.append(emoji_to_add)
 
