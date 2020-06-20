@@ -5,6 +5,7 @@ import sosmarkov
 import sosplay
 import sosdefine
 import sosbet
+import soshat
 import json
 import frames
 import minecraft_manage
@@ -119,6 +120,8 @@ class Menato(discord.Client):
                 markov = True # shitty workaround, sue me
             elif "play" in message.content:
                 responses = [sosplay.respond(message)]
+            elif "sorting hat" in message.content:
+                responses = [soshat.findHouse(message.author.name)]
             elif "define" in message.content:
                 responses = [sosdefine.respond(message)]
             else:
