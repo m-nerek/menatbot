@@ -1,7 +1,7 @@
 import discord
 import os
 import random
-# import sosmarkov
+import sosmarkov
 import sosplay
 import sosdefine
 import sosbet
@@ -118,7 +118,7 @@ class Menato(discord.Client):
 
             elif message.content.endswith('!') or message.content.endswith('?'):
                 pass
-                # responses = [sosmarkov.respond(message)]
+                responses = [sosmarkov.respond(message)]
                 markov = True # shitty workaround, sue me
             elif "play" in message.content:
                 responses = [sosplay.respond(message)]

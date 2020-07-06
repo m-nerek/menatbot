@@ -2,7 +2,7 @@
 import json
 import os
 import urbandictionary
-# import sosmarkov
+import sosmarkov
 import re
 import string
 
