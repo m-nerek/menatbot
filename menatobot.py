@@ -139,7 +139,10 @@ class Menato(discord.Client):
                 nemph_quote = random.choice(self.nemphs)
                 to_send = f"{to_send}\n{nemph_quote}"
             to_send = self.prep(to_send, message.guild)
-            if isinstance(to_send, list): # in case message is too long
+            if isinstance(to_send, tuple) and isinstance(to_send[1], discord.embeds.Embed):
+                # Hacky workaround for the output of the frames bot I poached
+                await message.channel.send(embed=to_send[1])
+            elif isinstance(to_send, list): # in case message is too long
                 for part in to_send:
                     await message.channel.send(part) # todo I don't know if this will work :help: but that's how I think it would if it needs to
             else:
@@ -340,7 +343,7 @@ class Menato(discord.Client):
         guild_emoji_names = [x.name for x in guild.emojis]
         # todo sorry tech, nothing personel, but the bot gotta keep on running
         #input_emojis = re.findall("(?<!<):[^:]+:", to_send)
-        # The above line kept breaking for any !frames-v and when doing @menato groups.
+        # The above line kept breaking for any !frames-v and when doing @menato groups
         input_emojis = []
 
         for emoji_name in input_emojis:
