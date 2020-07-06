@@ -1,7 +1,7 @@
 import discord
 import os
 import random
-import sosmarkov
+# import sosmarkov
 import sosplay
 import sosdefine
 import sosbet
@@ -44,6 +44,7 @@ class Menato(discord.Client):
         self.mc_handler = minecraft_manage.MinecraftManager()
         self.groups = {}
         self.tagged_string = f""
+        self.guild_id = ""
         with open(f'{dir_path}/responses.json', "r") as f:
             self.responses = json.load(f)
         with open(f'{dir_path}/nemph.txt', 'r') as f:
@@ -65,6 +66,7 @@ class Menato(discord.Client):
         """
         add_nemph = False
         self.tagged_string = f"{self.user.mention[:2]}!{self.user.mention[2:]}"
+        self.guild_id = str(message.guild.id)
         print(f'{message.guild}|{message.channel}|{message.author}: {message.content}')
         responses = []
         markov = False
@@ -116,7 +118,7 @@ class Menato(discord.Client):
 
             elif message.content.endswith('!') or message.content.endswith('?'):
                 pass
-                responses = [sosmarkov.respond(message)]
+                # responses = [sosmarkov.respond(message)]
                 markov = True # shitty workaround, sue me
             elif "play" in message.content:
                 responses = [sosplay.respond(message)]
@@ -237,6 +239,7 @@ class Menato(discord.Client):
         name = name.replace("@", "at") # fuck you you little shits
         name = name.replace("<","\<")
         return name
+
     def all_groups(self):
         """
         Lists all existing groups
@@ -248,6 +251,7 @@ class Menato(discord.Client):
             clean_groups.append(self.clean_groupname(group))
         response = f"Groups: {', '.join(sorted(clean_groups))}."
         return [response]
+
     def popular_groups(self):
         """
         Lists biggest groups
@@ -260,6 +264,7 @@ class Menato(discord.Client):
             clean_groups.append("("+str(len(self.groups[group]))+") "+str(self.clean_groupname(group)))
         response = f"Groups: {', '.join(clean_groups)}."
         return [response]
+
     def get_groups(self):
         """
         wrapper to read the groups database
@@ -272,7 +277,10 @@ class Menato(discord.Client):
                 except json.decoder.JSONDecodeError:
                     groups = {}
 
-            self.groups = groups
+            try:
+                self.groups = groups[self.guild_id]
+            except KeyError:
+                self.groups = {}
             self.lowercase_group_keys = {k.lower():k for k,v in self.groups.items()}
 
         except FileNotFoundError:
@@ -283,8 +291,20 @@ class Menato(discord.Client):
         handler for updating the groups ""database""
         :return:
         """
-        with open(f"{dir_path}/groups.json", "w") as file:
-            json.dump(self.groups,file)
+        try:
+            with open(f"{dir_path}/groups.json", "r") as file:
+                try:
+                    groups = json.load(file)
+                except json.decoder.JSONDecodeError:
+                    groups = {}
+            groups[self.guild_id] = self.groups
+            with open(f"{dir_path}/groups.json", "w") as file:
+                json.dump(groups, file)
+
+        except FileNotFoundError:
+            with open(f"{dir_path}/groups.json", "w") as file:
+                groups = {f"{self.guild_id}": self.groups}
+                json.dump(groups,file)
 
 
     def markov_emoji(self, to_send, guild):
