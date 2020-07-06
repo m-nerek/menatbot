@@ -338,7 +338,10 @@ class Menato(discord.Client):
         # updated regex version that hopefully fixes the issues
         emojis = []
         guild_emoji_names = [x.name for x in guild.emojis]
-        input_emojis = re.findall("(?<!<):[^:]+:", to_send)
+        # todo sorry tech, nothing personel, but the bot gotta keep on running
+        #input_emojis = re.findall("(?<!<):[^:]+:", to_send)
+        # The above line kept breaking for any !frames-v and when doing @menato groups.
+        input_emojis = []
 
         for emoji_name in input_emojis:
             name_without_colons = emoji_name.replace(":","")
