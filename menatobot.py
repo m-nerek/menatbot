@@ -2,7 +2,7 @@ import discord
 import os
 import random
 import sosmarkov
-#import sosplay
+import sosplay
 import sosdefine
 import sosbet
 import soshat
@@ -120,11 +120,11 @@ class Menato(discord.Client):
                 pass
                 responses = [sosmarkov.respond(message)]
                 markov = True # shitty workaround, sue me
-            #elif "play" in message.content:
-            #    responses = [sosplay.respond(message)]
-            elif "sorting hat" in message.content:
+            elif "play" in message.content.lower():
+                responses = [sosplay.respond(message)]
+            elif "sorting hat" in message.content.lower():
                 responses = [soshat.findHouse(message.author.name)]
-            elif "define" in message.content:
+            elif "define" in message.content.lower():
                 responses = [sosdefine.respond(message)]
             else:
                 responses = self.responses['idle']
