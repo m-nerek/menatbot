@@ -6,6 +6,7 @@ import sosplay
 import sosdefine
 import sosbet
 import soshat
+import sosemojicount
 import json
 import frames
 import minecraft_manage
@@ -37,6 +38,7 @@ class Menato(discord.Client):
         `@menato define "term"` to find out what something is
         `@menato !minecraft_info` to get the current minecraft IP address and server status
         `@menato !minecraft_start` to remotely start the server if it's not online
+        `@menato list emoji rankings` to show the most/least popular emojis
         
         Feel free to ask me to reply `with context` 
         
@@ -129,8 +131,13 @@ class Menato(discord.Client):
                 responses = [soshat.findHouse(message.author.name)]
             elif "define" in message.content.lower():
                 responses = [sosdefine.respond(message)]
+            elif "list emoji rankings" in message.content.lower():
+                responses = [sosemojicount.listEmoji(message.guild)]
             else:
                 responses = self.responses['idle']
+
+        sosemojicount.logEmoji(str(message.content), message.guild)
+
         if responses and "with context" in message.content.lower():
             add_nemph = True
         if responses:
@@ -152,8 +159,9 @@ class Menato(discord.Client):
                 await message.channel.send(to_send)
 
     async def on_reaction_add(self, reaction, user):
-
         print(f"react {str(reaction)}")
+        if reaction.message not None:
+            sosemojicount.logEmoji(str(reaction), reaction.message.guild)
 
     def add_to_group(self, message):
         """
