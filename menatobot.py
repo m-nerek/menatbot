@@ -152,7 +152,15 @@ class Menato(discord.Client):
                 await message.channel.send(to_send)
 
     def on_reaction_add(self, reaction, user):
-        print(f"react {str(reaction)} {str(user)} {str(reaction.message.guild)}")
+
+        print(f"react {str(reaction)}")
+
+        if reaction.message is None:
+            return
+         if reaction.message.guild is None:
+            return
+
+        print(f"resct server {str(reaction.message.guild)}")
 
     def add_to_group(self, message):
         """
