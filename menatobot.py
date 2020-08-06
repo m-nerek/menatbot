@@ -160,8 +160,8 @@ class Menato(discord.Client):
 
     async def on_reaction_add(self, reaction, user):
         print(f"react {str(reaction)}")
-        if reaction.message not None:
-            sosemojicount.logEmoji(str(reaction), reaction.message.guild)
+        #if reaction.message not None:
+        sosemojicount.logEmoji(str(reaction), reaction.message.guild)
 
     def add_to_group(self, message):
         """
