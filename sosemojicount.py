@@ -21,7 +21,7 @@ def saveData(file, data):
 		json.dump(data ,file)
 
 def findCleanEmojis(string):
-	emojis = re.findall( r"<:[^:\s]*(?:::[^:\s]*)*:[0-9]+>", string)
+	emojis = re.findall( r"<a?:[^:\s]*(?:::[^:\s]*)*:[0-9]+>", string)
 	for e in range(len(emojis)):
 		emojis[e] = emojis[e][emojis[e].find(':')+1:emojis[e].rfind(':')]
 	return emojis
@@ -90,8 +90,8 @@ def listEmoji(guild):
 emojiCounts = loadData("emojicounts")
 
 
-log_counter = 20
-logEmoji(" <:hello:1783>", None)
-print(listEmoji(None))
+#log_counter = 20
+#logEmoji(" <a:turkic:1783>", None)
+#print(listEmoji(None))
 
-print(getMonth())
+#print(getMonth())
