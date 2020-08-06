@@ -151,7 +151,7 @@ class Menato(discord.Client):
             else:
                 await message.channel.send(to_send)
 
-    def on_reaction_add(self, reaction, user):
+    async def on_reaction_add(self, reaction, user):
 
         print(f"react {str(reaction)}")
 
