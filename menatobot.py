@@ -155,13 +155,6 @@ class Menato(discord.Client):
 
         print(f"react {str(reaction)}")
 
-        if reaction.message is None:
-            return
-        if reaction.message.guild is None:
-            return
-
-        print(f"resct server {str(reaction.message.guild)}")
-
     def add_to_group(self, message):
         """
         Function to add a user to a ping group, ping groups are stored in a .json file next to the script root.
