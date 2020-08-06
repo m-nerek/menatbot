@@ -16,6 +16,7 @@ help_string = f"""Betting commands:
         `!bet [amount] on [thing]` create a new bet
         `!bet [amount] on [ID]` place {CURRENCY} on an existing bet
         `!bet [amount] against [ID]` place {CURRENCY} against an existing bet
+        `!bets` to see all your currently active bets
         `!lock [ID]` once an event starts you can lock a bet to prevent further modification (if you are participating)
         `!unlock [ID]` you can also unlock if participating
         `!concede [ID]` lost a bet? This is how you give the winners their {CURRENCY}

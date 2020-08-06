@@ -86,6 +86,9 @@ class Menato(discord.Client):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif message.content.startswith("!lock") or message.content.startswith("!unlock"):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
+
+        #elif message.channel.contains("nsfw") and message.contains("<@360897040986800130>"):
+        #    responses = [""]
         
         elif self.user in message.mentions:
             if "menat op" in message.content:
@@ -147,6 +150,9 @@ class Menato(discord.Client):
                     await message.channel.send(part) # todo I don't know if this will work :help: but that's how I think it would if it needs to
             else:
                 await message.channel.send(to_send)
+
+    def on_reaction_add(self, reaction, user):
+        print(f"react {str(reaction)} {str(user)} {str(reaction.message.guild)}")
 
     def add_to_group(self, message):
         """
