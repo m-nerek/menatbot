@@ -157,7 +157,7 @@ class Menato(discord.Client):
 
         if reaction.message is None:
             return
-         if reaction.message.guild is None:
+        if reaction.message.guild is None:
             return
 
         print(f"resct server {str(reaction.message.guild)}")
