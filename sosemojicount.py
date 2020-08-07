@@ -49,11 +49,14 @@ def logEmoji(string, guild, user):
 	emojis = findCleanEmojis(string)[:(3-last_user_emote_count)]
 	made_changes = False
 	
+	if len(emojis)<1:
+		return
+
 	if last_user is not user:
 		last_user_emote_count = 0
 		last_user = user
 
-	if last_user_emote_count>=3 or len(emojis)<1:
+	if last_user_emote_count>=3
 		return
 
 	log_counter+=1
