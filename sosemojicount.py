@@ -55,7 +55,7 @@ def logEmoji(string, guild, user):
 
 	print (f"{user} adding {len(emojis)} emojis  previous user: {last_user} at {last_user_emote_count} emojis, save counter {log_counter}")
 
-	if not last_user in str(user):
+	if str(user) not in last_user:
 		last_user_emote_count = 0
 		last_user = str(user)
 
