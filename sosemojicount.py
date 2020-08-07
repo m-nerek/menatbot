@@ -5,6 +5,8 @@ import datetime
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 log_counter = 0
+last_user = ""
+last_user_emote_count = 0
 
 def loadData(file):
 	try:
@@ -29,7 +31,18 @@ def findCleanEmojis(string):
 def getMonth():
 	return datetime.datetime.now().month
 
-def logEmoji(string, guild):
+def logEmoji(string, guild, user):
+	global last_user
+	global last_user_emote_count
+	global log_counter
+
+	if last_user is not user:
+		last_user_emote_count = 0
+		last_user = user
+
+	if last_user_emote_count>=3:
+		return
+
 	guild = str(guild)
 	month = str(getMonth())
 
@@ -39,14 +52,17 @@ def logEmoji(string, guild):
 	if month not in emojiCounts[guild]:
 		emojiCounts[guild][month] = {}
 
-	emojis = findCleanEmojis(string)
+	emojis = findCleanEmojis(string)[:(3-last_user_emote_count)]
 	made_changes = False
-	global log_counter
+	
 	log_counter+=1
 	for e in emojis:
 		if e not in emojiCounts[guild][month]:
 			emojiCounts[guild][month][e] = 0
 		emojiCounts[guild][month][e] += 1
+
+		if "turkic" not in e:
+			last_user_emote_count+=1
 		made_changes = True
 		
 	if made_changes and log_counter>20:
@@ -91,7 +107,9 @@ emojiCounts = loadData("emojicounts")
 
 
 #log_counter = 20
-#logEmoji(" <a:turkic:1783>", None)
+#logEmoji(" <a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783>", None, "Tech")
+
+
 #print(listEmoji(None))
 
 #print(getMonth())
