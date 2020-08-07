@@ -136,7 +136,7 @@ class Menato(discord.Client):
             else:
                 responses = self.responses['idle']
 
-        sosemojicount.logEmoji(str(message.content), message.guild)
+        sosemojicount.logEmoji(str(message.content), message.guild, message.author)
 
         if responses and "with context" in message.content.lower():
             add_nemph = True
@@ -161,7 +161,7 @@ class Menato(discord.Client):
     async def on_reaction_add(self, reaction, user):
         print(f"react {str(reaction)}")
         #if reaction.message not None:
-        sosemojicount.logEmoji(str(reaction), reaction.message.guild)
+        sosemojicount.logEmoji(str(reaction), reaction.message.guild, user)
 
     def add_to_group(self, message):
         """
