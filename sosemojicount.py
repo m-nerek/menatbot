@@ -56,7 +56,7 @@ def logEmoji(string, guild, user):
 		last_user_emote_count = 0
 		last_user = user
 
-	if last_user_emote_count>=3
+	if last_user_emote_count>=3:
 		return
 
 	log_counter+=1
