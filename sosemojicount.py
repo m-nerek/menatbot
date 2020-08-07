@@ -36,12 +36,6 @@ def logEmoji(string, guild, user):
 	global last_user_emote_count
 	global log_counter
 
-	if last_user is not user:
-		last_user_emote_count = 0
-		last_user = user
-
-	if last_user_emote_count>=3:
-		return
 
 	guild = str(guild)
 	month = str(getMonth())
@@ -55,6 +49,13 @@ def logEmoji(string, guild, user):
 	emojis = findCleanEmojis(string)[:(3-last_user_emote_count)]
 	made_changes = False
 	
+	if last_user is not user:
+		last_user_emote_count = 0
+		last_user = user
+
+	if last_user_emote_count>=3 or len(emojis)<1:
+		return
+
 	log_counter+=1
 	for e in emojis:
 		if e not in emojiCounts[guild][month]:
