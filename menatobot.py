@@ -11,6 +11,7 @@ import json
 import frames
 import minecraft_manage
 import re
+import asyncio
 dir_path = os.path.dirname(os.path.realpath(__file__))
 # todo set up logging
 
@@ -133,6 +134,8 @@ class Menato(discord.Client):
                 responses = [sosdefine.respond(message)]
             elif "list emoji rankings" in message.content.lower():
                 responses = [sosemojicount.listEmoji(message.guild)]
+            elif "test delayed response" in message.content.lower():
+                asyncio.create_task(delayed_message(message.channel, message.author.name, 30, test_response))
             else:
                 responses = self.responses['idle']
 
@@ -162,6 +165,13 @@ class Menato(discord.Client):
         print(f"react {str(reaction)}")
         #if reaction.message not None:
         sosemojicount.logEmoji(str(reaction), reaction.message.guild, user)
+
+    async def delayed_message(self, channel, user, delay, responseCallback):
+        await asyncio.sleep(delay)
+        await message.channel.send(responseCallback(user))
+
+    def test_response(self, user):
+        return f"this is {user}'s test delayed response"
 
     def add_to_group(self, message):
         """
