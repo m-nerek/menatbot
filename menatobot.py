@@ -168,7 +168,7 @@ class Menato(discord.Client):
 
     async def delayed_message(self, channel, user, delay, responseCallback):
         await asyncio.sleep(delay)
-        await message.channel.send(responseCallback(user))
+        await channel.send(responseCallback(user))
 
     def test_response(self, user):
         return f"this is {user}'s test delayed response"
