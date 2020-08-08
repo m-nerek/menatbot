@@ -135,7 +135,7 @@ class Menato(discord.Client):
             elif "list emoji rankings" in message.content.lower():
                 responses = [sosemojicount.listEmoji(message.guild)]
             elif "test delayed response" in message.content.lower():
-                asyncio.get_event_loop().create_task(delayed_message(message.channel, message.author.name, 30, test_response))
+                asyncio.get_event_loop().create_task(self.delayed_message(message.channel, message.author.name, 30, self.test_response))
             else:
                 responses = self.responses['idle']
 
