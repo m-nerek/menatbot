@@ -136,6 +136,8 @@ class Menato(discord.Client):
                 responses = [sosemojicount.listEmoji(message.guild)]
             elif "test delayed response" in message.content.lower():
                 asyncio.get_event_loop().create_task(self.delayed_message(message.channel, message.author.name, 30, self.test_response))
+            elif "de kong me" in message.content.lower():
+                responses = ["https://media.discordapp.net/attachments/728684452603232327/741708975539617902/kong_jr2.png"]
             else:
                 responses = self.responses['idle']
 
