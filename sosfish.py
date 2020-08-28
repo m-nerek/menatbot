@@ -469,7 +469,7 @@ def ShareBait(name):
 				output += f"\n{a} already has {bait}"
 			else:
 				output += f"\n{a} now has {bait} in their baitbox!"
-				data[a]["baitbox"][len(data[a]["baitbox"])] = bait
+				data[a]["baitbox"][str(len(data[a]["baitbox"]))] = bait
 				saveUserData(a, data)
 				if "Go team!" not in data[name]["flags"]:
 					output +=f"\n {badge_text}[Go team!]"
@@ -507,13 +507,12 @@ def Fish(name, parameters, mention_author=None, channel=None):
 			new_location = new_location.split("using")[0].strip()
 		new_location = new_location.replace("'s ", " ")
 		new_location = new_location.replace("s ", " ")
-		if len(new_location)>3:
-			for loc in data.keys():
-				if new_location.lower() in loc.lower():
-					#print(f"from location {new_location} matched {loc}\n")
+		for loc in data.keys():
+			if (len(new_location)>3 and new_location.lower() in loc.lower()) or new_location.lower()==loc.lower():
+				#print(f"from location {new_location} matched {loc}\n")
 
-					if location=="" or abs(len(new_location)-len(location))>abs(len(new_location)-len(loc)):
-						location = loc
+				if location=="" or abs(len(new_location)-len(location))>abs(len(new_location)-len(loc)):
+					location = loc
 
 	if " using " in parameters:
 		new_bait = parameters[parameters.index(" using ")+7:]
