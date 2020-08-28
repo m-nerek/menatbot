@@ -243,8 +243,8 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 	output = data[location]["description"]
 	output += f" {describeTime(current_time.hour)} {name} {arrival_text}settles down to fish and casts a rod baited with {data[name]['currentbait']} into the water"
 
-	secs = 50 + max(FishingOdds(name))
-	print(f"seconds: {secs}")
+	secs = 60*5 + (100-max(FishingOdds(name))) * 3
+	#print(f"seconds: {secs}")
 	catchtime = datetime.datetime.now() + datetime.timedelta(seconds = secs)
 
 	if channel != None:
