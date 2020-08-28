@@ -55,7 +55,14 @@ def numberFromString(string, range):
 	return (number % range)
 
 def randomUser():
-	return random.choice(list(data.keys()))
+	usr = random.choice(list(data.keys()))
+
+	for i in range(100):
+		if data[usr]['currentlocation']=="":
+			usr = random.choice(list(data.keys()))
+		else:
+			break
+	return usr
 
 def randomItem():
 	i = random.randrange(0,5)
@@ -507,8 +514,10 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		new_location = parameters[parameters.index(" at ")+4:]
 		if "using" in new_location:
 			new_location = new_location.split("using")[0].strip()
-		new_location = new_location.replace("'s ", " ")
-		new_location = new_location.replace("s ", " ")
+
+		new_location = new_location.rstrip("'s")
+		new_location = new_location.rstrip("s")
+		print(new_location)
 		for loc in data.keys():
 			if (len(new_location)>3 and new_location.lower() in loc.lower()) or new_location.lower()==loc.lower():
 				#print(f"from location {new_location} matched {loc}\n")
@@ -579,7 +588,7 @@ premadelocations = updatePremadeLocations()
 
 
 
-#print(Fish("dovah chief", "!fish using cornflakes"))
+#print(Fish("dovah chief", "!fish at Master Roshi's Epic Baits"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
