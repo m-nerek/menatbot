@@ -7,6 +7,7 @@ import sosdefine
 import sosbet
 import soshat
 import sosemojicount
+import sosfish
 import json
 import frames
 import minecraft_manage
@@ -89,6 +90,11 @@ class Menato(discord.Client):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif message.content.startswith("!lock") or message.content.startswith("!unlock"):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
+        elif "!fish" in message.content.lower():
+            #Fish(name, parameters, mention_author=None, channel=None)
+            responses = [sosfish.Fish(message.author.name, message.content.lower(),message.author.mention, message.channel)]
+        elif "!sharebait" in message.content.lower():
+            responses = [sosfish.ShareBait(message.author.name)]
 
         #elif message.channel.contains("nsfw") and message.contains("<@360897040986800130>"):
         #    responses = [""]
