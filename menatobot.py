@@ -135,7 +135,7 @@ class Menato(discord.Client):
             elif "list emoji rankings" in message.content.lower():
                 responses = [sosemojicount.listEmoji(message.guild)]
             elif "test delayed response" in message.content.lower():
-                asyncio.get_event_loop().create_task(self.delayed_message(message.channel, message.author.name, 30, self.test_response))
+                asyncio.get_event_loop().create_task(self.delayed_message(message.channel, message.author, 30, self.test_response))
             elif "de kong me" in message.content.lower():
                 responses = ["https://media.discordapp.net/attachments/728684452603232327/741708975539617902/kong_jr2.png"]
             else:
@@ -173,7 +173,7 @@ class Menato(discord.Client):
         await channel.send(responseCallback(user))
 
     def test_response(self, user):
-        return f"this is {user}'s test delayed response"
+        return f"{user.mention} this is {user.name}'s test delayed response"
 
     def add_to_group(self, message):
         """
