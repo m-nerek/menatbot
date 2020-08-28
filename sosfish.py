@@ -456,20 +456,22 @@ def ShareBait(name):
 
 	changes = False
 
+	sbait = data[name]["baitbox"][str(0)]
+	output += f"\n{name} offers to share {sbait} with anyone nearby"
+
 	for a in data.keys():
 		if data[a]["currentlocation"] == location and a != name:
-			bait = data[name]["baitbox"][str(0)]
-			output += f"\n{name} offers to share {bait} with anyone nearby"
+			
 			hasBait = False
 			for i in range(len(data[a]["baitbox"])):
-				if bait in data[a]["baitbox"][str(i)]:
+				if sbait in data[a]["baitbox"][str(i)]:
 					hasBait = True
 
 			if hasBait:
-				output += f"\n{a} already has {bait}"
+				output += f"\n{a} already has {sbait}"
 			else:
-				output += f"\n{a} now has {bait} in their baitbox!"
-				data[a]["baitbox"][str(len(data[a]["baitbox"]))] = bait
+				output += f"\n{a} now has {sbait} in their baitbox!"
+				data[a]["baitbox"][str(len(data[a]["baitbox"]))] = sbait
 				saveUserData(a, data)
 				if "Go team!" not in data[name]["flags"]:
 					output +=f"\n {badge_text}[Go team!]"
