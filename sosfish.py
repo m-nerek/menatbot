@@ -527,7 +527,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 				if location=="" or abs(len(new_location)-len(location))>abs(len(new_location)-len(loc)):
 					location = loc
 
-	if (" using " in parameters) || (" with " in parameters):
+	if (" using " in parameters) or (" with " in parameters):
 		
 		if (" using " in parameters):
 			new_bait = parameters[parameters.index(" using ")+7:]
