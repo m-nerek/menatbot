@@ -429,6 +429,8 @@ def Status(name):
 
 	if "bike" in data[name]["flags"]:
 		output += " - A bicycle\n"
+	if "surfboard" in data[name]["flags"]:
+		output += " - A surfboard\n"
 
 	for a in badge_names:
 		if a in data[name]["flags"]:
@@ -470,8 +472,8 @@ def ShareBait(name):
 		if data[a]["currentlocation"] == location and a != name:
 			
 			hasBait = False
-			for i in range(len(data[a]["baitbox"])):
-				if sbait in data[a]["baitbox"][str(i)]:
+			for i in data[a]["baitbox"]:
+				if sbait in data[a]["baitbox"][i]:
 					hasBait = True
 
 			if hasBait:
@@ -595,7 +597,7 @@ premadelocations = updatePremadeLocations()
 
 
 
-#print(Fish("dovah chief", "!fish at Master Roshi's Epic Baits"))
+#print(Fish("Kanna", "!fish"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
