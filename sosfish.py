@@ -65,7 +65,7 @@ def randomUser():
 	return usr
 
 def randomItem():
-	i = random.randrange(0,5)
+	i = random.randrange(0,5+1)
 
 	if i<=1:
 		return f"a flyer for '{ random.choice(premadelocations) }', maybe you should visit sometime"
@@ -118,11 +118,11 @@ def matchScore(tomatch, string, maxlen):
 	return len(re.findall(f"[{tomatchlower}]", stringlower))
 
 def describeTime(hour):
-	if hour<5 or hour>22:
+	if hour<6 or hour>21:
 		return "As the moon reflects off the dark water"
-	if hour<8:
+	if hour<9:
 		return "As the sun rises on the horizon"
-	if hour>19:
+	if hour>18:
 		return "As the sun sets over the water"
 	return "It is a lovely day when"
 
@@ -514,6 +514,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		new_location = parameters[parameters.index(" at ")+4:]
 		if "using" in new_location:
 			new_location = new_location.split("using")[0].strip()
+		if "with" in new_location:
+			new_location = new_location.split("with")[0].strip()
 
 		new_location = new_location.rstrip("'s")
 		new_location = new_location.rstrip("s")
@@ -525,8 +527,13 @@ def Fish(name, parameters, mention_author=None, channel=None):
 				if location=="" or abs(len(new_location)-len(location))>abs(len(new_location)-len(loc)):
 					location = loc
 
-	if " using " in parameters:
-		new_bait = parameters[parameters.index(" using ")+7:]
+	if (" using " in parameters) || (" with " in parameters):
+		
+		if (" using " in parameters):
+			new_bait = parameters[parameters.index(" using ")+7:]
+		elif (" with " in parameters):
+			new_bait = parameters[parameters.index(" with ")+6:]
+
 		if "at" in new_bait:
 			new_bait = new_bait.split("at")[0].strip()
 		if len(new_bait)>3:
