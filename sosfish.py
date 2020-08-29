@@ -531,6 +531,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 
 				if location=="" or abs(len(new_location)-len(location))>abs(len(new_location)-len(loc)):
 					location = loc
+		if location == "":
+			return "I don't recognize that location"
 
 	if (" using " in parameters) or (" with " in parameters):
 		
@@ -550,6 +552,9 @@ def Fish(name, parameters, mention_author=None, channel=None):
 				if new_bait.lower() in bt.lower():
 					print(f"from baits {new_bait} matched {bt}\n")
 					usebait = bt
+
+		if usebait == "":
+			return "I don't recognize that bait"
 
 	#print(f"location [{location}]")
 	#print(f"bait [{bait}]")
@@ -571,7 +576,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 			if data[name]["baitbox"][b] == usebait:
 		 		hasBait=True;
 
-		if not hasBait:
+		if hasBait == False:
 			return f"{name} you do not have that bait. Try asking someone to !sharebait when you are at the same location to get their starting bait"
 
 	output = ""
