@@ -356,8 +356,8 @@ def Catch(name):
 	return output
 
 
-badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God"]
-badge_scores = [3,3,1,1,10]
+badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God", "Fish Whisperer", "Grandmaster Angler" ]
+badge_scores = [3,3,1,1,10,20,60]
 badge_text = "You have been awarded a shiny new badge that reads: "
 
 def CheckBadgeQualification(name):
@@ -380,21 +380,24 @@ def CheckBadgeQualification(name):
 
 	for a in range(len(fish_counts)):
 
-		if fish_counts[a]>=badge_scores[a] and badge_names[a] not in data[name]["flags"]:
+		count_id = a
+		if a>4:
+			count_id=4
+
+		if fish_counts[count_id]>=badge_scores[a] and badge_names[a] not in data[name]["flags"]:
 			output += f"\n{badge_text}[{badge_names[a]}]"
 			data[name]["flags"][badge_names[a]] = True
 
 
 	location = data[name]["currentlocation"]
+	location_all_badge_name = f"I :heart: {location}"
+	location_any_badge_name = f"Visited {location}"
+
+	if location_all_badge_name not in data[name]["flags"] and HasCaughtAllFishAtCurrentLocation(name):
+		data[name]["flags"][location_all_badge_name] = True
+		output += f"\n{badge_text}[{location_all_badge_name}]"
 
 	if location != name:
-		location_all_badge_name = f"I :heart: {location}"
-		location_any_badge_name = f"Visited {location}"
-
-		if location_all_badge_name not in data[name]["flags"] and HasCaughtAllFishAtCurrentLocation(name):
-			data[name]["flags"][location_all_badge_name] = True
-			output += f"\n{badge_text}[{location_all_badge_name}]"
-
 		if location_any_badge_name not in data[name]["flags"] and HasCaughtAnyFishAtCurrentLocation(name):
 			data[name]["flags"][location_any_badge_name] = True
 			output += f"\n{badge_text}[{location_any_badge_name}]"
