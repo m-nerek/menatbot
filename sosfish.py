@@ -301,7 +301,7 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 	data[name]["catchtime"] = f"{catchtime.year}-{catchtime.month}-{catchtime.day}-{catchtime.hour}-{catchtime.minute}"
 	return output
 
-base_catch_chance = [70,70,25,20, 15]
+base_catch_chance = [70,70,30,20, 10]
 time_of_day_falloff = [14,14,12,10,6]
 
 def FishingOdds(name):
@@ -326,7 +326,6 @@ def FishingOdds(name):
 		chance = 100
 		chance *= baitscore
 		chance *= timescore
-		chance *= base_catch_chance[int(f)]/100
 	
 		#print(f"\n{fishname} chance {chance}: baitscore {baitscore} : timescore {timescore} =  {time_of_day_falloff[int(f)]} - {hoursfromoptimal} / TOD")
 		odds[int(f)] = chance
@@ -354,6 +353,8 @@ def Catch(name):
 		elif int(f)>=3 and chance>highest_noncommon_percentage:
 			highest_noncommon_percentage = chance
 
+		chance *= base_catch_chance[int(f)]/100
+		print(f"[{chance}]")
 		if random.randrange(0,100)<chance:
 			caught_fish = f
 
@@ -376,16 +377,16 @@ def Catch(name):
 	else:
 		output = f"A bite! {name} reels in the catch, only to discover {randomItem()}!"
 
-	if caught_fish != None:
-		if (highest_common_percentage<25 and highest_noncommon_percentage<25) or (highest_common_percentage>75 and highest_noncommon_percentage>75):
-			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching any fish"
-		elif (highest_common_percentage<25 or highest_common_percentage>75) and (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
-			output += f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish, and {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
-		elif (highest_common_percentage<25 or highest_common_percentage>75):
-			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish"
-		elif (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
-			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
 	
+	if (highest_common_percentage<25 and highest_noncommon_percentage<25) or (highest_common_percentage>75 and highest_noncommon_percentage>75):
+		output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching any fish"
+	elif (highest_common_percentage<25 or highest_common_percentage>75) and (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
+		output += f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish, and {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
+	elif (highest_common_percentage<25 or highest_common_percentage>75):
+		output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish"
+	elif (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
+		output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
+
 	output+=CheckBadgeQualification(name)
 	output+="\n\n"
 	#output += f"\ncommon effectiveness: {highest_common_percentage}  noncommon effectiveness: {highest_noncommon_percentage}\n\n"
@@ -665,7 +666,7 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("Kanna", "!fish status"))
+	print(Fish("Kanna", "!fish at senzer"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
