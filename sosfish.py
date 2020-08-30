@@ -1,3 +1,5 @@
+DEBUG = False
+
 import re
 import os
 import datetime
@@ -6,9 +8,21 @@ import random
 import urbandictionary
 import math
 import asyncio
-import sosmarkov
+
+if DEBUG == False:
+	import sosmarkov
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
+
+help_string = f"""Fishing commands:
+        `!fish` to get started fishing
+        `!fish status` to see your inventory
+        `!sharebait` to share your starter bait with anyone at your location
+        You will eventually unlock the ability to:
+        `!fish at [location]` The location can be the ID of another user
+        `!fish with/using [bait]` You need to have the bait in your baitbox
+        `!fish at [location] with/using [bait]`
+        """
 
 def loadList(file, keepcaps = False):
 	f = open(f"{dir_path}/fishingdata/{file}.txt", "r")
@@ -234,7 +248,6 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 
 	if "epic baits" in location.lower():
 		weekbaitindex = (math.floor((current_time.day-7)/7+current_time.month*4) % len(baitoftheweek))
-		#print(f"bait of the week index {weekbaitindex}")
 		bait_of_the_week = baitoftheweek[ weekbaitindex ]
 		hasBait = False
 		for i in range(len(data[name]["baitbox"])):
@@ -246,11 +259,35 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 			data[name]["baitbox"][len(data[name]["baitbox"])] = bait_of_the_week
 			return output
 
+	if "gardevoir" in location.lower():
+		weekherbindex = (math.floor((current_time.day-7)/7+current_time.month*4) % len(herbs))
+		herb_of_the_week = herbs[ weekherbindex ]
+		
+		if herb_of_the_week not in data[name]["flags"]:
+			output = data[location]["description"]
+			output += f" {describeTime(current_time.hour)} {name} {arrival_text}notices that the '{herb_of_the_week}' has grown a lot this week, and picks some"
+			data[name]["flags"][herb_of_the_week] = True
+			return output
+
+	if "spicy sailboat" in location.lower():
+		weekspiceindex = (math.floor((current_time.day-7)/7+current_time.month*4) % len(spices))
+		spice_of_the_week = spices[ weekspiceindex ]
+		
+		if spice_of_the_week not in data[name]["flags"]:
+			output = data[location]["description"]
+			output += f" {describeTime(current_time.hour)} {name} {arrival_text}stops for a chat and buys the spice of the week '{spice_of_the_week}'"
+			data[name]["flags"][spice_of_the_week] = True
+			return output
+
 
 	output = data[location]["description"]
 	output += f" {describeTime(current_time.hour)} {name} {arrival_text}settles down to fish and casts a rod baited with {data[name]['currentbait']} into the water"
 
 	secs = 60*5 + (100-max(FishingOdds(name))) * 3
+
+	if DEBUG==True:
+		secs = 0
+
 	#print(f"seconds: {secs}")
 	catchtime = datetime.datetime.now() + datetime.timedelta(seconds = secs)
 
@@ -335,7 +372,7 @@ def Catch(name):
 
 	elif "bike" not in data[name]["flags"]:
 		data[name]["flags"]["bike"] = True
-		output = f"A bite! {name} reels in the catch, only to discover an old bicycle! A bit of oil gets it working again, and you can now '!fish at [location]'. Try visiting other angler's locations and sharing your bait them with '!sharebait'"
+		output = f"A bite! {name} reels in the catch, only to discover an old bicycle! A bit of oil gets it working again, and you can now '!fish at [location]'. Try visiting other angler's locations and sharing your bait with them using '!sharebait'"
 	else:
 		output = f"A bite! {name} reels in the catch, only to discover {randomItem()}!"
 
@@ -434,6 +471,27 @@ def Status(name):
 		output += " - A bicycle\n"
 	if "surfboard" in data[name]["flags"]:
 		output += " - A surfboard\n"
+
+	herbList = ""
+	for a in herbs:
+		if a in data[name]["flags"]:
+			if herbList == "":
+				herbList = a
+			else:
+				herbList = f"{herbList}, {a}"
+	spiceList = ""
+	for a in spices:
+		if a in data[name]["flags"]:
+			if spiceList == "":
+				spiceList = a
+			else:
+				spiceList = f"{spiceList}, {a}"
+
+	if herbList != "":
+		output += f" - Herbs: {herbList}\n"
+
+	if spiceList != "":
+		output += f" - Spices: {spiceList}\n"
 
 	for a in badge_names:
 		if a in data[name]["flags"]:
@@ -601,11 +659,13 @@ waterbodies = loadList("waterbodies")
 fish = loadList("fish")
 bait = loadList("bait")
 baitoftheweek = loadList("baitoftheweek")
+herbs = loadList("herbs")
+spices = loadList("spices")
 premadelocations = updatePremadeLocations()
 
 
-
-#print(Fish("Kanna", "!fish"))
+if DEBUG==True:
+	print(Fish("Kanna", "!fish status"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))

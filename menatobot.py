@@ -27,6 +27,7 @@ class Menato(discord.Client):
         `!frames` for SFV Frame data
         `!help` to show this again
         `!bethelp` to show the betting commands
+        `!fishhelp` to show the fishing commands
         `@menato !cb` to use my crystal ball
         `@menato` and end with`?` or `!` to have a chat with me 
         `@menato` otherwise for a random shitpost
@@ -90,10 +91,12 @@ class Menato(discord.Client):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif message.content.startswith("!lock") or message.content.startswith("!unlock"):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
-        elif "!fish" in message.content.lower():
+        elif message.content.startswith("!fishhelp"):
+            responses = [sosfish.help_string]
+        elif message.content.lower().startswith("!fish"):
             #Fish(name, parameters, mention_author=None, channel=None)
             responses = [sosfish.Fish(message.author.name, message.content.lower(),message.author.mention, message.channel)]
-        elif "!sharebait" in message.content.lower():
+        elif message.content.lower().startswith("!sharebait"):
             responses = [sosfish.ShareBait(message.author.name)]
 
         #elif message.channel.contains("nsfw") and message.contains("<@360897040986800130>"):
