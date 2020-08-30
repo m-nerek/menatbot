@@ -353,8 +353,9 @@ def Catch(name):
 		elif int(f)>=3 and chance>highest_noncommon_percentage:
 			highest_noncommon_percentage = chance
 
+		#print(f"prebase[{chance}]")
 		chance *= base_catch_chance[int(f)]/100
-		print(f"[{chance}]")
+		#print(f"[{chance}]")
 		if random.randrange(0,100)<chance:
 			caught_fish = f
 
@@ -666,7 +667,7 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("Kanna", "!fish at senzer"))
+	print(Fish("Kanna", "!fish at kanna"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))

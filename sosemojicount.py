@@ -53,7 +53,7 @@ def logEmoji(string, guild, user):
 	if len(emojis)<1:
 		return
 
-	print (f"{user} adding {len(emojis)} emojis  previous user: {last_user} at {last_user_emote_count} emojis, save counter {log_counter}")
+	#print (f"{user} adding {len(emojis)} emojis  previous user: {last_user} at {last_user_emote_count} emojis, save counter {log_counter}")
 
 	if str(user) not in last_user:
 		last_user_emote_count = 0
@@ -73,12 +73,12 @@ def logEmoji(string, guild, user):
 		if "turkic" not in e:
 			last_user_emote_count+=1
 		made_changes = True
-		print(f"logged {len(emojis)} emojis")
+		#print(f"logged {len(emojis)} emojis")
 		
 	if made_changes and log_counter>20:
 		saveData("emojicounts", emojiCounts)
 		log_counter=0
-		print("saved emojis")
+		#print("saved emojis")
 
 
 def listEmoji(guild):
