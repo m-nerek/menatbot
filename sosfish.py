@@ -258,7 +258,7 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 		if not hasBait:
 			output = data[location]["description"]
 			output += f" {describeTime(current_time.hour)} {name} {arrival_text}stops for a chat and buys the bait of the week '{bait_of_the_week}'"
-			data[name]["baitbox"][len(data[name]["baitbox"])] = bait_of_the_week
+			data[name]["baitbox"][str(len(data[name]["baitbox"]))] = bait_of_the_week
 			return output
 
 	if "gardevoir" in location.lower():
