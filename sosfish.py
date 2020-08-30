@@ -239,6 +239,8 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 			arrival_text="arrives on a bicycle, "
 		elif "surfboard" in data[location]["requires"]:
 			arrival_text="paddles across the water and rides the surf in, "
+		elif "crampons" in data[location]["requires"]:
+			arrival_text="scales the sheer cliffs and hikes to the water, "
 		
 	if "surf shack" in location.lower() and "surfboard" not in data[name]["flags"]:
 		output = data[location]["description"]
@@ -375,6 +377,9 @@ def Catch(name):
 	elif "bike" not in data[name]["flags"]:
 		data[name]["flags"]["bike"] = True
 		output = f"A bite! {name} reels in the catch, only to discover an old bicycle! A bit of oil gets it working again, and you can now '!fish at [location]'. Try visiting other angler's locations and sharing your bait with them using '!sharebait'"
+	elif "crampons" not in data[name]["flags"] and random.randrange(0,100)<10:
+		data[name]["flags"]["crampons"] = True
+		output = f"A bite! {name} reels in the catch, only to discover a pair of rusty climbing crampons! After cleaning them up you think they would come in handy if you ever had to climb something!"
 	else:
 		output = f"A bite! {name} reels in the catch, only to discover {randomItem()}!"
 
@@ -473,7 +478,8 @@ def Status(name):
 		output += " - A bicycle\n"
 	if "surfboard" in data[name]["flags"]:
 		output += " - A surfboard\n"
-
+	if "crampons" in data[name]["flags"]:
+		output += " - Crampons\n"
 	herbList = ""
 	for a in herbs:
 		if a in data[name]["flags"]:
@@ -628,6 +634,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 				return f"{name} doesn't have a mode of transport to use the command '!fish at' yet"
 			if req == "surfboard" and "surfboard" not in data[name]["flags"]:
 				return f"{name} needs a way to cross the water to reach this place"
+			if req == "crampons" and "crampons" not in data[name]["flags"]:
+				return f"There doesn't seem to be any way for {name} to climb up to this location"
 
 
 	if changed_bait:
@@ -667,7 +675,7 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("Kanna", "!fish at kanna"))
+	print(Fish("Kanna", "!fish at hold"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
