@@ -1,0 +1,11 @@
+{
+  "1": {"text": "This is room 1, to go to room 2 press (1), to go to room 4 press (2)",
+        "options": {"1": "2", "2": "4"}},
+  "2": {"text": "This is room 2, to go to room 1 press (1), to go to room 3 press (2)",
+        "options": {"1": "", "2": ""}},
+  "3": {"text": "This is room 3, a wild dhalsim is here to  fight you! get ready for a fight!\n\n DHALSIM: SKILL: 3, STAMINA: 3\n\n ",
+        "options": {"1": "", "2": ""},
+        "foes":  {}},
+  "4": {"text": "",
+        "options": {"1": "", "2": ""}}
+}
