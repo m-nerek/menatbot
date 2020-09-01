@@ -42,10 +42,11 @@ user_data = loadUserData()
 def hello():
     return "<h1 style='color:blue'>Eat shit Chris.</h1>"
 
-@app.route("/fishinfo")
-def fishinfo():
-    angler=request.form["a"]
-    output = Status(angler, user_data, herbs, spices, badge_names)
+@app.route("/fishinfo/<name>")
+def fishinfo(name):
+    output = Status(name, user_data, herbs, spices, badge_names)
+    output = output.replace("\n","<br>")
+    output = f"<html><p>{output}</p></html>"
     return output
 
 
