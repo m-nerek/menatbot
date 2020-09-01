@@ -384,6 +384,9 @@ def Catch(name):
 	elif "crampons" not in data[name]["flags"] and random.randrange(0,100)<10:
 		data[name]["flags"]["crampons"] = True
 		output = f"A bite! {name} reels in the catch, only to discover a pair of rusty climbing crampons! After cleaning them up you think they would come in handy if you ever had to climb something!"
+	elif "platinumkey" not in data[name]["flags"] and "dwarven" in location.lower() and random.randrange(0,100)<10:
+		data[name]["flags"]["platinumkey"] = True
+		output = f"A bite! {name} reels in the catch, only to discover a beautifully smithed platinum key with 'Im Narvi hain echant' engraved upon it"
 	else:
 		output = f"A bite! {name} reels in the catch, only to discover {randomItem()}!"
 
@@ -443,7 +446,7 @@ def CheckBadgeQualification(name):
 
 	if location_all_badge_name not in data[name]["flags"] and HasCaughtAllFishAtCurrentLocation(name):
 		data[name]["flags"][location_all_badge_name] = True
-		output += f"\n{badge_text}[{location_all_badge_name}]"
+		output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on catching all the fish at this location!"
 
 	if location != name:
 		if location_any_badge_name not in data[name]["flags"] and HasCaughtAnyFishAtCurrentLocation(name):
