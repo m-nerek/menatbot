@@ -142,7 +142,7 @@ class Menato(discord.Client):
             elif "define" in message.content.lower():
                 responses = [sosdefine.respond(message)]
             elif "list emoji rankings" in message.content.lower():
-                responses = [sosemojicount.listEmoji(message.guild)]
+                responses = [sosemojicount.listEmoji(message.guild, message.content)]
             elif "test delayed response" in message.content.lower():
                 asyncio.get_event_loop().create_task(self.delayed_message(message.channel, message.author, 30, self.test_response))
             elif "de kong me" in message.content.lower():

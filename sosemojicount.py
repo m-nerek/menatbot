@@ -81,7 +81,8 @@ def logEmoji(string, guild, user):
 		#print("saved emojis")
 
 
-def listEmoji(guild):
+def listEmoji(guild, parameters):
+
 
 	output = ""
 
@@ -89,27 +90,69 @@ def listEmoji(guild):
 		emojiCounts[str(guild)] = {}
 
 	month = str(getMonth())
+	list_month = month
+
+	parameters = parameters.lower()
+
+	if "12" in parameters or "dec" in parameters:
+		list_month = 12
+	elif "11" in parameters or "nov" in parameters:
+		list_month = 11
+	elif "10" in parameters or "oct" in parameters:
+		list_month = 10
+	elif "9" in parameters or "sep" in parameters:
+		list_month = 9
+	elif "8" in parameters or "aug" in parameters:
+		list_month = 8
+	elif "7" in parameters or "jul" in parameters:
+		list_month = 7
+	elif "6" in parameters or "jun" in parameters:
+		list_month = 6
+	elif "5" in parameters or "may" in parameters:
+		list_month = 5
+	elif "4" in parameters or "apr" in parameters:
+		list_month = 4
+	elif "3" in parameters or "mar" in parameters:
+		list_month = 3
+	elif "2" in parameters or "feb" in parameters:
+		list_month = 2
+	elif "1" in parameters or "jan" in parameters:
+		list_month = 1
+
+	list_month = str(list_month)
+
 	if month not in emojiCounts[str(guild)]:
 		emojiCounts[str(guild)][month] = {}
+
+	if list_month not in emojiCounts[str(guild)]:
+		return "No data for that month!"
 
 	guild_emoji_names = {}
 	if guild is not None:
 		guild_emoji_names = [x.name for x in guild.emojis]
 
 		for e in guild_emoji_names:
-			if e not in emojiCounts[str(guild)][month]:
-				emojiCounts[str(guild)][month][e] = 0
+			if e not in emojiCounts[str(guild)][list_month]:
+				emojiCounts[str(guild)][list_month][e] = 0
 
-	top = sorted(emojiCounts[str(guild)][month].items(), key=lambda x: x[1], reverse=True)[:5]
-	bottom = sorted(emojiCounts[str(guild)][month].items(), key=lambda x: x[1])[:10]
+	bottom_count = 0
+	for e in emojiCounts[str(guild)][list_month]:
+		if emojiCounts[str(guild)][list_month][e] == 0:
+			bottom_count+=1
+
+	if bottom_count<10:
+		bottom_count = 10
+
+	top = sorted(emojiCounts[str(guild)][list_month].items(), key=lambda x: x[1], reverse=True)[:5]
+	bottom = sorted(emojiCounts[str(guild)][list_month].items(), key=lambda x: x[1])[:bottom_count]
 	
 	output+= "Top Emojis:\n"
 	for e in top:
-		output += f" - {e[0]} ({e[1]})\n"
+		output += f" - {e[0]} ({e[1]})"
 
 	output+= "Bottom Emojis:\n"
 	for e in bottom:
-		output += f" - {e[0]} ({e[1]})\n"
+		output += f" - {e[0]} ({e[1]})"
 
 
 	return output
