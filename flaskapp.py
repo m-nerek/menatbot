@@ -45,7 +45,7 @@ def hello():
 @app.route("/fishinfo")
 def fishinfo():
     angler=request.form["a"]
-    output = Status(angler,user_data,badge_names)
+    output = Status(angler, user_data, herbs, spices, badge_names)
     return output
 
 
