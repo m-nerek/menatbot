@@ -518,8 +518,13 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		buildProfile(name)
 
 	if "status" in parameters:
-		return Status(name, data, herbs, spices, badge_names)
+		status_output = Status(name, data, herbs, spices, badge_names)
 
+		# Checking if output is too long, 10 lines, if it is, return the flask link instead
+		if len(status_output.splitlines()) > 10:
+			status_output = f"http://mena.to:5000/fishinfo/{name}"
+			status_output = status_output.replace(" ", "%20")
+		return status_output
 	current_time = datetime.datetime.now()
 
 	if data[name]["catchtime"]==0:
