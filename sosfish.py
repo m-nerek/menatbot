@@ -8,6 +8,7 @@ import random
 import urbandictionary
 import math
 import asyncio
+from fishstatus import Status
 
 if DEBUG == False:
 	import sosmarkov
@@ -472,63 +473,6 @@ def HasCaughtAnyFishAtCurrentLocation(name):
 	return False
 
 
-def Status(name):
-	output = f" --- {name} the angler --- \n"
-
-	output += f"Inventory:\n"
-
-	if "bike" in data[name]["flags"]:
-		output += " - A bicycle\n"
-	if "surfboard" in data[name]["flags"]:
-		output += " - A surfboard\n"
-	if "crampons" in data[name]["flags"]:
-		output += " - Crampons\n"
-	herbList = ""
-	for a in herbs:
-		if a in data[name]["flags"]:
-			if herbList == "":
-				herbList = a
-			else:
-				herbList = f"{herbList}, {a}"
-	spiceList = ""
-	for a in spices:
-		if a in data[name]["flags"]:
-			if spiceList == "":
-				spiceList = a
-			else:
-				spiceList = f"{spiceList}, {a}"
-
-	if herbList != "":
-		output += f" - Herbs: {herbList}\n"
-
-	if spiceList != "":
-		output += f" - Spices: {spiceList}\n"
-
-	for a in badge_names:
-		if a in data[name]["flags"]:
-			output += f" - [{a}] badge\n"
-
-	for a in data[name]["flags"].keys():
-		if "I :heart: " in a or "Visited " in a or "Go Team!" in a:
-			output += f" - [{a}] badge\n"
-
-	
-	output += " - Bait box: "
-	for a in data[name]["baitbox"].keys():
-		output += f"[{data[name]['baitbox'][a]}] "
-
-	output += "\n"
-
-	output += f"Fish caught:\n"
-
-	total_fish=0;
-	for a in data[name]["catchlog"].keys():
-		output += f" - {a} ({data[name]['catchlog'][a]})\n"
-		total_fish += data[name]['catchlog'][a]
-
-	output += f"Total: {total_fish} fish"
-	return output
-
 def ShareBait(name):
 
 	output = ""
@@ -571,7 +515,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		buildProfile(name)
 
 	if "status" in parameters:
-		return Status(name)
+		return Status(name, data, herbs, spices, badge_names)
 
 	current_time = datetime.datetime.now()
 
