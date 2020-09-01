@@ -361,6 +361,9 @@ def Catch(name):
 		if random.randrange(0,100)<chance:
 			caught_fish = f
 
+	if "gardevoir" in location.lower() and random.randrange(0,1000)<10:
+		caught_fish = { "name":"Gardevoir", "rarity":" [Unexpected]", "TOD":"0" }
+
 	output = ""
 
 	if caught_fish != None:
@@ -675,7 +678,7 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("Kanna", "!fish at hold"))
+	print(Fish("Kanna", "!fish at gardevoir"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
