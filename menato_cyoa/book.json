@@ -1,7 +1,8 @@
 {
   "1": { "text": "At last your two-day hike is over, You unsheathe your sword, lay it on the ground and sigh with relief as you lower yourself down on to the mossy rocks to sit for a moment's rest. You stretch, rub your eyes and finally look up at Firetop Mountain.\n The very mountain itself looks menacing. The steep face in front of you looks to have been savaged by the claws of some gargantuan beast. Sharp rocky crags jut out at unnatural angles. At the top of the mountain you can see the eerie red colouring - probably some strange vegetation - which has given the mountain its name. Perhaps no one will ever know exactly what grows up there, as climbing the peak must surely be impossible.\n Your quest lies ahead of you. Across the clearing is a dark cave entrance. You pick up your sword, get to your feet and consider what dangers may lie ahead of you. But with determination, you thrust the sword home into its scabbard and approach the cave.\n You peer into the gloom to see dark, slimy walls with pools of water on the stone floor in front of you. The air is cold and dank. You light your lantern and step warily into the blackness. Cobwebs brush your face and you hear the scurrying of tiny feet; rats, most likely. \n You set off into the cave. After a few yards you arrive at a junction. Will you turn west (1) or east (2)",
         "options": {"1": "71", "2": "278"},
-        "actions": null},
+        "rest": false,
+        "escape": false},
   "2": {"text": "FIXME Test your Luck. If you are Lucky, you escape without attracting the Ogre's attention. lf you are Unlucky, you curse as you kick a small stone which goes skidding across the cavern floor. You draw your sword In case the Ogre has heard it - turn to 16. If you were Lucky, you creep down the corridor back to the crossroads. Turn to 269.",
         "options": {"1": "", "2": ""},
         "actions": "test_luck"},
@@ -81,6 +82,16 @@
                   "stamina": 5,
                   "escape": 0,
                   "win": 317}]},
+  "71": {"text": "There is a right-hand turn to the north in the Passage. Cautiously you approach a sentry Post on the corner and, as you look in, you can see a strange Goblin-like creature in leather armour asleep at his post. You try to tiptoe Past him. Test your Luck if you are Lucky, he does not wake up and remains snoring loudly.If you are Unlucky, you step with a crunch on some loose Sround and hiseyes flick open - turn to 248.",
+        "options": {"1": "", "2": ""},
+        "rest": false,
+        "escape": false},
   "n": {"text": "",
-        "options": {"1": "", "2": ""}}
+        "options": {"1": "", "2": ""},
+        "rest": false,
+        "escape": false},
+  "n": {"text": "",
+        "options": {"1": "", "2": ""},
+        "rest": false,
+        "escape": false}
 }
