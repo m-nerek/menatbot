@@ -22,6 +22,12 @@ def saveData(file, data):
 	with open(f"{dir_path}/{file}.json", "w") as file:
 		json.dump(data ,file)
 
+def saveData(file, data):
+	with open(f"{dir_path}/{file}.json", "w") as file:
+		json.dump(data ,file)
+
+
+
 def findCleanEmojis(string):
 	emojis = re.findall( r"<a?:[^:\s]*(?:::[^:\s]*)*:[0-9]+>", string)
 	for e in range(len(emojis)):
@@ -31,6 +37,9 @@ def findCleanEmojis(string):
 def getMonth():
 	return datetime.datetime.now().month
 
+def getYear():
+	return datetime.datetime.now().year
+
 def logEmoji(string, guild, user):
 	global last_user
 	global last_user_emote_count
@@ -39,6 +48,7 @@ def logEmoji(string, guild, user):
 
 	guild = str(guild)
 	month = str(getMonth())
+	year = str(getYear())
 
 	if guild not in emojiCounts:
 		emojiCounts[guild] = {}
@@ -76,94 +86,121 @@ def logEmoji(string, guild, user):
 		#print(f"logged {len(emojis)} emojis")
 		
 	if made_changes and log_counter>20:
-		saveData("emojicounts", emojiCounts)
+
+		guild_emoji_names = {}
+		if not isinstance(guild, str):
+			guild_emoji_names = [x.name for x in guild.emojis]
+			for e in guild_emoji_names:
+				if e not in emojiCounts[guild][month]:
+					emojiCounts[guild][month][e] = 0
+
+		saveData(f"emojidata/emojicounts_{year}_{month}_{guild}",emojiCounts[guild][month])
+
+		#saveData("emojicounts", emojiCounts)
 		log_counter=0
 		#print("saved emojis")
 
 
 def listEmoji(guild, parameters):
 
-
 	output = ""
 
 	if str(guild) not in emojiCounts:
 		emojiCounts[str(guild)] = {}
-
+	if str(getMonth()) not in emojiCounts[str(guild)]:
+		emojicounts[str(guild)][str(getMonth())] = {}
 	month = str(getMonth())
-	list_month = month
 
+	list_month = month
+	list_year = "2020"
 	parameters = parameters.lower()
 
-	if "12" in parameters or "dec" in parameters:
+
+	if "dec" in parameters:
 		list_month = 12
-	elif "11" in parameters or "nov" in parameters:
+	elif "nov" in parameters:
 		list_month = 11
-	elif "10" in parameters or "oct" in parameters:
+	elif "oct" in parameters:
 		list_month = 10
-	elif "9" in parameters or "sep" in parameters:
+	elif "sep" in parameters:
 		list_month = 9
-	elif "8" in parameters or "aug" in parameters:
+	elif "aug" in parameters:
 		list_month = 8
-	elif "7" in parameters or "jul" in parameters:
+	elif "jul" in parameters:
 		list_month = 7
-	elif "6" in parameters or "jun" in parameters:
+	elif "jun" in parameters:
 		list_month = 6
-	elif "5" in parameters or "may" in parameters:
+	elif "may" in parameters:
 		list_month = 5
-	elif "4" in parameters or "apr" in parameters:
+	elif "apr" in parameters:
 		list_month = 4
-	elif "3" in parameters or "mar" in parameters:
+	elif "mar" in parameters:
 		list_month = 3
-	elif "2" in parameters or "feb" in parameters:
+	elif "feb" in parameters:
 		list_month = 2
-	elif "1" in parameters or "jan" in parameters:
+	elif "jan" in parameters:
 		list_month = 1
 
 	list_month = str(list_month)
 
-	if month not in emojiCounts[str(guild)]:
-		emojiCounts[str(guild)][month] = {}
+	list_data = emojiCounts[str(guild)][month]
 
-	if list_month not in emojiCounts[str(guild)]:
-		return "No data for that month!"
-
-	guild_emoji_names = {}
-	if guild is not None:
-		guild_emoji_names = [x.name for x in guild.emojis]
-
-		for e in guild_emoji_names:
-			if e not in emojiCounts[str(guild)][list_month]:
-				emojiCounts[str(guild)][list_month][e] = 0
+	if list_month != month and list_year != getYear():
+		filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
+		try:
+			with open(filename, 'r') as f:
+				list_data = json.load(f)
+		except:
+			return "I can't find any data for that month!"
+	
 
 	bottom_count = 0
-	for e in emojiCounts[str(guild)][list_month]:
-		if emojiCounts[str(guild)][list_month][e] == 0:
+	for e in list_data:
+		if list_data[e] == 0:
 			bottom_count+=1
 
 	if bottom_count<10:
 		bottom_count = 10
 
-	top = sorted(emojiCounts[str(guild)][list_month].items(), key=lambda x: x[1], reverse=True)[:5]
-	bottom = sorted(emojiCounts[str(guild)][list_month].items(), key=lambda x: x[1])[:bottom_count]
+	top = sorted(list_data.items(), key=lambda x: x[1], reverse=True)[:5]
+	bottom = sorted(list_data.items(), key=lambda x: x[1])[:bottom_count]
 	
 	output+= "Top Emojis:\n"
 	for e in top:
 		output += f" - {e[0]} ({e[1]})"
 
-	output+= "Bottom Emojis:\n"
+	output+= "\n\nBottom Emojis:\n"
 	for e in bottom:
 		output += f" - {e[0]} ({e[1]})"
 
 
 	return output
 
-emojiCounts = loadData("emojicounts")
+emojiCounts = {}
 
+dir = f"{dir_path}/emojidata/"
+for filename in os.listdir(dir):
+	with open(os.path.join(dir, filename), 'r') as f:
+		name = filename[:-5]
+
+		parts = name.split("_")
+		year = parts[1]
+		month = parts[2]
+		guild = "".join(parts[3:])
+
+		if year == str(getYear()) and month == str(getMonth()):
+			emojiCounts[guild] = {}
+			emojiCounts[guild][month] = {}
+			emojiCounts[guild][month] = json.load(f)
+
+		
+
+		#dat[name] = loadData(f"emojidata/{name}")
 
 #log_counter = 20
 #logEmoji(" <a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783><a:turkic:1783>", None, "Tech")
 
 
-#print(listEmoji(None))
+#print(listEmoji("People Of Salt", "jan 2020"))
 
 #print(getMonth())
