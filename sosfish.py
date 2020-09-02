@@ -1,4 +1,4 @@
-DEBUG = False
+DEBUG = True
 
 import re
 import os
@@ -519,11 +519,13 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	if "status" in parameters:
 		status_output = Status(name, data, herbs, spices, badge_names)
 
-		if len(status_output.splitlines()) > 30:
-			status_output = Status(name, data, herbs, spices, badge_names, False, True)
-			if len(status_output.splitlines()) > 30:
-				status_output = Status(name, data, herbs, spices, badge_names, True, True)
-			status_output += f"http://mena.to/fishinfo/{name}".replace(" ", "%20")
+		if len(status_output.splitlines()) > 22:
+			status_output = Status(name, data, herbs, spices, badge_names, True)
+			if len(status_output.splitlines()) > 22:
+				status_output = Status(name, data, herbs, spices, badge_names, True, False, True)
+				if len(status_output.splitlines()) > 22:
+					status_output = Status(name, data, herbs, spices, badge_names, True, True, True)
+				status_output += f"http://mena.to/fishinfo/{name}".replace(" ", "%20")
 			
 		return status_output
 
@@ -632,7 +634,9 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
+	print(Fish("Kyap", "!fish status"))
 	print(Fish("Kanna", "!fish status"))
+	print(Fish("technicalty", "!fish status"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))

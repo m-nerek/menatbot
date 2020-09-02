@@ -1,4 +1,4 @@
-def Status(name, data, herbs, spices, badge_names, hide_badges=False, hide_fish=False):
+def Status(name, data, herbs, spices, badge_names, compress_badges=False, hide_badges=False, hide_fish=False):
     output = f" --- {name} the angler --- \n"
 
     output += f"Inventory:\n"
@@ -32,28 +32,49 @@ def Status(name, data, herbs, spices, badge_names, hide_badges=False, hide_fish=
     if spiceList != "":
         output += f" - Spices: {spiceList}\n"
 
+    output += " - Bait box: "
+    for a in data[name]["baitbox"].keys():
+        output += f"[{data[name]['baitbox'][a]}] "
+    output += "\n"
 
     badge_output = ""
     badge_count=0;
+
+    if compress_badges:
+        badge_output = " - Badges:\n"
+
+    row_count=0
     for a in badge_names:
         if a in data[name]["flags"]:
-            badge_output += f" - [{a}] badge\n"
+            if compress_badges:
+                badge_output += f"  [{a}]"
+                row_count+=1
+                if row_count>2:
+                    badge_output +="\n"
+                    row_count=0;
+            else:
+                badge_output += f" - [{a}] badge\n"
+
             badge_count+=1
 
     for a in data[name]["flags"].keys():
         if "I :heart: " in a or "Visited " in a or "Go Team!" in a:
-            badge_output += f" - [{a}] badge\n"
+            if compress_badges:
+                badge_output += f"  [{a}]"
+                row_count+=1
+                if row_count>2:
+                    badge_output +="\n"
+                    row_count=0;
+            else:
+                badge_output += f" - [{a}] badge\n"
             badge_count+=1
 
+    if compress_badges:
+        badge_output += "\n"
+    
     if hide_badges == False:
         output += badge_output
     
-
-    output += " - Bait box: "
-    for a in data[name]["baitbox"].keys():
-        output += f"[{data[name]['baitbox'][a]}] "
-
-    output += "\n"
 
     if hide_badges == True:
         output += f" {badge_count} Badges\n"
@@ -65,12 +86,14 @@ def Status(name, data, herbs, spices, badge_names, hide_badges=False, hide_fish=
         fish_output += f" - {a} ({data[name]['catchlog'][a]})\n"
         total_fish += data[name]['catchlog'][a]
     
-    fish_output += f"Total: {total_fish} Fish"
+    fish_output += f"Total: {total_fish} Fish\n"
 
     if hide_fish == False:
         output+=fish_output
     else:
         output+=f" {total_fish} Fish\n"
+    
+    if hide_fish or hide_badges:
         output+="Full inventory: "
 
     return output
