@@ -83,7 +83,7 @@ def logEmoji(string, guild, user):
 		if "turkic" not in e:
 			last_user_emote_count+=1
 		made_changes = True
-		#print(f"logged {len(emojis)} emojis")
+		print(f"logged {len(emojis)} emojis (count {log_counter})")
 		
 	if made_changes and log_counter>20:
 
@@ -98,7 +98,7 @@ def logEmoji(string, guild, user):
 
 		#saveData("emojicounts", emojiCounts)
 		log_counter=0
-		#print("saved emojis")
+		print("saved emojis")
 
 
 def listEmoji(guild, parameters):
