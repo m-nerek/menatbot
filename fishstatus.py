@@ -9,6 +9,8 @@ def Status(name, data, herbs, spices, badge_names, hide_badges=False, hide_fish=
         output += " - A surfboard\n"
     if "crampons" in data[name]["flags"]:
         output += " - Crampons\n"
+    if "platinumkey" in data[name]["flags"]:
+        output += " - A Platinum Key\n"
     herbList = ""
     for a in herbs:
         if a in data[name]["flags"]:
