@@ -1,4 +1,4 @@
-def Status(name, data, herbs, spices, badge_names):
+def Status(name, data, herbs, spices, badge_names, hide_badges=False, hide_fish=False):
     output = f" --- {name} the angler --- \n"
 
     output += f"Inventory:\n"
@@ -30,13 +30,22 @@ def Status(name, data, herbs, spices, badge_names):
     if spiceList != "":
         output += f" - Spices: {spiceList}\n"
 
+
+    badge_output = ""
+    badge_count=0;
     for a in badge_names:
         if a in data[name]["flags"]:
-            output += f" - [{a}] badge\n"
+            badge_output += f" - [{a}] badge\n"
+            badge_count+=1
 
     for a in data[name]["flags"].keys():
         if "I :heart: " in a or "Visited " in a or "Go Team!" in a:
-            output += f" - [{a}] badge\n"
+            badge_output += f" - [{a}] badge\n"
+            badge_count+=1
+
+    if hide_badges == False:
+        output += badge_output
+    
 
     output += " - Bait box: "
     for a in data[name]["baitbox"].keys():
@@ -44,12 +53,22 @@ def Status(name, data, herbs, spices, badge_names):
 
     output += "\n"
 
-    output += f"Fish caught:\n"
+    if hide_badges == True:
+        output += f" {badge_count} Badges\n"
+
+    fish_output = f"Fish caught:\n"
 
     total_fish = 0
     for a in data[name]["catchlog"].keys():
-        output += f" - {a} ({data[name]['catchlog'][a]})\n"
+        fish_output += f" - {a} ({data[name]['catchlog'][a]})\n"
         total_fish += data[name]['catchlog'][a]
+    
+    fish_output += f"Total: {total_fish} Fish"
 
-    output += f"Total: {total_fish} fish"
+    if hide_fish == False:
+        output+=fish_output
+    else:
+        output+=f" {total_fish} Fish\n"
+        output+="Full inventory: "
+
     return output

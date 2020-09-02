@@ -426,7 +426,6 @@ def CheckBadgeQualification(name):
 			fish_counts[1]+=1
 		else:
 			fish_counts[0]+=1
-
 	
 
 	for a in range(len(fish_counts)):
@@ -520,11 +519,14 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	if "status" in parameters:
 		status_output = Status(name, data, herbs, spices, badge_names)
 
-		# Checking if output is too long, 10 lines, if it is, return the flask link instead
 		if len(status_output.splitlines()) > 30:
-			status_output = f"http://mena.to:5000/fishinfo/{name}"
-			status_output = status_output.replace(" ", "%20")
+			status_output = Status(name, data, herbs, spices, badge_names, False, True)
+			if len(status_output.splitlines()) > 30:
+				status_output = Status(name, data, herbs, spices, badge_names, True, True)
+			status_output += f"http://mena.to/fishinfo/{name}".replace(" ", "%20")
+			
 		return status_output
+
 	current_time = datetime.datetime.now()
 
 	if data[name]["catchtime"]==0:
@@ -630,7 +632,7 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("Kanna", "!fish at gardevoir"))
+	print(Fish("Kanna", "!fish status"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
