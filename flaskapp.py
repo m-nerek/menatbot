@@ -4,7 +4,7 @@ from flask import request
 import os
 import json
 dir_path = os.path.dirname(os.path.realpath(__file__))
-badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God"]
+badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God", "Fish Whisperer", "Grandmaster Angler" ]
 
 app = Flask(__name__)
 
@@ -13,8 +13,6 @@ def loadList(file, keepcaps = False):
     data = [line.strip().lower() for line in f]
     f.close()
     return data
-herbs = loadList("herbs")
-spices = loadList("spices")
 
 
 def loadData(file):
@@ -36,7 +34,7 @@ def loadUserData():
             dat[name] = loadData(f"fishingdata/users/{name}")
     return dat
 
-user_data = loadUserData()
+
 
 @app.route("/")
 def hello():
@@ -44,6 +42,9 @@ def hello():
 
 @app.route("/fishinfo/<name>")
 def fishinfo(name):
+    user_data = loadUserData()
+    herbs = loadList("herbs")
+    spices = loadList("spices")
     output = Status(name, user_data, herbs, spices, badge_names)
     output = output.replace("\n","<br>")
     output = f"<html><p>{output}</p></html>"
