@@ -9,6 +9,7 @@ import urbandictionary
 import math
 import asyncio
 from fishstatus import Status
+import sosfish_buffs
 
 if DEBUG == False:
 	import sosmarkov
@@ -360,7 +361,7 @@ def Catch(name):
 		chance *= base_catch_chance[int(f)]/100
 		#print(f"[{chance}]")
 		if random.randrange(0,100)<chance:
-			caught_fish = f
+			caught_fish = data[location]["fish"][f]
 
 	if "gardevoir" in location.lower() and random.randrange(0,1000)<10:
 		caught_fish = { "name":"Gardevoir", "rarity":" [Unexpected]", "TOD":"0" }
@@ -368,7 +369,7 @@ def Catch(name):
 	output = ""
 
 	if caught_fish != None:
-		caught_fish_name = f"{data[location]['fish'][caught_fish]['name']}{data[location]['fish'][caught_fish]['rarity']}"
+		caught_fish_name = f"{caught_fish['name']}{caught_fish['rarity']}"
 		
 
 		if caught_fish_name in data[name]["catchlog"].keys():
@@ -387,6 +388,7 @@ def Catch(name):
 	elif "platinumkey" not in data[name]["flags"] and "dwarven" in location.lower() and random.randrange(0,100)<10:
 		data[name]["flags"]["platinumkey"] = True
 		output = f"A bite! {name} reels in the catch, only to discover a beautifully smithed platinum key with 'Im Narvi hain echant' engraved upon it"
+	
 	else:
 		output = f"A bite! {name} reels in the catch, only to discover {randomItem()}!"
 
@@ -634,9 +636,7 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("Kyap", "!fish status"))
-	print(Fish("Kanna", "!fish status"))
-	print(Fish("technicalty", "!fish status"))
+	print(Fish("technicalty", "!fish at gardevoir"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
