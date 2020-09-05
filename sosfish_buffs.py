@@ -156,7 +156,7 @@ def campfire_main_loop(name, location, parameters, data):
 	if location == "":
 		location = data[name]["currentlocation"]
 
-	#print(data[location]["campfire"]["stewscore"])
+	print(data[location])
 	if data[location]["campfire"]["timer"] == 0:
 		data[location]["campfire"]["timer"] = "0"
 
