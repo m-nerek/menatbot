@@ -713,7 +713,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		data[name]["catchtime"] = 0
 		saveUserData(name, data)
 	else:
-		if "pub" in data[location]["requires"]:
+		if "pub" in data[data[name]["currentlocation"]]["requires"]:
 			output = f"{name} waits for a drink.."
 		else:
 			output = f"{name} waits for a fish.."
@@ -734,8 +734,8 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish status"))
-	print(Fish("kanna", "!fish status"))
+	print(Fish("technicalty", "!fish"))
+	#print(Fish("kanna", "!fish status"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))
