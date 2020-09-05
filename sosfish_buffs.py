@@ -150,10 +150,15 @@ def addToStew(ingredient, name, location, data):
 
 def campfire_main_loop(name, location, parameters, data):
 
-	if location == "":
+	if data[name]["currentlocation"] == "":
+		data[name]["currentlocation"] = name
+
+	if location == '':
 		location = data[name]["currentlocation"]
 
+
 	#fixes for bad data
+	#print(f"[{location}]{location == ''}")
 	if data[location]["campfire"]["timer"] == 0:
 		data[location]["campfire"]["timer"] = "0"
 
