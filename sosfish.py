@@ -583,6 +583,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	if not name in data:
 		buildProfile(name)
 	amendProfile(name)
+	amendProfile(data[name]["currentlocation"])
+
 	
 	if " equip" in parameters:
 		if "last_item" not in data[name]:
@@ -642,6 +644,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 
 	if location != "":
 		amendProfile(location)
+
 
 	if (" using " in parameters) or (" with " in parameters):
 		
