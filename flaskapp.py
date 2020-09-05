@@ -1,19 +1,13 @@
 from flask import Flask
-from fishstatus import Status
+from sosfish_status import Status
+from sosfish_constants import herbs
+from sosfish_constants import spices
 from flask import request
 import os
 import json
 dir_path = os.path.dirname(os.path.realpath(__file__))
-badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God", "Fish Whisperer", "Grandmaster Angler" ]
 
 app = Flask(__name__)
-
-def loadList(file, keepcaps = False):
-    f = open(f"{dir_path}/fishingdata/{file}.txt", "r")
-    data = [line.strip().lower() for line in f]
-    f.close()
-    return data
-
 
 def loadData(file):
     try:
@@ -43,9 +37,7 @@ def hello():
 @app.route("/fishinfo/<name>")
 def fishinfo(name):
     user_data = loadUserData()
-    herbs = loadList("herbs")
-    spices = loadList("spices")
-    output = Status(name, user_data, herbs, spices, badge_names)
+    output = Status(name, user_data)
     output = output.replace("\n","<br>")
     output = f"<html><p>{output}</p></html>"
     return output

@@ -1,5 +1,14 @@
-def Status(name, data, herbs, spices, badge_names, compress_badges=False, hide_badges=False, hide_fish=False):
+from sosfish_constants import badge_names 
+from sosfish_constants import herbs
+from sosfish_constants import spices
+
+def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False):
     output = f" --- {name} the angler --- \n"
+
+    if len(data[name]["equipped"])>0:
+        output += f"Wearing:\n"
+        for a in data[name]["equipped"].keys():
+            output += f" - {a}\n"
 
     output += f"Inventory:\n"
 

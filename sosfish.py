@@ -8,13 +8,18 @@ import random
 import urbandictionary
 import math
 import asyncio
-from fishstatus import Status
+from sosfish_status import Status
 import sosfish_buffs
+import sosfish_constants
+from sosfish_constants import badge_scores
+from sosfish_constants import badge_names 
+from sosfish_constants import herbs
+from sosfish_constants import spices
+from sosfish_constants import dir_path
+from sosfish_constants import loadList
 
 if DEBUG == False:
 	import sosmarkov
-
-dir_path = os.path.dirname(os.path.realpath(__file__))
 
 help_string = f"""Fishing commands:
         `!fish` to get started fishing
@@ -25,17 +30,6 @@ help_string = f"""Fishing commands:
         `!fish with/using [bait]` You need to have the bait in your baitbox
         `!fish at [location] with/using [bait]`
         """
-
-def loadList(file, keepcaps = False):
-	f = open(f"{dir_path}/fishingdata/{file}.txt", "r")
-
-	if keepcaps==True:
-		data = [line.strip() for line in f]
-	else:
-		data = [line.strip().lower() for line in f]
-
-	f.close()
-	return data 
 
 def loadData(file):
 	try:
@@ -80,19 +74,36 @@ def randomUser():
 			break
 	return usr
 
-def randomItem():
+def randomItem(name, location):
 	i = random.randrange(0,5+1)
 
+	equiptext = "\n(you can equip this item with !fish equip)"
+
 	if i<=1:
-		return f"a flyer for '{ random.choice(premadelocations) }', maybe you should visit sometime"
+		visit = random.choice(premadelocations)
+
+		if "Mead and Madness" in visit and "Dwarven Hold" not in location:
+			return f"a flyer, but the water has damaged it to the point where you can't read what it says any more"
+
+		if f"Visited {visit}" in data[name]["flags"]:
+			return f"a flyer for '{visit}'"
+
+		return f"a flyer for '{visit}', maybe you should visit sometime"
+
 	if i<=2:
-		return f"{randomUser()}'s wellington boot"
+		word = randomUser()
+		data[name]["last_item"] = f"{word}'s wellington boot"
+		return f"{word}'s wellington boot!{equiptext}"
 	if i<=3:
-		return f"a keyring with a tag that says '{urbandictionary.random()[0].word}' in worn letters"
+		word = urbandictionary.random()[0].word
+		data[name]["last_item"] = f"a keyring with a tag that says '{word}' in worn letters"
+		return f"a keyring with a tag that says '{word}' in worn letters!{equiptext}"
 	if i<=4:
-		return f"a hat with '{urbandictionary.random()[0].word}' emblazoned across the front"
+		word = urbandictionary.random()[0].word
+		data[name]["last_item"] = f"a hat with '{word}' emblazoned across the front"
+		return f"a hat with '{word}' emblazoned across the front!{equiptext}"
 	if i<=5:
-		return f"a bottle containing a message that reads '{sosmarkov.sentence(sosmarkov.models['general'])}'"
+		return f"a bottle containing a message that reads '{sosmarkov.sentence(sosmarkov.models['general'])} '"
 
 
 
@@ -133,14 +144,15 @@ def matchScore(tomatch, string, maxlen):
 	stringlower = string.lower()
 	return len(re.findall(f"[{tomatchlower}]", stringlower))
 
+
 def describeTime(hour):
-	if hour<6 or hour>21:
-		return "As the moon reflects off the dark water"
-	if hour<9:
-		return "As the sun rises on the horizon"
-	if hour>18:
-		return "As the sun sets over the water"
-	return "It is a lovely day when"
+	if hour<sosfish_constants.SUNRISE_START or hour>sosfish_constants.SUNSET_END:
+		return "As the moon reflects off the dark water "
+	if hour<sosfish_constants.SUNRISE_END:
+		return "As the sun rises on the horizon "
+	if hour>sosfish_constants.SUNSET_START:
+		return "As the sun sets over the water "
+	return "It is a lovely day when "
 
 def describeRarity(index):
 
@@ -191,7 +203,9 @@ def updatePremadeLocations():
 
 def buildProfile(name):
 	#print("building profile")
-	data[name] = {}
+	if name not in data:
+		data[name] = {}
+
 	data[name]["description"] = f"Behind {name}'s {matchFromArray(name, houses)} is a {matchFromArray(name, descriptors)} {matchFromArray(name, waterbodies)}."
 	
 	data[name]["baitbox"] = {}
@@ -209,9 +223,16 @@ def buildProfile(name):
 		data[name]["fish"][i]["name"] = matchFish(name, i)
 		data[name]["fish"][i]["TOD"] = numberFromString(data[name]["fish"][i]["name"],24)
 		data[name]["fish"][i]["rarity"] = describeRarity(i)
-
+	amendProfile(name)
 	return ""
 
+def amendProfile(name):
+	if "campfire" not in data[name]:
+		sosfish_buffs.resetCampfire(name, data)
+	if "buffs" not in data[name]:
+		data[name]["buffs"] = {}
+	if "equipped" not in data[name]:
+		data[name]["equipped"] = {}
 
 async def BiteMessageCallback(mention_author, channel, time):
 	try:
@@ -219,6 +240,17 @@ async def BiteMessageCallback(mention_author, channel, time):
 		await channel.send(f"{mention_author} your line twitches")
 	except:
 		return
+
+def ArrivalText(location):
+	if "bike" in data[location]["requires"]:
+		return "arrives on a bicycle, "
+	elif "surfboard" in data[location]["requires"]:
+		return "paddles across the water and rides the surf in, "
+	elif "platinumkey" in data[location]["requires"]:
+		return "unlocks the door and enters, "
+	elif "crampons" in data[location]["requires"]:
+		return "scales the sheer cliffs and hikes to the water, "
+	return ""
 
 def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 	global timer_tasks
@@ -237,16 +269,22 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 	if new_location!="" and new_location!=location:
 		data[name]["currentlocation"] = new_location
 		location = new_location
-		if "bike" in data[location]["requires"]:
-			arrival_text="arrives on a bicycle, "
-		elif "surfboard" in data[location]["requires"]:
-			arrival_text="paddles across the water and rides the surf in, "
-		elif "crampons" in data[location]["requires"]:
-			arrival_text="scales the sheer cliffs and hikes to the water, "
-		
+		arrival_text = ArrivalText(location)
+	
+	
+	additional_description = ""
+
+	if data[location]["campfire"]["fuel"] == "Y":
+		additional_description = sosfish_buffs.describeCampfire(location, data, current_time.hour)
+
+	timedescription = describeTime(current_time.hour)
+	if "underground" in data[location]["requires"]:
+		timedescription = ""
+
+	base_description = f"{data[location]['description']}{additional_description} {timedescription}{name} {arrival_text}"
+
 	if "surf shack" in location.lower() and "surfboard" not in data[name]["flags"]:
-		output = data[location]["description"]
-		output += f" {describeTime(current_time.hour)} {name} {arrival_text}browses a bit and after some deliberation buys a { random.choice(descriptors) } second hand surfboard in the sale"
+		output = f"{base_description}browses a bit and after some deliberation buys a { random.choice(descriptors) } second hand surfboard in the sale"
 		data[name]["flags"]["surfboard"] = True
 		return output
 
@@ -258,8 +296,7 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 			if bait_of_the_week in data[name]["baitbox"][str(i)]:
 				hasBait = True
 		if not hasBait:
-			output = data[location]["description"]
-			output += f" {describeTime(current_time.hour)} {name} {arrival_text}stops for a chat and buys the bait of the week '{bait_of_the_week}'"
+			output = f"{base_description}stops for a chat and buys the bait of the week '{bait_of_the_week}'"
 			data[name]["baitbox"][str(len(data[name]["baitbox"]))] = bait_of_the_week
 			return output
 
@@ -268,8 +305,7 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 		herb_of_the_week = herbs[ weekherbindex ]
 		
 		if herb_of_the_week not in data[name]["flags"]:
-			output = data[location]["description"]
-			output += f" {describeTime(current_time.hour)} {name} {arrival_text}notices that the '{herb_of_the_week}' has grown a lot this week, and picks some"
+			output = f"{base_description}notices that the '{herb_of_the_week}' has grown a lot this week, and picks some"
 			data[name]["flags"][herb_of_the_week] = True
 			return output
 
@@ -278,14 +314,14 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 		spice_of_the_week = spices[ weekspiceindex ]
 		
 		if spice_of_the_week not in data[name]["flags"]:
-			output = data[location]["description"]
-			output += f" {describeTime(current_time.hour)} {name} {arrival_text}stops for a chat and buys the spice of the week '{spice_of_the_week}'"
+			output = f"{base_description}stops for a chat and buys the spice of the week '{spice_of_the_week}'"
 			data[name]["flags"][spice_of_the_week] = True
 			return output
 
-
-	output = data[location]["description"]
-	output += f" {describeTime(current_time.hour)} {name} {arrival_text}settles down to fish and casts a rod baited with {data[name]['currentbait']} into the water"
+	if "pub" in data[location]["requires"]:
+		output = f"{base_description}heads over to the raucous packed bar, and orders a drink from the grumpy old dwarven barkeep"
+	else:
+		output = f"{base_description}settles down to fish and casts a rod baited with {data[name]['currentbait']} into the water"
 
 	secs = 60*5 + (100-max(FishingOdds(name))) * 3
 
@@ -315,10 +351,19 @@ def FishingOdds(name):
 	location = data[name]["currentlocation"]
 	currentbait = data[name]["currentbait"]
 
+	stewscore = sosfish_buffs.calculateStew(location, data)
+
+	sosfish_buffs.checkAlcoholExpiry(name, data)
+
+	alcoholscore = sosfish_buffs.alcoholBuff(name, data)
+
+
 	for f in data[location]["fish"]:
 		fishname = data[location]['fish'][f]['name']
 		
 		baitscore = min(3, matchScore(fishname, currentbait, 3)) / 3
+		if "pub" in data[location]["requires"]:
+			baitscore = 1
 		
 		hoursfromoptimal = abs(datetime.datetime.now().hour-int(data[location]['fish'][f]['TOD']))
 
@@ -327,7 +372,7 @@ def FishingOdds(name):
 
 		timescore = max(0,time_of_day_falloff[int(f)]-hoursfromoptimal) / time_of_day_falloff[int(f)]
 
-		chance = 100
+		chance =  max(0, 100 + stewscore * 5 + alcoholscore * 10)
 		chance *= baitscore
 		chance *= timescore
 	
@@ -371,14 +416,21 @@ def Catch(name):
 	if caught_fish != None:
 		caught_fish_name = f"{caught_fish['name']}{caught_fish['rarity']}"
 		
-
 		if caught_fish_name in data[name]["catchlog"].keys():
 			data[name]["catchlog"][caught_fish_name]+=1
 			output = f"A bite! {name} has caught another {caught_fish_name}!"
+			if "pub" in data[location]["requires"]:
+				output = f"The barman returns and hands {name} another glass of {caught_fish_name}"
+				if random.randrange(0,100)<60:
+					sosfish_buffs.progressAlcohol(name, data)
 		else:
 			data[name]["catchlog"][caught_fish_name]=1
 			output = f"A bite! {name} has caught a {caught_fish_name}, congratulations on catching one!"
+			if "pub" in data[location]["requires"]:
+				output = f"The barman returns and hands {name} a glass of {caught_fish_name}, time to drink!"
 
+	elif "pub" in data[location]["requires"]:
+		output = "It seems like the barman has forgotten about you, better order again!"
 	elif "bike" not in data[name]["flags"]:
 		data[name]["flags"]["bike"] = True
 		output = f"A bite! {name} reels in the catch, only to discover an old bicycle! A bit of oil gets it working again, and you can now '!fish at [location]'. Try visiting other angler's locations and sharing your bait with them using '!sharebait'"
@@ -388,19 +440,30 @@ def Catch(name):
 	elif "platinumkey" not in data[name]["flags"] and "dwarven" in location.lower() and random.randrange(0,100)<10:
 		data[name]["flags"]["platinumkey"] = True
 		output = f"A bite! {name} reels in the catch, only to discover a beautifully smithed platinum key with 'Im Narvi hain echant' engraved upon it"
-	
+	elif "log" not in data[name]["flags"] and random.randrange(0,100)<20:
+		data[name]["flags"]["log"] = True
+		output = f"A bite! {name} reels in the catch, only to discover a log bleached by the sun and waves. Why not build a campfire somewhere with '!fish campfire'"
+	elif "flintsteel" not in data[name]["flags"] and random.randrange(0,100)<10:
+		data[name]["flags"]["flintsteel"] = True
+		output = f"A bite! {name} reels in the catch, only to discover a flint and steel. You can now light a campfire with '!fish light campfire'"
 	else:
-		output = f"A bite! {name} reels in the catch, only to discover {randomItem()}!"
+		output = f"A bite! {name} reels in the catch, only to discover {randomItem(name, location)}"
 
-	
-	if (highest_common_percentage<25 and highest_noncommon_percentage<25) or (highest_common_percentage>75 and highest_noncommon_percentage>75):
-		output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching any fish"
-	elif (highest_common_percentage<25 or highest_common_percentage>75) and (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
-		output += f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish, and {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
-	elif (highest_common_percentage<25 or highest_common_percentage>75):
-		output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish"
-	elif (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
-		output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
+	if "pub" not in data[location]["requires"]:
+		if (highest_common_percentage<25 and highest_noncommon_percentage<25) or (highest_common_percentage>75 and highest_noncommon_percentage>75):
+			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching any fish"
+		elif (highest_common_percentage<25 or highest_common_percentage>75) and (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
+			output += f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish, and {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
+		elif (highest_common_percentage<25 or highest_common_percentage>75):
+			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching common fish"
+		elif (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
+			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_noncommon_percentage)} for catching uncommon fish"
+
+	if len(data[location]["campfire"]["ingredients"])>0:
+		output += f"\n{sosfish_buffs.describeStew(location, data)}"
+
+	if "alcohol" in data[name]["buffs"]:
+		output += f"\nYou are {sosfish_buffs.describeDrunkenness(name, data)}"
 
 	output+=CheckBadgeQualification(name)
 	output+="\n\n"
@@ -409,8 +472,6 @@ def Catch(name):
 	return output
 
 
-badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God", "Fish Whisperer", "Grandmaster Angler" ]
-badge_scores = [3,3,1,1,10,20,60]
 badge_text = "You have been awarded a shiny new badge that reads: "
 
 def CheckBadgeQualification(name):
@@ -445,9 +506,13 @@ def CheckBadgeQualification(name):
 	location_all_badge_name = f"I :heart: {location}"
 	location_any_badge_name = f"Visited {location}"
 
+
 	if location_all_badge_name not in data[name]["flags"] and HasCaughtAllFishAtCurrentLocation(name):
 		data[name]["flags"][location_all_badge_name] = True
-		output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on catching all the fish at this location!"
+		if "pub" in data[location]["requires"]:
+			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on sampling all the alcohol at this location!"
+		else:
+			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on catching all the fish at this location!"
 
 	if location != name:
 		if location_any_badge_name not in data[name]["flags"] and HasCaughtAnyFishAtCurrentLocation(name):
@@ -517,16 +582,30 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	parameters = parameters.lower()
 	if not name in data:
 		buildProfile(name)
+	amendProfile(name)
+	
+	if " equip" in parameters:
+		if "last_item" not in data[name]:
+			return "No item to equip!"
+
+		item = data[name]["last_item"]
+		
+		del data[name]["last_item"]
+
+		data[name]["equipped"][item] = True
+
+		saveUserData(name,data)
+		return f"{name} equips {item}"
 
 	if "status" in parameters:
-		status_output = Status(name, data, herbs, spices, badge_names)
+		status_output = Status(name, data)
 
 		if len(status_output.splitlines()) > 22:
-			status_output = Status(name, data, herbs, spices, badge_names, True)
+			status_output = Status(name, data, True)
 			if len(status_output.splitlines()) > 22:
-				status_output = Status(name, data, herbs, spices, badge_names, True, False, True)
+				status_output = Status(name, data, True, False, True)
 				if len(status_output.splitlines()) > 22:
-					status_output = Status(name, data, herbs, spices, badge_names, True, True, True)
+					status_output = Status(name, data, True, True, True)
 				status_output += f"http://mena.to/fishinfo/{name}".replace(" ", "%20")
 			
 		return status_output
@@ -551,7 +630,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 
 		new_location = new_location.rstrip("'s")
 		new_location = new_location.rstrip("s")
-		print(new_location)
+		#print(new_location)
 		for loc in data.keys():
 			if (len(new_location)>3 and new_location.lower() in loc.lower()) or new_location.lower()==loc.lower():
 				#print(f"from location {new_location} matched {loc}\n")
@@ -560,6 +639,9 @@ def Fish(name, parameters, mention_author=None, channel=None):
 					location = loc
 		if location == "":
 			return "I don't recognize that location"
+
+	if location != "":
+		amendProfile(location)
 
 	if (" using " in parameters) or (" with " in parameters):
 		
@@ -597,6 +679,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 				return f"{name} needs a way to cross the water to reach this place"
 			if req == "crampons" and "crampons" not in data[name]["flags"]:
 				return f"There doesn't seem to be any way for {name} to climb up to this location"
+			if req == "platinumkey" and "platinumkey" not in data[name]["flags"]:
+				return f"{name} is not yet a friend of the dwarves, so cannot pass this way"
 
 
 	if changed_bait:
@@ -608,6 +692,18 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		if hasBait == False:
 			return f"{name} you do not have that bait. Try asking someone to !sharebait when you are at the same location to get their starting bait"
 
+	# --- campfire stuff ---
+	camp = sosfish_buffs.campfire_main_loop(name, location, parameters, data)
+
+	if camp != None:
+		if location == "":
+			saveUserData(data[name]["currentlocation"], data)
+		else:
+			saveUserData(location, data)
+		saveUserData(name, data)
+		return camp
+	
+
 	output = ""
 	if catch_time == 0 or changed_location or changed_bait:
 		output = CastRod(name, location, usebait, mention_author, channel)
@@ -617,7 +713,10 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		data[name]["catchtime"] = 0
 		saveUserData(name, data)
 	else:
-		output = f"{name} waits for a fish.."
+		if "pub" in data[location]["requires"]:
+			output = f"{name} waits for a drink.."
+		else:
+			output = f"{name} waits for a fish.."
 	return output
 
 timer_tasks = {}
@@ -630,13 +729,13 @@ waterbodies = loadList("waterbodies")
 fish = loadList("fish")
 bait = loadList("bait")
 baitoftheweek = loadList("baitoftheweek")
-herbs = loadList("herbs")
-spices = loadList("spices")
+
 premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish at gardevoir"))
+	print(Fish("technicalty", "!fish status"))
+	print(Fish("kanna", "!fish status"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))

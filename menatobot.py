@@ -173,7 +173,7 @@ class Menato(discord.Client):
                 await message.channel.send(to_send)
 
     async def on_reaction_add(self, reaction, user):
-        print(f"react {str(reaction)}")
+        #print(f"react {str(reaction)}")
         #if reaction.message not None:
         sosemojicount.logEmoji(str(reaction), reaction.message.guild, user)
 
