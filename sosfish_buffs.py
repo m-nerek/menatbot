@@ -53,9 +53,9 @@ def resetCampfire(name, data):
 	data[name]["campfire"] = {}
 	data[name]["campfire"]["fuel"] = "N"
 	data[name]["campfire"]["alight"] = "N"
-	data[name]["campfire"]["timer"] = 0
+	data[name]["campfire"]["timer"] = "0"
 	data[name]["campfire"]["ingredients"] = {}
-	data[name]["campfire"]["stewscore"] = 0
+	data[name]["campfire"]["stewscore"] = "0"
 
 def describeCampfire(name, data, hour):
 
@@ -100,6 +100,7 @@ def calculateStew(location, data):
 	return score
 
 def describeStew_(score):
+	score = int(score)
 	bad_stew = ["looks a bit gray and watery","smells a little weird","has turned an unpleasant green colour","smells revolting","has turned black and is making your eyes water"]
 	good_stew = ["smells appetizing","looks succulent","smells delicious","looks rich and tasty","smells irresistably divine"]
 	ok_stew = "looks ok"
@@ -114,6 +115,7 @@ def describeStew_(score):
 		return bad_stew[index]
 
 def describeBuff(score):
+	score = int(score)
 	amounts = ["small", "moderate", "significant", "large", "huge"]
 	if score == 0:
 		return ""
@@ -142,7 +144,7 @@ def addToStew(ingredient, name, location, data):
 		index = str(len(data[location]["campfire"]["ingredients"]))
 		data[location]["campfire"]["ingredients"][index] = ingredient
 	stewscore = calculateStew(location, data)
-	data[location]["campfire"]["stewscore"] = stewscore
+	data[location]["campfire"]["stewscore"] = str(stewscore)
 
 	return f"{name} adds {ingredient} to the pot. The stew {describeStew_(stewscore)}{describeBuff(stewscore)}"
 
@@ -151,7 +153,14 @@ def campfire_main_loop(name, location, parameters, data):
 	if location == "":
 		location = data[name]["currentlocation"]
 
-	if data[location]["campfire"]["timer"] != 0:
+	#fixes for bad data
+	if data[location]["campfire"]["timer"] == 0:
+		data[location]["campfire"]["timer"] = "0"
+
+	if data[name]["campfire"]["stewscore"] == 0:
+		data[name]["campfire"]["stewscore"] = "0"
+
+	if data[location]["campfire"]["timer"] != "0":
 		campfire_expiry_time = datetime.datetime.strptime( data[location]["campfire"]["timer"] ,"%Y-%m-%d-%H-%M")
 		if campfire_expiry_time < datetime.datetime.now():
 			resetCampfire(location, data)
