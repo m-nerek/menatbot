@@ -153,17 +153,15 @@ def campfire_main_loop(name, location, parameters, data):
 	if data[name]["currentlocation"] == "":
 		data[name]["currentlocation"] = name
 
-	if location == '':
+	if location == "":
 		location = data[name]["currentlocation"]
 
-
-	#fixes for bad data
-	#print(f"[{location}]{location == ''}")
+	#print(data[location]["campfire"]["stewscore"])
 	if data[location]["campfire"]["timer"] == 0:
 		data[location]["campfire"]["timer"] = "0"
 
-	if data[name]["campfire"]["stewscore"] == 0:
-		data[name]["campfire"]["stewscore"] = "0"
+	if data[location]["campfire"]["stewscore"] == 0:
+		data[location]["campfire"]["stewscore"] = "0"
 
 	if data[location]["campfire"]["timer"] != "0":
 		campfire_expiry_time = datetime.datetime.strptime( data[location]["campfire"]["timer"] ,"%Y-%m-%d-%H-%M")
