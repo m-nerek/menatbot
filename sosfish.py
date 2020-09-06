@@ -21,14 +21,31 @@ from sosfish_constants import loadList
 if DEBUG == False:
 	import sosmarkov
 
-help_string = f"""Fishing commands:
+
+def helpString(name):
+
+	if data[name]["currentlocation"] == "":
+		data[name]["currentlocation"] = name
+
+	move_help = "\n	`!fish at [location]` The location can be the ID of another user\n	`!fish at [location] with/using [bait]`"
+	campfire_help ="\n	`!fish campfire` To lay a campfire (requires a log)"
+	campfire_light_help ="\n	`!fish light campfire` To light a campfire at your location"
+	campfire_cook_help ="\n	`!fish cook [ingredient]` To add something to the stew (requires a lit campfire at your location)"
+	
+	if "bike" not in data[name]["flags"]:
+		move_help = ""
+	if "log" not in data[name]["flags"]:
+		campfire_help = ""
+	if "flintsteel" not in data[name]["flags"]:
+		campfire_light_help = ""
+	if data[data[name]["currentlocation"]]["campfire"]["alight"] == "N":
+		campfire_cook_help = ""
+
+	return f"""Fishing commands:
         `!fish` to get started fishing
         `!fish status` to see your inventory
         `!sharebait` to share your starter bait with anyone at your location
-        You will eventually unlock the ability to:
-        `!fish at [location]` The location can be the ID of another user
-        `!fish with/using [bait]` You need to have the bait in your baitbox
-        `!fish at [location] with/using [bait]`
+        `!fish with/using [bait]` You need to have the bait in your baitbox{move_help}{campfire_help}{campfire_light_help}{campfire_cook_help}
         """
 
 def loadData(file):
@@ -696,7 +713,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 			return f"{name} you do not have that bait. Try asking someone to !sharebait when you are at the same location to get their starting bait"
 
 	# --- campfire stuff ---
-	
+
 	camp = sosfish_buffs.campfire_main_loop(name, location, parameters, data)
 
 	if camp != None:
@@ -740,8 +757,8 @@ premadelocations = updatePremadeLocations()
 
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish"))
-	#print(Fish("kanna", "!fish status"))
+	print(Fish("technicalty", "!fish light campfire"))
+	print(helpString("technicalty"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))

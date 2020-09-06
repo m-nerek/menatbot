@@ -92,7 +92,7 @@ class Menato(discord.Client):
         elif message.content.startswith("!lock") or message.content.startswith("!unlock"):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif message.content.startswith("!fishhelp"):
-            responses = [sosfish.help_string]
+            responses = [sosfish.helpString(message.author.name)]
         elif message.content.lower().startswith("!fish"):
             #Fish(name, parameters, mention_author=None, channel=None)
             responses = [sosfish.Fish(message.author.name, message.content.lower(),message.author.mention, message.channel)]
