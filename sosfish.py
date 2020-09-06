@@ -27,10 +27,10 @@ def helpString(name):
 	if data[name]["currentlocation"] == "":
 		data[name]["currentlocation"] = name
 
-	move_help = "\n	`!fish at [location]` The location can be the ID of another user\n	`!fish at [location] with/using [bait]`"
-	campfire_help ="\n	`!fish campfire` To lay a campfire (requires a log)"
-	campfire_light_help ="\n	`!fish light campfire` To light a campfire at your location"
-	campfire_cook_help ="\n	`!fish cook [ingredient]` To add something to the stew (requires a lit campfire at your location)"
+	move_help = "\n		`!fish at [location]` The location can be the ID of another user\n		`!fish at [location] with/using [bait]`"
+	campfire_help ="\n		`!fish campfire` To lay a campfire (requires a log)"
+	campfire_light_help ="\n		`!fish light campfire` To light a campfire at your location"
+	campfire_cook_help ="\n		`!fish cook [ingredient]` To add something to the stew (requires a lit campfire at your location)"
 	
 	if "bike" not in data[name]["flags"]:
 		move_help = ""
