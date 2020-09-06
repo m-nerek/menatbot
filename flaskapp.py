@@ -59,6 +59,8 @@ def fishinfo(name):
       type="image/png" 
       href="http://mena.to/favicon.ico">
    </head>"""
+    heart = "♥"
+    inventory = inventory.replace(":heart:", heart)
     output = f"{output}<body><h1>{inventory}</h1></body></html>"
     return output
 
