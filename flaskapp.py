@@ -48,8 +48,9 @@ def fishinfo(name):
     <style>
       @font-face { font-family: default_text; src: url('/fonts/default_text.otf'); } 
       h1 {
+         font-weight: normal;
          font-family: default_text;
-         font-size: 70%;
+         font-size: 100%;
       }
       body {background-color: rgb(54,57,63);}
       h1 {color: white;}
