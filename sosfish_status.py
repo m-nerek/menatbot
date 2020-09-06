@@ -19,7 +19,12 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
     if "crampons" in data[name]["flags"]:
         output += " - Crampons\n"
     if "platinumkey" in data[name]["flags"]:
-        output += " - A Platinum Key\n"
+        output += " - A platinum key\n"
+    if "log" in data[name]["flags"]:
+        output += " - A log\n"
+    if "flintsteel" in data[name]["flags"]:
+        output += " - A flint and steel\n"
+    
     herbList = ""
     for a in herbs:
         if a in data[name]["flags"]:
