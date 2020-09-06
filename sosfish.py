@@ -696,9 +696,12 @@ def Fish(name, parameters, mention_author=None, channel=None):
 			return f"{name} you do not have that bait. Try asking someone to !sharebait when you are at the same location to get their starting bait"
 
 	# --- campfire stuff ---
+	
 	camp = sosfish_buffs.campfire_main_loop(name, location, parameters, data)
 
 	if camp != None:
+
+
 		if location == "":
 			saveUserData(data[name]["currentlocation"], data)
 		else:
