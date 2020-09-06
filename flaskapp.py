@@ -33,7 +33,7 @@ def hello():
 
 @app.route("/fonts/default_text.otf")
 def discord_font():
-    return send_file(f"{dir_path}/web/Roboto-Medium.ttf")
+    return send_file(f"{dir_path}/web/Roboto-Light.ttf")
 
 @app.route("/favicon.ico")
 def favicon():
@@ -49,10 +49,14 @@ def fishinfo(name):
       @font-face { font-family: default_text; src: url('/fonts/default_text.otf'); } 
       h1 {
          font-family: default_text
+         font-size: 62.5%;
       }
       body {background-color: rgb(54,57,63);}
       h1 {color: white;}
     </style>
+    <link rel="icon" 
+      type="image/png" 
+      href="http://mena.to/favicon.ico">
    </head>"""
     output = f"{output}<body><h1>{inventory}</h1></body></html>"
     return output
