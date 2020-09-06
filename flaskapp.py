@@ -31,10 +31,13 @@ def hello():
     return "<h1 style='color:blue'>Eat shit Chris.</h1>"
 
 
-@app.route("/fonts/uni_sans_thin.otf")
+@app.route("/fonts/default_text.otf")
 def discord_font():
-    return send_file(f"{dir_path}/web/uni_sans_thin.otf")
+    return send_file(f"{dir_path}/web/Roboto-Medium.ttf")
 
+@app.route("/favicon.ico")
+def favicon():
+    return send_file(f"{dir_path}/web/favicon.ico")
 
 @app.route("/fishinfo/<name>")
 def fishinfo(name):
@@ -43,9 +46,9 @@ def fishinfo(name):
     inventory = output.replace("\n","<br>")
     output = """<html><head>
     <style>
-      @font-face { font-family: uni_sans_thin; src: url('/fonts/uni_sans_thin.otf'); } 
+      @font-face { font-family: default_text; src: url('/fonts/default_text.otf'); } 
       h1 {
-         font-family: uni_sans_thin
+         font-family: default_text
       }
       body {background-color: rgb(54,57,63);}
       h1 {color: white;}
