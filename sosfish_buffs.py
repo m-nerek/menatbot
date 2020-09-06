@@ -171,7 +171,7 @@ def campfire_main_loop(name, location, parameters, data):
 		if campfire_expiry_time < datetime.datetime.now():
 			resetCampfire(location, data)
 
-	if " cook" in parameters:
+	if " cook " in parameters:
 
 		if data[location]["campfire"]["fuel"] == "N":
 			return "A campfire has not been made at this location"
