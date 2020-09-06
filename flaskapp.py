@@ -1,8 +1,5 @@
-from flask import Flask
+from flask import Flask, send_file
 from sosfish_status import Status
-from sosfish_constants import herbs
-from sosfish_constants import spices
-from flask import request
 import os
 import json
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -29,17 +26,32 @@ def loadUserData():
     return dat
 
 
-
 @app.route("/")
 def hello():
     return "<h1 style='color:blue'>Eat shit Chris.</h1>"
+
+
+@app.route("/fonts/uni_sans_thin.otf")
+def discord_font():
+    return send_file(f"{dir_path}/web/uni_sans_thin.otf")
+
 
 @app.route("/fishinfo/<name>")
 def fishinfo(name):
     user_data = loadUserData()
     output = Status(name, user_data)
-    output = output.replace("\n","<br>")
-    output = f"<html><p>{output}</p></html>"
+    inventory = output.replace("\n","<br>")
+    output = """<html><head>
+    <style>
+      @font-face { font-family: uni_sans_thin; src: url('/fonts/uni_sans_thin.otf'); } 
+      h1 {
+         font-family: uni_sans_thin
+      }
+      body {background-color: rgb(54,57,63);}
+      h1 {color: white;}
+    </style>
+   </head>"""
+    output = f"{output}<body><h1>{inventory}</h1></body></html>"
     return output
 
 
