@@ -104,7 +104,13 @@ class Menato(discord.Client):
         
         elif self.user in message.mentions:
             if "menat op" in message.content:
-                responses = ["can you not"]
+                await message.channel.send("https://cdn.discordapp.com/attachments/750340925066051604/752632855665967204/favicon_crop1.png")
+                await message.channel.send("Hmm what's this?")
+                await message.channel.send("https://cdn.discordapp.com/attachments/750340925066051604/752632958153785394/unknown.png")
+                await message.channel.send("What are you trying to say?")
+                await message.channel.send("https://cdn.discordapp.com/attachments/750340925066051604/752633033164718100/unknown.png")
+                await message.channel.send("You really out here starting shit?")
+                return
             elif "nemph stream link" in message.content:
                 responses = ["here you go you lazy degen: http://twitch.tv/nemphtis"]
             elif message.content.strip(f"{self.tagged_string} ").startswith("ping"):
