@@ -81,6 +81,8 @@ class Menato(discord.Client):
             return
         if message.content.startswith("!frames"):
             responses = self.frames(message)
+        elif "eekum bokum" in message.content.lower():
+            responses = ["eekum bokum"]
         elif message.content.startswith("!help"):
             responses = [self.help_string]
         elif message.content.startswith("!bethelp"):
