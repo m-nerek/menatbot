@@ -1,6 +1,7 @@
 from sosfish_constants import badge_names 
 from sosfish_constants import herbs
 from sosfish_constants import spices
+from sosfish_constants import PokemonURL
 
 def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False):
     output = f" --- {name} the angler --- \n"
@@ -107,7 +108,19 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
     else:
         output+=f" {total_fish} Catches\n"
     
+    if data[name]["currentcompanion"]!="":
+        output+= f"Current companion: {data[name]['currentcompanion']}\n"
+        output+= PokemonURL(data[name]['currentcompanion'])
+        output+="\n"
+    if len(data[name]["companions"])>1:
+        output+="Other friends: "
+        for poke in data[name]["companions"]:
+            output += f"[{poke}] "
+        output+="\n"
+
     if hide_fish or hide_badges:
         output+="Full inventory: "
+
+
 
     return output

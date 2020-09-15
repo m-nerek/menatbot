@@ -17,6 +17,7 @@ from sosfish_constants import herbs
 from sosfish_constants import spices
 from sosfish_constants import dir_path
 from sosfish_constants import loadList
+from sosfish_constants import PokemonURL
 
 if DEBUG == False:
 	import sosmarkov
@@ -31,7 +32,8 @@ def helpString(name):
 	campfire_help ="\n		`!fish campfire` To lay a campfire (requires a log)"
 	campfire_light_help ="\n		`!fish light campfire` To light a campfire at your location"
 	campfire_cook_help ="\n		`!fish cook [ingredient]` To add something to the stew (requires a lit campfire at your location)"
-	
+	companion_help ="\n		`!fish companion [name]` To make a creature your companion"
+
 	if "bike" not in data[name]["flags"]:
 		move_help = ""
 	if "log" not in data[name]["flags"]:
@@ -40,12 +42,15 @@ def helpString(name):
 		campfire_light_help = ""
 	if data[data[name]["currentlocation"]]["campfire"]["alight"] == "N":
 		campfire_cook_help = ""
+	if len(data[name]["companions"])<=1:
+		companion_help = ""
+
 
 	return f"""Fishing commands:
         `!fish` to get started fishing
         `!fish status` to see your inventory
         `!sharebait` to share your starter bait with anyone at your location
-        `!fish with/using [bait]` You need to have the bait in your baitbox{move_help}{campfire_help}{campfire_light_help}{campfire_cook_help}
+        `!fish with/using [bait]` You need to have the bait in your baitbox{move_help}{campfire_help}{campfire_light_help}{campfire_cook_help}{companion_help}
         """
 
 def loadData(file):
@@ -250,6 +255,13 @@ def amendProfile(name):
 		data[name]["buffs"] = {}
 	if "equipped" not in data[name]:
 		data[name]["equipped"] = {}
+
+	if "currentcompanion" not in data[name]:
+		data[name]["currentcompanion"] = ""
+	if "nearbycompanion" not in data[name]:
+		data[name]["nearbycompanion"] = ""
+	if "companions" not in data[name]:
+		data[name]["companions"] = []
 
 async def BiteMessageCallback(mention_author, channel, time):
 	try:
@@ -483,6 +495,17 @@ def Catch(name):
 		output += f"\nYou are {sosfish_buffs.describeDrunkenness(name, data)}"
 
 	output+=CheckBadgeQualification(name)
+
+	if random.randrange(0,100)<10:
+		for p in data[location]["requires"]:
+			if "P_" in p:
+				for poketype in pokemon:
+					if poketype in p:
+						poke = random.choice( pokemon[poketype] )
+						data[name]["nearbycompanion"] = poke
+						output += f"\nA {poke} peeks out at you from its hiding place! Make friends with '!fish companion {poke}'\n{PokemonURL(poke)}"
+
+
 	output+="\n\n"
 	#output += f"\ncommon effectiveness: {highest_common_percentage}  noncommon effectiveness: {highest_noncommon_percentage}\n\n"
 
@@ -594,7 +617,6 @@ def ShareBait(name):
 
 	return output
 
-
 def Fish(name, parameters, mention_author=None, channel=None):
 	parameters = parameters.lower()
 	if not name in data:
@@ -602,6 +624,42 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	amendProfile(name)
 	amendProfile(data[name]["currentlocation"])
 
+	if " companion " in parameters:
+
+		chosenPoke = ""
+		for poke in pokemon["ALL"]:
+			if poke.lower() in parameters:
+				chosenPoke = poke
+
+		if chosenPoke=="":
+			return f"I do not recognize that name"
+
+		if chosenPoke in data[name]["companions"]:
+			data[name]["currentcompanion"] = chosenPoke
+			saveUserData(name, data)
+			return f"{chosenPoke} is now the companion of {name}\n{PokemonURL(chosenPoke)}"
+
+		for catch in data[name]["catchlog"].keys():
+			if chosenPoke.lower() in catch.lower():
+				data[name]["currentcompanion"] = chosenPoke
+				data[name]["companions"].append(chosenPoke)
+				saveUserData(name, data)
+				return f"{name} makes friends with a {chosenPoke} that was caught, it is now a companion\n{PokemonURL(chosenPoke)}"
+
+		if data[name]["nearbycompanion"] == chosenPoke:
+			data[name]["currentcompanion"] = chosenPoke
+			data[name]["companions"].append(chosenPoke)
+			data[name]["nearbycompanion"] = ""
+			saveUserData(name, data)
+			return f"{name} makes friends with the {chosenPoke}, it is now a companion\n{PokemonURL(chosenPoke)}"
+
+		if chosenPoke!="":
+			return f"{chosenPoke} does not appear to be anywhere near {name}"
+
+		if data[name]["nearbycompanion"] == "":
+			return "No companions nearby"
+
+		return "I do not recognize that name"
 	
 	if " equip" in parameters:
 		if "last_item" not in data[name]:
@@ -617,6 +675,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		return f"{name} equips {item}"
 
 	if "status" in parameters:
+
+		saveUserData(name, data)
 		status_output = Status(name, data)
 
 		if len(status_output.splitlines()) > 22:
@@ -729,6 +789,10 @@ def Fish(name, parameters, mention_author=None, channel=None):
 
 	output = ""
 	if catch_time == 0 or changed_location or changed_bait:
+
+		if changed_location:
+			data[name]["nearbycompanion"] = ""
+
 		output = CastRod(name, location, usebait, mention_author, channel)
 		saveUserData(name, data)
 	elif catch_time<current_time:
@@ -752,13 +816,15 @@ waterbodies = loadList("waterbodies")
 fish = loadList("fish")
 bait = loadList("bait")
 baitoftheweek = loadList("baitoftheweek")
-
+pokemon = loadData("/fishingdata/pokemon")
 premadelocations = updatePremadeLocations()
 
+#for a in pokemon.keys():
+#	print(a)
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish light campfire"))
-	print(helpString("technicalty"))
+	print(Fish("technicalty", "!fish"))
+	#print(helpString("technicalty"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
 #(Fish("dovah chief", "!fish at epic bait"))

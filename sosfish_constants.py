@@ -10,6 +10,11 @@ badge_scores = [3,3,1,1,10,20,60]
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
+def PokemonURL(poke):
+	poke = poke.replace("-","")
+	poke = poke.replace(".","")
+	poke = poke.lower()
+	return f"https://raw.githubusercontent.com/msikma/pokesprite/master/pokemon-gen8/regular/{poke}.png"
 
 def loadList(file, keepcaps = False):
 	f = open(f"{dir_path}/fishingdata/{file}.txt", "r")
