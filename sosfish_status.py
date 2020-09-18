@@ -1,4 +1,5 @@
 from sosfish_constants import badge_names 
+from sosfish_constants import other_badge_names
 from sosfish_constants import herbs
 from sosfish_constants import spices
 from sosfish_constants import PokemonURL
@@ -72,8 +73,22 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
 
             badge_count+=1
 
+    for a in other_badge_names:
+        if a in data[name]["flags"]:
+            if compress_badges:
+                badge_output += f"  [{a}]"
+                row_count+=1
+                if row_count>2:
+                    badge_output +="\n"
+                    row_count=0;
+            else:
+                badge_output += f" - [{a}] badge\n"
+
+            badge_count+=1
+
+
     for a in data[name]["flags"].keys():
-        if "I :heart: " in a or "Visited " in a or "Go Team!" in a:
+        if "I :heart: " in a or "Visited " in a:
             if compress_badges:
                 badge_output += f"  [{a}]"
                 row_count+=1

@@ -3,6 +3,7 @@ import datetime
 import sosfish_constants
 from sosfish_constants import herbs
 from sosfish_constants import spices
+from sosfish_constants import badge_text
 
 def checkAlcoholExpiry(name, data):
 	if "alcohol" in data[name]["buffs"]:
@@ -146,7 +147,22 @@ def addToStew(ingredient, name, location, data):
 	stewscore = calculateStew(location, data)
 	data[location]["campfire"]["stewscore"] = str(stewscore)
 
-	return f"{name} adds {ingredient} to the pot. The stew {describeStew_(stewscore)}{describeBuff(stewscore)}"
+	output = f"{name} adds {ingredient} to the pot. The stew {describeStew_(stewscore)}{describeBuff(stewscore)}"
+
+	if "Cook" not in data[user]["flags"]:
+		data[user]["flags"]["Cook"] = True
+		output += f"\n{badge_text}[Cook]"
+
+	if "Masterchef" not in data[user]["flags"] and int(stewscore)>=5:
+		data[user]["flags"]["Masterchef"] = True
+		output += f"\n{badge_text}[Masterchef]"
+
+	if "Disaster Artist" not in data[user]["flags"] and int(stewscore)<=-5:
+		data[user]["flags"]["Disaster Artist"] = True
+		output += f"\n{badge_text}[Disaster Artist]"
+
+	return output
+
 
 def campfire_main_loop(name, location, parameters, data):
 
@@ -159,9 +175,12 @@ def campfire_main_loop(name, location, parameters, data):
 	if location == "":
 		location = data[name]["currentlocation"]
 
-	#print(data[location])
 	if data[location]["campfire"]["timer"] == 0:
 		data[location]["campfire"]["timer"] = "0"
+
+
+	if "stewscore" not in data[location]["campfire"]:
+		data[location]["campfire"]["stewscore"] = "0"
 
 	if data[location]["campfire"]["stewscore"] == 0:
 		data[location]["campfire"]["stewscore"] = "0"
@@ -218,7 +237,11 @@ def campfire_main_loop(name, location, parameters, data):
 			data[location]["campfire"]["alight"] = "Y"
 			camptimer = datetime.datetime.now() + datetime.timedelta(hours = 4)
 			data[location]["campfire"]["timer"] = f"{camptimer.year}-{camptimer.month}-{camptimer.day}-{camptimer.hour}-{camptimer.minute}"
-			return "You light the campfire and the flames crackle merrily. You can now make stew with the '!fish cook [ingredient]' command"
+			output = "You light the campfire and the flames crackle merrily. You can now make stew with the '!fish cook [ingredient]' command"
+			if "Pyromaniac" not in data[user]["flags"]:
+				data[user]["flags"]["Pyromaniac"] = True
+				output += f"\n{badge_text}[Pyromaniac]"
+			return output
 
 		else:
 			if "nofire" in data[location]["requires"]:

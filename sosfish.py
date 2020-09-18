@@ -18,6 +18,9 @@ from sosfish_constants import spices
 from sosfish_constants import dir_path
 from sosfish_constants import loadList
 from sosfish_constants import PokemonURL
+from sosfish_constants import badge_text
+
+from sosfish_board import CheckLeaderBoard
 
 if DEBUG == False:
 	import sosmarkov
@@ -512,7 +515,6 @@ def Catch(name):
 	return output
 
 
-badge_text = "You have been awarded a shiny new badge that reads: "
 
 def CheckBadgeQualification(name):
 	output = ""
@@ -679,7 +681,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		saveUserData(name, data)
 		status_output = Status(name, data)
 
-		if len(status_output.splitlines()) > 22:
+		if len(status_output.splitlines()) > 22 and DEBUG == False:
 			status_output = Status(name, data, True)
 			if len(status_output.splitlines()) > 22:
 				status_output = Status(name, data, True, False, True)
@@ -773,7 +775,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 			return f"{name} you do not have that bait. Try asking someone to !sharebait when you are at the same location to get their starting bait"
 
 	# --- campfire stuff ---
-
+	if location != "":
+		amendProfile(location)
 	camp = sosfish_buffs.campfire_main_loop(name, location, parameters, data)
 
 	if camp != None:
@@ -786,6 +789,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		saveUserData(name, data)
 		return camp
 	
+	if " leaderboards" in parameters and ("Salt Mine" in location or "Salt Mine" in data[name]["currentlocation"]):
+		return CheckLeaderBoard(data, name)	
 
 	output = ""
 	if catch_time == 0 or changed_location or changed_bait:
@@ -823,7 +828,9 @@ premadelocations = updatePremadeLocations()
 #	print(a)
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish"))
+	print(Fish("technicalty", "!fish at tech"))
+	print(Fish("technicalty", "!fish leaderboards"))
+	print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
