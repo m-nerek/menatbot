@@ -149,16 +149,16 @@ def addToStew(ingredient, name, location, data):
 
 	output = f"{name} adds {ingredient} to the pot. The stew {describeStew_(stewscore)}{describeBuff(stewscore)}"
 
-	if "Cook" not in data[user]["flags"]:
-		data[user]["flags"]["Cook"] = True
+	if "Cook" not in data[name]["flags"]:
+		data[name]["flags"]["Cook"] = True
 		output += f"\n{badge_text}[Cook]"
 
-	if "Masterchef" not in data[user]["flags"] and int(stewscore)>=5:
-		data[user]["flags"]["Masterchef"] = True
+	if "Masterchef" not in data[name]["flags"] and int(stewscore)>=5:
+		data[name]["flags"]["Masterchef"] = True
 		output += f"\n{badge_text}[Masterchef]"
 
-	if "Disaster Artist" not in data[user]["flags"] and int(stewscore)<=-5:
-		data[user]["flags"]["Disaster Artist"] = True
+	if "Disaster Artist" not in data[name]["flags"] and int(stewscore)<=-5:
+		data[name]["flags"]["Disaster Artist"] = True
 		output += f"\n{badge_text}[Disaster Artist]"
 
 	return output
@@ -238,8 +238,8 @@ def campfire_main_loop(name, location, parameters, data):
 			camptimer = datetime.datetime.now() + datetime.timedelta(hours = 4)
 			data[location]["campfire"]["timer"] = f"{camptimer.year}-{camptimer.month}-{camptimer.day}-{camptimer.hour}-{camptimer.minute}"
 			output = "You light the campfire and the flames crackle merrily. You can now make stew with the '!fish cook [ingredient]' command"
-			if "Pyromaniac" not in data[user]["flags"]:
-				data[user]["flags"]["Pyromaniac"] = True
+			if "Pyromaniac" not in data[name]["flags"]:
+				data[name]["flags"]["Pyromaniac"] = True
 				output += f"\n{badge_text}[Pyromaniac]"
 			return output
 
