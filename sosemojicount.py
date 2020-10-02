@@ -155,24 +155,33 @@ def listEmoji(guild, parameters):
 			return "I can't find any data for that month!"
 	
 
+	bottom_value = 0
 	bottom_count = 0
-	for e in list_data:
-		if list_data[e] == 0:
-			bottom_count+=1
 
-	if bottom_count<10:
-		bottom_count = 10
+	while bottom_count<10:
+		for e in list_data:
+			if list_data[e] == bottom_value:
+				bottom_count+=1
+		bottom_value += 1
+
 
 	top = sorted(list_data.items(), key=lambda x: x[1], reverse=True)[:5]
 	bottom = sorted(list_data.items(), key=lambda x: x[1])[:bottom_count]
-	
+	guild_emojis = [x.name for x in guild.emojis]
+
 	output+= "Top Emojis:\n"
 	for e in top:
-		output += f" - {e[0]} ({e[1]})"
+		if e in guild_emojis:
+			output += f" - {e[0]} ({e[1]})"
+		else:
+			output += f" - [{e[0]}] ({e[1]})"
 
 	output+= "\n\nBottom Emojis:\n"
 	for e in bottom:
-		output += f" - {e[0]} ({e[1]})"
+		if e in guild_emojis:
+			output += f" - {e[0]} ({e[1]})"
+		else:
+			output += f" - [{e[0]}] ({e[1]})"
 
 
 	return output
