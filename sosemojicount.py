@@ -46,15 +46,15 @@ def logEmoji(string, guild, user):
 	global log_counter
 
 
-	guild = str(guild)
+	guildstr = str(guild)
 	month = str(getMonth())
 	year = str(getYear())
 
-	if guild not in emojiCounts:
-		emojiCounts[guild] = {}
+	if guildstr not in emojiCounts:
+		emojiCounts[guildstr] = {}
 
-	if month not in emojiCounts[guild]:
-		emojiCounts[guild][month] = {}
+	if month not in emojiCounts[guildstr]:
+		emojiCounts[guildstr][month] = {}
 
 	emojis = findCleanEmojis(string)
 	made_changes = False
@@ -76,9 +76,9 @@ def logEmoji(string, guild, user):
 
 	log_counter+=1
 	for e in emojis:
-		if e not in emojiCounts[guild][month]:
-			emojiCounts[guild][month][e] = 0
-		emojiCounts[guild][month][e] += 1
+		if e not in emojiCounts[guildstr][month]:
+			emojiCounts[guildstr][month][e] = 0
+		emojiCounts[guildstr][month][e] += 1
 
 		if "turkic" not in e:
 			last_user_emote_count+=1
@@ -90,11 +90,11 @@ def logEmoji(string, guild, user):
 
 		guild_emoji_names = [x.name for x in guild.emojis]
 		for e in guild_emoji_names:
-			if e not in emojiCounts[guild][month]:
-				emojiCounts[guild][month][e] = 0
+			if e not in emojiCounts[guildstr][month]:
+				emojiCounts[guildstr][month][e] = 0
 				print(f"adding emoji to db {e}")
 
-		saveData(f"emojidata/emojicounts_{year}_{month}_{guild}",emojiCounts[guild][month])
+		saveData(f"emojidata/emojicounts_{year}_{month}_{guildstr}",emojiCounts[guildstr][month])
 		log_counter=0
 
 
