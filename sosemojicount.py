@@ -164,6 +164,9 @@ def listEmoji(guild, parameters):
 				bottom_count+=1
 		bottom_value += 1
 
+	if bottom_count>30:
+		bottom_count = 30
+
 
 	top = sorted(list_data.items(), key=lambda x: x[1], reverse=True)[:5]
 	bottom = sorted(list_data.items(), key=lambda x: x[1])[:bottom_count]
@@ -171,17 +174,17 @@ def listEmoji(guild, parameters):
 
 	output+= "Top Emojis:\n"
 	for e in top:
-		if e in guild_emojis:
+		if f":{e}:" in guild_emojis:
 			output += f" - {e[0]} ({e[1]})"
 		else:
-			output += f" - [{e[0]}] ({e[1]})"
+			output += f" - *{e[0]} ({e[1]})*"
 
 	output+= "\n\nBottom Emojis:\n"
 	for e in bottom:
-		if e in guild_emojis:
+		if f":{e}:" in guild_emojis:
 			output += f" - {e[0]} ({e[1]})"
 		else:
-			output += f" - [{e[0]}] ({e[1]})"
+			output += f" - *{e[0]} ({e[1]})*"
 
 
 	return output
