@@ -63,7 +63,7 @@ def logEmoji(string, guild, user):
 	if len(emojis)<1:
 		return
 
-	print (f"{user} adding {len(emojis)} emojis  previous user: {last_user} at {last_user_emote_count} emojis, save counter {log_counter}")
+	#print (f"{user} adding {len(emojis)} emojis  previous user: {last_user} at {last_user_emote_count} emojis, save counter {log_counter}")
 
 	if str(user) not in last_user:
 		last_user_emote_count = 0
@@ -84,9 +84,9 @@ def logEmoji(string, guild, user):
 			last_user_emote_count+=1
 		made_changes = True
 	
-	print(f"logged {len(emojis)} emojis (count {log_counter})")
+	#print(f"logged {len(emojis)} emojis (count {log_counter})")
 		
-	if made_changes and log_counter>0:
+	if made_changes and log_counter>20:
 
 		guild_emoji_names = [x.name for x in guild.emojis]
 		for e in guild_emoji_names:
@@ -168,22 +168,22 @@ def listEmoji(guild, parameters):
 	bottom = sorted(list_data.items(), key=lambda x: x[1])[:bottom_count]
 	guild_emojis = [x.name for x in guild.emojis]
 
-	print(f"---{len(guild_emojis)} emojis compared")
+	#print(f"---{len(guild_emojis)} emojis compared")
 
 
 	output+= "Top Emojis:\n"
 	for e in top:
 		if e[0] in guild_emojis:
-			output += f" - **{e[0]} ({e[1]})**"
+			output += f" - **{e[0]}** ({e[1]})"
 		else:
-			output += f" - *{e[0]} ({e[1]})*"
+			output += f" - *{e[0]}* ({e[1]})"
 
 	output+= "\n\nBottom Emojis:\n"
 	for e in bottom:
 		if e[0] in guild_emojis:
-			output += f" - **{e[0]} ({e[1]})**"
+			output += f" - **{e[0]}** ({e[1]})"
 		else:
-			output += f" - *{e[0]} ({e[1]})*"
+			output += f" - *{e[0]}* ({e[1]})"
 
 
 	return output
