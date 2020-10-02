@@ -86,7 +86,7 @@ def logEmoji(string, guild, user):
 	
 	#print(f"logged {len(emojis)} emojis (count {log_counter})")
 		
-	if made_changes and log_counter>20:
+	if made_changes and log_counter>0:
 
 		guild_emoji_names = {}
 		if not isinstance(guild, str):
@@ -94,6 +94,7 @@ def logEmoji(string, guild, user):
 			for e in guild_emoji_names:
 				if e not in emojiCounts[guild][month]:
 					emojiCounts[guild][month][e] = 0
+					print(f"adding emoji to db {e}")
 
 		saveData(f"emojidata/emojicounts_{year}_{month}_{guild}",emojiCounts[guild][month])
 
@@ -172,16 +173,19 @@ def listEmoji(guild, parameters):
 	bottom = sorted(list_data.items(), key=lambda x: x[1])[:bottom_count]
 	guild_emojis = [x.name for x in guild.emojis]
 
+	print(f"---{len(guild_emojis)} emojis compared {guild_emojis[0]} ")
+
+
 	output+= "Top Emojis:\n"
 	for e in top:
-		if f":{e}:" in guild_emojis:
+		if e in guild_emojis:
 			output += f" - {e[0]} ({e[1]})"
 		else:
 			output += f" - *{e[0]} ({e[1]})*"
 
 	output+= "\n\nBottom Emojis:\n"
 	for e in bottom:
-		if f":{e}:" in guild_emojis:
+		if e in guild_emojis:
 			output += f" - {e[0]} ({e[1]})"
 		else:
 			output += f" - *{e[0]} ({e[1]})*"
