@@ -159,7 +159,7 @@ def concedeBet(user, description):
 		total_pot=0
 		total_to_pay=0
 		conceding_sign=0
-		output = ""
+		output = "```diff\n"
 
 		for x in range(len(bets[key].keys())):
 			if str(x) in bets[key].keys() and user in bets[key][str(x)]["user"]:
@@ -175,7 +175,12 @@ def concedeBet(user, description):
 				else:
 					total_to_pay += abs(int(bets[key][str(x)]['amount']))
 
+		output+=showBet(key)+"\n"
+
 		output+=f"Total pot {total_pot+total_to_pay} was bet."
+
+		payouts = ""
+		refunds = ""
 
 		for x in range(len(bets[key].keys())):
 			
@@ -186,15 +191,19 @@ def concedeBet(user, description):
 					refund = max(0, amount_bet - total_to_pay)
 					total_to_pay-=min(amount_bet, total_to_pay)
 					addMoney(bet_user, refund)
-					output+=f" {bet_user} was refunded {CURRENCY}{refund} from a bet of {CURRENCY}{amount_bet}."
+					refunds+=f"---{bet_user} was refunded {CURRENCY}{refund} of {CURRENCY}{amount_bet}.\n"
 				else:
 					amount_bet = abs(int(bets[key][str(x)]['amount']))
 					bet_user = bets[key][str(x)]['user']
 					payoff = min(amount_bet, total_pot)
 					total_pot -= payoff
 					addMoney(bet_user, payoff + amount_bet)
-					output+=f" {bet_user} was paid {CURRENCY}{payoff+amount_bet} from a bet of {CURRENCY}{amount_bet}."
+					payouts+=f"+{bet_user} won {CURRENCY}{payoff+amount_bet} from a bet of {CURRENCY}{amount_bet}!\n"
 
+		output += payouts
+		output += "Because nobody bet against their stake, the following money was refunded:"
+		output += refunds
+		output += "```"
 		del bets[key]
 		
 		return output
