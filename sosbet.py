@@ -198,7 +198,11 @@ def concedeBet(user, description):
 					payoff = min(amount_bet, total_pot)
 					total_pot -= payoff
 					addMoney(bet_user, payoff + amount_bet)
-					payouts+=f"+{bet_user} won {CURRENCY}{payoff+amount_bet} from a bet of {CURRENCY}{amount_bet}!\n"
+					if payoff>0:
+						payouts+=f"+{bet_user} won {CURRENCY}{payoff+amount_bet} from a bet of {CURRENCY}{amount_bet}!\n"
+					else:
+						refunds+=f"---{bet_user} was refunded {CURRENCY}{amount_bet}.\n"
+
 
 		output += payouts
 		output += "Because nobody bet against their stake, the following money was refunded:"
