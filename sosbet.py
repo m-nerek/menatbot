@@ -177,7 +177,7 @@ def concedeBet(user, description):
 
 		output+=showBet(key)+"\n"
 
-		output+=f"Total pot {total_pot+total_to_pay} was bet."
+		output+=f"Total pot {total_pot+total_to_pay} was bet.\n"
 
 		payouts = ""
 		refunds = ""
@@ -205,7 +205,7 @@ def concedeBet(user, description):
 
 
 		output += payouts
-		output += "Because nobody bet against their stake, the following money was refunded:"
+		output += "Because nobody bet against their stake, the following money was refunded:\n"
 		output += refunds
 		output += "```"
 		del bets[key]
