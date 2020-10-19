@@ -220,7 +220,7 @@ def showBet(key):
 
 
 def showBets(user, user_to_find):
-	output = "```diff"
+	output = "```diff\n"
 	if user_to_find == "me" or user_to_find == "":
 		user_to_find=user
 
