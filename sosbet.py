@@ -67,7 +67,7 @@ def findKey(search_key, dict):
 	if any(keys):
 		return keys[0]
 	if any(descs):
-		return desc[0]
+		return descs[0]
 	else:
 		return False
 
