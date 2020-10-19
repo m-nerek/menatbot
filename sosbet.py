@@ -10,7 +10,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 STARTING_FUNDS = 5
 MINIMUM_FUNDS = 1
-CURRENCY = ":takemymoney:"
+CURRENCY = "$"
 
 help_string = f"""Betting commands:
         `!bet [amount] on [thing]` create a new bet
@@ -204,20 +204,23 @@ def concedeBet(user, description):
 
 
 def showBet(key):
-	output = f"[{key}] \"{bets[key]['description']}\" \n"
+	output = f"\"{bets[key]['description']}\" [{key}]\n"
 	for x in range(len(bets[key].keys())):
 			if str(x) in bets[key].keys():
 				amount = bets[key][str(x)]['amount']
 				user = bets[key][str(x)]['user']
-				output+=f"{user} has bet {CURRENCY}{abs(amount)} "
 				if amount<0:
-					output+="against"
+					output+="-"
+				else:
+					output+="+"
+				output+=f"{CURRENCY}{abs(amount)} {user}"
+				
 				output+="\n"
 	return output
 
 
 def showBets(user, user_to_find):
-	output = ""
+	output = "```diff"
 	if user_to_find == "me" or user_to_find == "":
 		user_to_find=user
 
@@ -227,6 +230,7 @@ def showBets(user, user_to_find):
 				if (user_to_find == bets[bet][str(x)]['user']):
 					amount = bets[bet][str(x)]['amount']
 					output+=f"{showBet(bet)}"
+	output+="```"
 	return output
 
 def lockBet(user, id):
