@@ -63,11 +63,11 @@ def sign(number):
 #bets[key]['description']
 def findKey(search_key, dict):
 	keys = [string for string in dict.keys() if search_key.lower() in string.lower()]
-	descs = [item for item in dict if search_key.lower() == item['description'].lower()]
+	descs = [string for string in dict.keys() if search_key.lower() == dict[string]['description'].lower()]
 	if any(keys):
 		return keys[0]
 	if any(descs):
-		return desc[0].key
+		return desc[0]
 	else:
 		return False
 
