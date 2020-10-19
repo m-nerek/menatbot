@@ -210,9 +210,9 @@ def showBet(key):
 				amount = bets[key][str(x)]['amount']
 				user = bets[key][str(x)]['user']
 				if amount<0:
-					output+="-"
+					output+="	-"
 				else:
-					output+="+"
+					output+="	+"
 				output+=f"{CURRENCY}{abs(amount)} {user}"
 				
 				output+="\n"
@@ -221,6 +221,7 @@ def showBet(key):
 
 def showBets(user, user_to_find):
 	output = "```diff\n"
+	output = "+[bets for are yellow] -[bets against are red]\n"
 	if user_to_find == "me" or user_to_find == "":
 		user_to_find=user
 
