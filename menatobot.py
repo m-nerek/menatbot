@@ -8,6 +8,7 @@ import sosbet
 import soshat
 import sosemojicount
 import sosfish
+import soscharselect
 import json
 import frames
 import minecraft_manage
@@ -155,6 +156,8 @@ class Menato(discord.Client):
                 asyncio.get_event_loop().create_task(self.delayed_message(message.channel, message.author, 30, self.test_response))
             elif "de kong me" in message.content.lower():
                 responses = ["https://media.discordapp.net/attachments/728684452603232327/741708975539617902/kong_jr2.png"]
+            elif "random select" in message.content.lower():
+            	responses = [soscharselect.CharSelect(message.author.name, message.content)]
             else:
                 responses = self.responses['idle']
 
