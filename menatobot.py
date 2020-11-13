@@ -159,7 +159,7 @@ class Menato(discord.Client):
             elif "de kong me" in message.content.lower():
                 responses = ["https://media.discordapp.net/attachments/728684452603232327/741708975539617902/kong_jr2.png"]
             elif "random select" in message.content.lower():
-            	responses = [soscharselect.CharSelect(message.author.name, message.content)]
+                responses = [soscharselect.CharSelect(message.author.name, message.content)]
             else:
                 responses = self.responses['idle']
 
@@ -282,10 +282,10 @@ class Menato(discord.Client):
             response = ""
             print(len(message.guild.members))
             for member in members_to_ping:
-            	#for x in message.guild.members:
-	        	#	if member == x.mention.replace("!", ""):
-	        	response = f"{response} {member}"
-	        	#   		break;
+                #for x in message.guild.members:
+                #   if member == x.mention.replace("!", ""):
+                response = f"{response} {member}"
+                #           break;
 
             response = f"You're being pinged for {group_key}\n\n{response}"
         return [response]
@@ -445,7 +445,7 @@ class Menato(discord.Client):
         return response
 
 if __name__ =="__main__":
-	intents = discord.Intents.all()
-	menat = Menato()
-	framesy_boye = frames.Frames()
-	menat.run(client_token)
+    intents = discord.Intents.all()
+    menat = Menato()
+    framesy_boye = frames.Frames()
+    menat.run(client_token)
