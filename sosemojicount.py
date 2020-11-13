@@ -97,6 +97,13 @@ def logEmoji(string, guild, user):
 		saveData(f"emojidata/emojicounts_{year}_{month}_{guildstr}",emojiCounts[guildstr][month])
 		log_counter=0
 
+def serverEmoji(guild, parameters):
+	guild_emojis = [x.name for x in guild.emojis]
+	output = ""
+	for e in guild_emojis:
+		output+=f" {e} :"
+	return output
+
 
 def listEmoji(guild, parameters):
 
