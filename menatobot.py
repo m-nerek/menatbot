@@ -282,7 +282,7 @@ class Menato(discord.Client):
             response = ""
             print(len(message.guild.members))
             for member in members_to_ping:
-            	print(str(member)+"  "+str(message.guild.members[0].mention.replace("!", "")))
+            	print("["+str(member)+"]  ["+str(message.guild.members[0].mention.replace("!", ""))+"]")
             	if str(member) in [str(x.mention.replace("!", "")) for x in message.guild.members]:
                		response = f"{response} {member}"
             response = f"You're being pinged for {group_key}\n\n{response}"
