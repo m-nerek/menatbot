@@ -102,6 +102,8 @@ def serverEmoji(guild, parameters):
 	output = ""
 	for e in guild_emojis:
 		output+=f" {e} :"
+
+	output+=f"\n {len(guild_emojis)} total"
 	return output
 
 
