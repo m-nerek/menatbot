@@ -445,6 +445,7 @@ class Menato(discord.Client):
         return response
 
 if __name__ =="__main__":
-    menat = Menato()
+	intents = discord.Intents.all()
+    menat = Menato(intents=intents)
     framesy_boye = frames.Frames()
     menat.run(client_token)
