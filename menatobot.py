@@ -144,8 +144,8 @@ class Menato(discord.Client):
                 pass
                 responses = [sosmarkov.respond(message)]
                 markov = True # shitty workaround, sue me
-            elif "play" in message.content.lower():
-                responses = [sosplay.respond(message)]
+            #elif "play" in message.content.lower():
+            #    responses = [sosplay.respond(message)]
             elif "sorting hat" in message.content.lower():
                 responses = [soshat.findHouse(message.author.name)]
             elif "define" in message.content.lower():
