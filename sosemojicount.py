@@ -118,9 +118,12 @@ def listEmoji(guild, parameters):
 	month = str(getMonth())
 
 	list_month = month
-	list_year = "2020"
+	list_year = str(getYear())
 	parameters = parameters.lower()
 
+	for y in range(2020,2100):
+		if str(y) in parameters:
+			list_year = str(y)
 
 	if "dec" in parameters:
 		list_month = 12
