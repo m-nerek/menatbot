@@ -9,6 +9,7 @@ import soshat
 import sosemojicount
 import sosfish
 import soscharselect
+import sosfortune
 import json
 import frames
 import minecraft_manage

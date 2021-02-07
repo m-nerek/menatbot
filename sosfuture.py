@@ -32,4 +32,4 @@ def Future(user):
 			
 	return output
 
-#print(Future("CFTony13", ""))
+#print(Future("technicalty"))
