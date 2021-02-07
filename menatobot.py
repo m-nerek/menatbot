@@ -43,6 +43,8 @@ class Menato(discord.Client):
         `@menato !minecraft_info` to get the current minecraft IP address and server status
         `@menato !minecraft_start` to remotely start the server if it's not online
         `@menato list emoji rankings` to show the most/least popular emojis
+        `@menato sorting hat` to be sorted into your harry potter house
+        `@menato tell my fortune` to have your fortune told
         
         Feel free to ask me to reply `with context` 
         
@@ -146,6 +148,10 @@ class Menato(discord.Client):
                 markov = True # shitty workaround, sue me
             #elif "play" in message.content.lower():
             #    responses = [sosplay.respond(message)]
+            elif "tell my fortune" in message.content.lower():
+                responses = [sosfuture.Future(message.author.name)]
+            elif "tell me my fortune" in message.content.lower():
+                responses = [sosfuture.Future(message.author.name)]
             elif "sorting hat" in message.content.lower():
                 responses = [soshat.findHouse(message.author.name)]
             elif "define" in message.content.lower():
