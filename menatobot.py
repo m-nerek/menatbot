@@ -10,6 +10,7 @@ import sosemojicount
 import sosfish
 import soscharselect
 import sosfuture
+import sosquiz
 import json
 import frames
 import minecraft_manage
@@ -83,6 +84,9 @@ class Menato(discord.Client):
             pass
         if self.user == message.author:
             return
+
+        await sosquiz.quiz(message.author.name,message.server,message.channel, message.content)
+
         if message.content.startswith("!frames"):
             responses = self.frames(message)
         elif "eekum bokum" in message.content.lower():
