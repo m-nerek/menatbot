@@ -96,6 +96,8 @@ def subtractMoney(user, amount):
 	money[user] = max(MINIMUM_FUNDS, int(money[user]) - abs(int(amount)))
 
 def addMoney(user, amount):
+	if not user in money:
+		money[user] = STARTING_FUNDS
 	money[user] = int(money[user]) + abs(int(amount))
 
 def processBet(user, amount, description):
