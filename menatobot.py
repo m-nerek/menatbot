@@ -85,7 +85,7 @@ class Menato(discord.Client):
         if self.user == message.author:
             return
 
-        await sosquiz.quiz(message.author.name,message.server,message.channel, message.content)
+        await sosquiz.quiz(message.author.name,message.guild,message.channel, message.content)
 
         if message.content.startswith("!frames"):
             responses = self.frames(message)
