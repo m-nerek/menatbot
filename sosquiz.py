@@ -206,6 +206,9 @@ async def quiz(user, server, channel, text):
 			questiontimers[server][channel] = datetime.datetime.now() + datetime.timedelta(seconds = 20)
 
 		to_send = f"{q.questionpreamble}\n\n{q.censoreddef}\n\nType your answers below!"
+		if len(to_send) > 1999:
+            to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
+
 		if debug:
 			print(to_send)
 		else:
@@ -216,6 +219,11 @@ async def quiz(user, server, channel, text):
 		if int(score)>0:
 
 			to_send = respondToCorrectAnswer(q, score, user)
+
+			if len(to_send) > 1999:
+            	to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
+
+
 			if debug:
 				print(to_send)
 			else:
@@ -229,6 +237,9 @@ async def quiz(user, server, channel, text):
 
 			if questions[s][c]!="" and datetime.datetime.now()>questiontimers[s][c]:
 				to_send = f"Times up! the answer was: '{questions[s][c].word}'\n\n{questions[s][c].definition}"
+				if len(to_send) > 1999:
+		            to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
+
 				if debug:
 					print(to_send)
 				else:
