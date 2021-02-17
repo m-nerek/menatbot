@@ -14,7 +14,7 @@ with open('girl_boy_names_2005.json') as f:
 data["girls"] = [x.lower() for x in data["girls"]]
 data["boys"] = [x.lower() for x in data["boys"]]
 
-people_words = ["friend", "person", "beautiful", "handsome", "girl", "boy", "she", "guy", "caring", "dude"]
+people_words = ["friend", "person", "beautiful", "handsome", "girl", "boy", "she", "guy", "caring", "dude", "sex", "gorgeous"]
 nonpeople_words = ["college", "university", "school", "town", "city"]
 
 
@@ -82,7 +82,7 @@ def UDquestion():
 	definitions[index].censoreddef = censoredoutput
 	definitions[index].questionpreamble = "--- URBAN JEOPARDY ROUND ---\n--- What is the word/phrase described by this definition? ---"
 	definitions[index].questiontype = "UD"
-
+	definitions[index].rules = ""
 	return definitions[index]
 
 
@@ -90,16 +90,19 @@ class Object(object):
 	pass
 
 def MarkovQuestion():
-	user =  random.choice(sosmarkov.usermodelsizes[:20] )[1]
+	user =  random.choice(sosmarkov.usermodelsizes[:35] )[1]
 
-	phrase = sosmarkov.answer(sosmarkov.models["nsfw"], f"quote {user}","")
+	phrase = sosmarkov.answer(sosmarkov.models["nsfw"], f"quote {user}","").split('-')[0]
+	phrase += "\n\n"+sosmarkov.answer(sosmarkov.models["nsfw"], f"quote {user}","").split('-')[0]
+	phrase += "\n\n"+sosmarkov.answer(sosmarkov.models["nsfw"], f"quote {user}","").split('-')[0]
 
 	question = Object()
 	question.word = user
-	question.censoreddef = f"{phrase.split('-')[0]}"
-	question.questionpreamble = "--- WHO DAT?!? ROUND ---\n--- Who would say something like this? ---"
+	question.censoreddef = f"{phrase}"
+	question.questionpreamble = "--- WHO DAT?!? ROUND ---\n--- Who would say things like this? ---"
 	question.questiontype = "MARKOV"
 	question.definition = f"{phrase}"
+	question.rules = "\n\nOnly 3 guesses per player allowed!"
 
 	return question
 
@@ -107,6 +110,9 @@ def MarkovQuestion():
 def matchAnswer(question, attempt):
 
 	matches = 0
+
+	if len(attempt.split())>10:
+		return 0
 
 	for word in re.split('[^a-zA-Z]', attempt.replace("'","")):
 		for word2 in re.split('[^a-zA-Z]', question.word.replace("'","")):
@@ -143,6 +149,7 @@ scoring = Object()
 scoring.scores = {}
 scoring.expires = ""
 scoring.max = 3
+guesses = {}
 
 def Score(user):
 	global scoring
@@ -179,6 +186,7 @@ async def quiz(user, server, channel, text):
 	global questiontimers
 	global questionnumber
 	global debug
+	global guesses
 
 	if server not in questions.keys():
 		questions[server] = {}
@@ -187,6 +195,10 @@ async def quiz(user, server, channel, text):
 	if channel not in questions[server].keys():
 		questions[server][channel] = ""
 
+	combinedID = f"{server}{channel}{user}"
+
+	if combinedID not in guesses:
+		guesses[combinedID] = 0
 
 	q = questions[server][channel] 
 
@@ -197,6 +209,7 @@ async def quiz(user, server, channel, text):
 		else:
 			questions[server][channel] = UDquestion()
 		
+		guesses = {}
 
 		questionnumber+=1
 		q = questions[server][channel]
@@ -205,7 +218,11 @@ async def quiz(user, server, channel, text):
 		if q.questiontype == "MARKOV":
 			questiontimers[server][channel] = datetime.datetime.now() + datetime.timedelta(seconds = 20)
 
-		to_send = f"{q.questionpreamble}\n\n{q.censoreddef}\n\nType your answers below!"
+		to_send = f"{q.questionpreamble}\n\n{q.censoreddef}{q.rules}\n\nType your answers below!"
+
+		if debug:
+			to_send+=f"[{q.word}]"
+
 		if len(to_send) > 1999:
 			to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
 
@@ -216,7 +233,7 @@ async def quiz(user, server, channel, text):
 
 	elif q != "" and len(text.split())<6:
 		score = matchAnswer(q, text)
-		if int(score)>0:
+		if int(score)>0 and guesses[combinedID]<3:
 
 			to_send = respondToCorrectAnswer(q, score, user)
 
@@ -230,7 +247,7 @@ async def quiz(user, server, channel, text):
 				await channel.send(to_send)
 			questions[server][channel] = ""
 			return
-	
+		guesses[combinedID] += 1
 
 	for s in questions.keys():
 		for c in questions[s].keys():
