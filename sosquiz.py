@@ -83,6 +83,7 @@ def UDquestion():
 	definitions[index].questionpreamble = "--- URBAN JEOPARDY ROUND ---\n--- What is the word/phrase described by this definition? ---"
 	definitions[index].questiontype = "UD"
 	definitions[index].rules = ""
+	definitions[index].maxguesses = 9999;
 	return definitions[index]
 
 
@@ -103,6 +104,7 @@ def MarkovQuestion():
 	question.questiontype = "MARKOV"
 	question.definition = f"{phrase}"
 	question.rules = "\n\nOnly 3 guesses per player allowed!"
+	question.maxguesses = 3
 
 	return question
 
@@ -233,7 +235,7 @@ async def quiz(user, server, channel, text):
 
 	elif q != "" and len(text.split())<6:
 		score = matchAnswer(q, text)
-		if int(score)>0 and guesses[combinedID]<3:
+		if int(score)>0 and guesses[combinedID]<q.maxguesses:
 
 			to_send = respondToCorrectAnswer(q, score, user)
 
