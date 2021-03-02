@@ -218,7 +218,7 @@ async def quiz(user, server, channel, text):
 		questiontimers[server][channel] = datetime.datetime.now() + datetime.timedelta(seconds = 30)
 
 		if q.questiontype == "MARKOV":
-			questiontimers[server][channel] = datetime.datetime.now() + datetime.timedelta(seconds = 20)
+			questiontimers[server][channel] = datetime.datetime.now() + datetime.timedelta(seconds = 30)
 
 		to_send = f"{q.questionpreamble}\n\n{q.censoreddef}{q.rules}\n\nType your answers below!"
 
