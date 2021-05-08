@@ -186,7 +186,7 @@ questionnumber = 0
 def trimLength(to_send):
 	if len(to_send) > 1999:
 		return f"{to_send[i: i + 1900]}..."
-	elif:
+	else:
 		return to_send
 
 
