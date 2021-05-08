@@ -91,7 +91,7 @@ def hasMoney(user, amount):
 def subtractMoney(user, amount):
 	if not user in money:
 		money[user] = STARTING_FUNDS
-	money[user] = max(MINIMUM_FUNDS, int(money[user]) - abs(int(amount)))
+	money[user] = max(0, int(money[user]) - abs(int(amount)))
 
 def addMoney(user, amount):
 	if not user in money:
