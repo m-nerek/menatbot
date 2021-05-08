@@ -183,6 +183,13 @@ debug = False
 
 questionnumber = 0
 
+def trimLength(to_send):
+	if len(to_send) > 1999:
+		return f"{to_send[i: i + 1900]}..."
+	elif:
+		return to_send
+
+
 async def quiz(user, server, channel, text):
 	global questions
 	global questiontimers
@@ -225,8 +232,7 @@ async def quiz(user, server, channel, text):
 		if debug:
 			to_send+=f"[{q.word}]"
 
-		if len(to_send) > 1999:
-			to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
+		to_send = trimLength(to_send)
 
 		if debug:
 			print(to_send)
@@ -238,10 +244,7 @@ async def quiz(user, server, channel, text):
 		if int(score)>0 and guesses[combinedID]<q.maxguesses:
 
 			to_send = respondToCorrectAnswer(q, score, user)
-
-			if len(to_send) > 1999:
-				to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
-
+			to_send = trimLength(to_send)
 
 			if debug:
 				print(to_send)
@@ -256,8 +259,7 @@ async def quiz(user, server, channel, text):
 
 			if questions[s][c]!="" and datetime.datetime.now()>questiontimers[s][c]:
 				to_send = f"Times up! the answer was: '{questions[s][c].word}'\n\n{questions[s][c].definition}"
-				if len(to_send) > 1999:
-					to_send = [to_send[i: i + 1900] for i in range(0,len(to_send), 1900)] # index notation code golf lmao
+				to_send = trimLength(to_send)
 
 				if debug:
 					print(to_send)
