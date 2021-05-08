@@ -85,10 +85,8 @@ def hasMoney(user, amount):
 	if not user in money:
 		money[user] = STARTING_FUNDS
 
-	if money[user] == 1 and int(amount)== 1:
-		return True
 
-	return money[user]-1>=int(amount)
+	return money[user]>=int(amount)
 
 def subtractMoney(user, amount):
 	if not user in money:
@@ -320,7 +318,7 @@ def pay(user, user_to_find, amount):
 	if key==False:
 		return "who?"
 
-	if money[user]<amount+MINIMUM_FUNDS:
+	if money[user]<amount:
 		return "you do not have the funds to pay"
 
 	money[user] -= amount;
