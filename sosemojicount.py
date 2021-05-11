@@ -153,23 +153,38 @@ def listEmoji(guild, parameters):
 	list_month = str(list_month)
 
 	if "recent" in parameters:
-		output+=f"Emoji counts for the last 4 months"
-		list_data = {}
-		for i in range(0,3):
-			if list_month != month and list_year != getYear():
-				filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
-				try:
-					with open(filename, 'r') as f:
-						list_data.append(json.load(f))
-				except:
-					return "I can't find any data for that month!"
-			else:
-				list_data.append(emojiCounts[str(guild)][month])
+		output+=f"Emoji counts for the last 3 months"
 
-			list_month-=1
-			if(list_month<1):
-				list_month = 12
-				list_year = str(int(list_year)-1)
+		list_month-=3
+		if list_month<1:
+			list_month+=12
+			list_year-=1
+
+		for i in range(1,3):
+
+			
+			filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
+			try:
+				with open(filename, 'r') as f:
+					data = json.load(f)
+					if i==1:
+						list_data = data
+					else:
+						for d in data.keys():
+							if d in list_data.keys():
+								list_data[d] = int(list_data[d])+int(data[d])
+						
+			except:
+				return "I can't find any data for that month!"
+
+			list_month+=1
+			if(list_month>1):
+				list_month = 1
+				list_year = str(int(list_year)+1)
+
+		
+
+
 
 	else:
 		output+=f"Emoji counts for {month}/{year}"
