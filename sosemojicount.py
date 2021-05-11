@@ -152,28 +152,49 @@ def listEmoji(guild, parameters):
 
 	list_month = str(list_month)
 
-	list_data = emojiCounts[str(guild)][month]
+	if "recent" in parameters:
+		output+=f"Emoji counts for the last 4 months"
+		list_data = {}
+		for i in range(0,3):
+			if list_month != month and list_year != getYear():
+				filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
+				try:
+					with open(filename, 'r') as f:
+						list_data.append(json.load(f))
+				except:
+					return "I can't find any data for that month!"
+			else:
+				list_data.append(emojiCounts[str(guild)][month])
 
-	if list_month != month and list_year != getYear():
-		filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
-		try:
-			with open(filename, 'r') as f:
-				list_data = json.load(f)
-		except:
-			return "I can't find any data for that month!"
+			list_month-=1
+			if(list_month<1):
+				list_month = 12
+				list_year = str(int(list_year)-1)
+
+	else:
+		output+=f"Emoji counts for {month}/{year}"
+		list_data = emojiCounts[str(guild)][month]
+
+		if list_month != month and list_year != getYear():
+			filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
+			try:
+				with open(filename, 'r') as f:
+					list_data = json.load(f)
+			except:
+				return "I can't find any data for that month!"
 	
 
 	bottom_value = 0
 	bottom_count = 0
 
-	while bottom_count<10:
+	while bottom_count<20:
 		for e in list_data:
 			if list_data[e] == bottom_value:
 				bottom_count+=1
 		bottom_value += 1
 
-	if bottom_count>30:
-		bottom_count = 30
+	if bottom_count>40:
+		bottom_count = 40
 
 
 	top = sorted(list_data.items(), key=lambda x: x[1], reverse=True)[:5]
