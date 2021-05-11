@@ -197,9 +197,10 @@ def listEmoji(guild, parameters):
 			except:
 				return f"I can't find any data for {list_month}/{list_year} server {str(guild.id)}!"
 	
+	guild_emojis = [x.name for x in guild.emojis]
 
 	if "static" in parameters:
-		list_data = {k:v for (k,v) in list_data.items() if k in guild.emojis and not guild.emojis[k].animated}
+		list_data = {k:v for (k,v) in list_data.items() if k in guild_emojis and guild.emojis[guild_emojis.index(k)].animated == False}
 
 	bottom_value = 0
 	bottom_count = 0
@@ -216,7 +217,7 @@ def listEmoji(guild, parameters):
 
 	top = sorted(list_data.items(), key=lambda x: x[1], reverse=True)[:5]
 	bottom = sorted(list_data.items(), key=lambda x: x[1])[:bottom_count]
-	guild_emojis = [x.name for x in guild.emojis]
+	
 
 	#print(f"---{len(guild_emojis)} emojis compared")
 
