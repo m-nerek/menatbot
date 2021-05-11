@@ -248,9 +248,9 @@ for filename in os.listdir(dir):
 		guild = "".join(parts[3:])
 
 		if year == str(getYear()) and month == str(getMonth()):
-			emojiCounts[str(guild.id)] = {}
-			emojiCounts[str(guild.id)][month] = {}
-			emojiCounts[str(guild.id)][month] = json.load(f)
+			emojiCounts[str(guild)] = {}
+			emojiCounts[str(guild)][month] = {}
+			emojiCounts[str(guild)][month] = json.load(f)
 
 		
 
