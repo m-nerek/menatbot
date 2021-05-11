@@ -155,10 +155,10 @@ def listEmoji(guild, parameters):
 	if "recent" in parameters:
 		output+=f"Emoji counts for the last 3 months"
 
-		list_month-=3
+		list_month=int(list_month)-3
 		if list_month<1:
 			list_month+=12
-			list_year-=1
+			list_year=int(list_year)1
 
 		for i in range(1,3):
 
@@ -177,8 +177,8 @@ def listEmoji(guild, parameters):
 			except:
 				return "I can't find any data for that month!"
 
-			list_month+=1
-			if(list_month>1):
+			list_month=int(list_month)+1
+			if(int(list_month)>1):
 				list_month = 1
 				list_year = str(int(list_year)+1)
 
