@@ -46,7 +46,7 @@ def logEmoji(string, guild, user):
 	global log_counter
 
 
-	guildstr = str(guild)
+	guildstr = str(guild.id)
 	month = str(getMonth())
 	year = str(getYear())
 
@@ -111,10 +111,10 @@ def listEmoji(guild, parameters):
 
 	output = ""
 
-	if str(guild) not in emojiCounts:
-		emojiCounts[str(guild)] = {}
-	if str(getMonth()) not in emojiCounts[str(guild)]:
-		emojicounts[str(guild)][str(getMonth())] = {}
+	if str(guild.id) not in emojiCounts:
+		emojiCounts[str(guild.id)] = {}
+	if str(getMonth()) not in emojiCounts[str(guild.id)]:
+		emojicounts[str(guild.id)][str(getMonth())] = {}
 	month = str(getMonth())
 
 	list_month = month
@@ -160,10 +160,11 @@ def listEmoji(guild, parameters):
 			list_month+=12
 			list_year=str(int(list_year)-1)
 
+		list_month = str(list_month)
 		for i in range(1,3):
 
 			
-			filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
+			filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild.id)}.json"
 			try:
 				with open(filename, 'r') as f:
 					data = json.load(f)
@@ -175,28 +176,26 @@ def listEmoji(guild, parameters):
 								list_data[d] = int(list_data[d])+int(data[d])
 						
 			except:
-				return f"I can't find any data for {list_month}/{list_year}!"
+				return f"I can't find any data for {list_month}/{list_year} server {str(guild.id)}!"
 
 			list_month=int(list_month)+1
 			if(int(list_month)>1):
 				list_month = 1
 				list_year = str(int(list_year)+1)
-
-		
-
+			list_month = str(list_month)
 
 
 	else:
 		output+=f"Emoji counts for {month}/{year}\n"
-		list_data = emojiCounts[str(guild)][month]
+		list_data = emojiCounts[str(guild.id)][month]
 
 		if list_month != month and list_year != getYear():
-			filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild)}.json"
+			filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild.id)}.json"
 			try:
 				with open(filename, 'r') as f:
 					list_data = json.load(f)
 			except:
-				return f"I can't find any data for {list_month}/{list_year}!"
+				return f"I can't find any data for {list_month}/{list_year} server {str(guild.id)}!"
 	
 
 	bottom_value = 0
@@ -249,9 +248,9 @@ for filename in os.listdir(dir):
 		guild = "".join(parts[3:])
 
 		if year == str(getYear()) and month == str(getMonth()):
-			emojiCounts[guild] = {}
-			emojiCounts[guild][month] = {}
-			emojiCounts[guild][month] = json.load(f)
+			emojiCounts[str(guild.id)] = {}
+			emojiCounts[str(guild.id)][month] = {}
+			emojiCounts[str(guild.id)][month] = json.load(f)
 
 		
 
