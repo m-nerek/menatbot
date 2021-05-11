@@ -186,8 +186,8 @@ def listEmoji(guild, parameters):
 
 
 	else:
-		output+=f"Emoji counts for {month}/{year}\n"
-		list_data = emojiCounts[str(guild.id)][month]
+		output+=f"Emoji counts for {list_month}/{list_year}\n"
+		list_data = emojiCounts[str(guild.id)][list_month]
 
 		if list_month != month and list_year != getYear():
 			filename = f"{dir_path}/emojidata/emojicounts_{list_year}_{list_month}_{str(guild.id)}.json"
