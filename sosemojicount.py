@@ -198,6 +198,9 @@ def listEmoji(guild, parameters):
 				return f"I can't find any data for {list_month}/{list_year} server {str(guild.id)}!"
 	
 
+	if "static" in parameters:
+		list_data = {k:v for (k,v) in list_data.items() if k in guild.emojis.keys() and not guild.emojis[k].animated}
+
 	bottom_value = 0
 	bottom_count = 0
 
