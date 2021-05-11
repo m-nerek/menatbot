@@ -114,7 +114,7 @@ def listEmoji(guild, parameters):
 	if str(guild.id) not in emojiCounts:
 		emojiCounts[str(guild.id)] = {}
 	if str(getMonth()) not in emojiCounts[str(guild.id)]:
-		emojicounts[str(guild.id)][str(getMonth())] = {}
+		emojiCounts[str(guild.id)][str(getMonth())] = {}
 	month = str(getMonth())
 
 	list_month = month
