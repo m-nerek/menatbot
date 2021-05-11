@@ -44,7 +44,7 @@ class Menato(discord.Client):
         `@menato define "term"` to find out what something is
         `@menato !minecraft_info` to get the current minecraft IP address and server status
         `@menato !minecraft_start` to remotely start the server if it's not online
-        `@menato list emoji rankings` to show the most/least popular emojis
+        `@menato emoji rankings [month] [year] [recent] [static/animated]` to show the most/least popular emojis, parameters optional
         `@menato sorting hat` to be sorted into your harry potter house
         `@menato tell my fortune` to have your fortune told
         
@@ -161,7 +161,7 @@ class Menato(discord.Client):
                 responses = [soshat.findHouse(message.author.name)]
             elif "define" in message.content.lower():
                 responses = [sosdefine.respond(message)]
-            elif "list emoji rankings" in message.content.lower():
+            elif "emoji rankings" in message.content.lower():
                 responses = [sosemojicount.listEmoji(message.guild, message.content)]
             elif "list guild emojis" in message.content.lower():
                 responses = [sosemojicount.serverEmoji(message.guild, message.content)]

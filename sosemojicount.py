@@ -201,6 +201,8 @@ def listEmoji(guild, parameters):
 
 	if "static" in parameters:
 		list_data = {k:v for (k,v) in list_data.items() if k in guild_emojis and guild.emojis[guild_emojis.index(k)].animated == False}
+	elif "animated" in parameters:
+		list_data = {k:v for (k,v) in list_data.items() if k in guild_emojis and guild.emojis[guild_emojis.index(k)].animated == True}
 
 	bottom_value = 0
 	bottom_count = 0
