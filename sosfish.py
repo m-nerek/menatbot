@@ -252,6 +252,8 @@ def buildProfile(name):
 	return ""
 
 def amendProfile(name):
+	if name == "":
+		return
 	if "campfire" not in data[name]:
 		sosfish_buffs.resetCampfire(name, data)
 	if "buffs" not in data[name]:
