@@ -11,6 +11,7 @@ import sosfish
 import soscharselect
 import sosfuture
 import sosquiz
+import sosleeg
 import json
 import frames
 import minecraft_manage
@@ -47,6 +48,7 @@ class Menato(discord.Client):
         `@menato emoji rankings [month] [year] [recent] [static/animated]` to show the most/least popular emojis, parameters optional
         `@menato sorting hat` to be sorted into your harry potter house
         `@menato tell my fortune` to have your fortune told
+        `@menato leeg stats` to get your current league of legends data
         
         Feel free to ask me to reply `with context` 
         
@@ -159,6 +161,8 @@ class Menato(discord.Client):
                 responses = [sosfuture.Future(message.author.name)]
             elif "sorting hat" in message.content.lower():
                 responses = [soshat.findHouse(message.author.name)]
+            elif "leeg stats" in message.content.lower():
+                responses = [sosleeg.Leeg(message.author.name)]
             elif "define" in message.content.lower():
                 responses = [sosdefine.respond(message)]
             elif "emoji rankings" in message.content.lower():

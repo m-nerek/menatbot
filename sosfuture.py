@@ -1,11 +1,12 @@
 import random;
+import urbandictionary;
 
 preamble = ["Looking into my crystal ball I can see"]
 secondpreamble = ["I can also see"]
 
 events = ["that you will meet a", "that you will have a", "that you will fall in love with a", "you with many", "you with lots of", "you will be a", "you will be happy with a", "you will be successful at work because of your", "you making love with a", "you married to a"]
-descriptors = ["girthy", "beautiful", "lovely", "majestic", "warrior", "loving", "thicc"]
-objects = ["woman", "house", "dong", "wallet", "car", "wife", "husband", "husbando", "femboy", "bank balance", "clothing", "waifu", "mansion", "robot", "vtuber"]
+descriptors = ["girthy", "beautiful", "lovely", "majestic", "warrior", "loving", "thicc", "elegant", "manly", "buff", "voluptuous", "mighty", "saucy"]
+objects = ["woman", "house", "dong", "wallet", "car", "wife", "husband", "husbando", "femboy", "bank balance", "clothing", "waifu", "mansion", "robot", "vtuber", "body pillow"]
 subobjects = ["with big tits", "made of gold", "that insipires you to accomplish your goals", "that hugs you when you feel sad", "that buys you kinder eggs"]
 
 def numberFromString(string, range):
