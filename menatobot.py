@@ -12,6 +12,7 @@ import soscharselect
 import sosfuture
 import sosquiz
 import sosleeg
+import sosspace
 import json
 import frames
 import minecraft_manage
@@ -49,6 +50,7 @@ class Menato(discord.Client):
         `@menato sorting hat` to be sorted into your harry potter house
         `@menato tell my fortune` to have your fortune told
         `@menato leeg stats` to get your current league of legends data
+        `@menato space fact` to find out something about space!
         
         Feel free to ask me to reply `with context` 
         
@@ -163,6 +165,8 @@ class Menato(discord.Client):
                 responses = [soshat.findHouse(message.author.name)]
             elif "leeg stats" in message.content.lower():
                 responses = [sosleeg.Leeg(message.author.name)]
+            elif "space fact" in message.content.lower():
+                responses = [sosspace.SpaceFact()]
             elif "define" in message.content.lower():
                 responses = [sosdefine.respond(message)]
             elif "emoji rankings" in message.content.lower():
