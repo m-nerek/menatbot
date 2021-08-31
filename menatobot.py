@@ -303,8 +303,8 @@ class Menato(discord.Client):
             print(f"members: {len(message.guild.members)}")
             for member in members_to_ping:
                 for x in message.guild.members:
-                    #if member == x.mention.replace("!", ""):
-                    print(f"[{member}] matches user [{x.mention}]?")
+                    if member == x.mention.replace("!", ""):
+                        print(f"[{member}] matches user [{x.mention}] [{x.name}]?")
                 response = f"{response} {member}"
                 #           break;
 
