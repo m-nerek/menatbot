@@ -26,8 +26,8 @@ client_token = os.environ['MENAT_TOKEN']
 
 
 class Menato(discord.Client):
-    def __init__(self, intents):
-        super(Menato,self).__init__(intents=intents)
+    def __init__(self):
+        super(Menato,self).__init__()
 
         self.help_string = """Commands:
         `!frames` for SFV Frame data
