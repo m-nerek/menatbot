@@ -470,7 +470,8 @@ class Menato(discord.Client):
 if __name__ =="__main__":
     intents = discord.Intents().default()
     intents.members = True
-    menat = Menato(intents=intents)
+    menat = Menato()
+    #intents=intents)
 
     framesy_boye = frames.Frames()
     menat.run(client_token)
