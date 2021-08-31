@@ -299,10 +299,11 @@ class Menato(discord.Client):
         else:
             members_to_ping = self.groups[group_key]
             response = ""
-            print(len(message.guild.members))
+            print(f"members: {len(message.guild.members)}")
             for member in members_to_ping:
-                #for x in message.guild.members:
-                #   if member == x.mention.replace("!", ""):
+                for x in message.guild.members:
+                    #if member == x.mention.replace("!", ""):
+                    print(f"[{member}] matches user [{x.mention}]?")
                 response = f"{response} {member}"
                 #           break;
 
