@@ -307,8 +307,8 @@ class Menato(discord.Client):
                 for x in message.guild.members:
                     if member == x.mention.replace("!", ""):
                         print(f"[{member}] matches user [{x.mention}] [{x.name}]?")
-                response = f"{response} {member}"
-                #           break;
+                        response = f"{response} {member}"
+                        break;
 
             response = f"You're being pinged for {group_key}\n\n{response}"
         return [response]
