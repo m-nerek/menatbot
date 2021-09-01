@@ -152,7 +152,8 @@ class Menato(discord.Client):
                 responses = self.remove_from_group(message)
             elif "crystal ball" in message.content or "!cb" in message.content:
                 responses = self.responses['crystal ball']
-
+            elif "who" in message.content and message.content.endswith('?'):
+                responses = [soswho.respond(message)]
             elif message.content.endswith('!') or message.content.endswith('?'):
                 pass
                 responses = [sosmarkov.respond(message)]
