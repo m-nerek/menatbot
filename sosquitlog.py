@@ -45,7 +45,7 @@ def QuitLog(guild):
 				if not found:
 					# add quit to the log
 					entry = {}
-					time = datetime.now()
+					time = datetime..datetime.now()
 					entry["time"] = f"{time.year}-{time.month}-{time.day}-{time.hour}-{time.minute}"
 					entry["id"] = x
 					entry["name"] = data[serverName]["USERS"][x]
@@ -58,7 +58,7 @@ def QuitLog(guild):
 				if str(x.mention) not in data[serverName]["USERS"].keys():
 					#add join to the log
 					entry = {}
-					time = datetime.now()
+					time = datetime.datetime.now()
 					entry["time"] = f"{time.year}-{time.month}-{time.day}-{time.hour}-{time.minute}"
 					entry["id"] = str(x.mention)
 					entry["name"] = x.name
