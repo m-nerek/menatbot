@@ -45,7 +45,7 @@ def QuitLog(guild):
 				if not found:
 					# add quit to the log
 					entry = {}
-					time = datetime..datetime.now()
+					time = datetime.datetime.now()
 					entry["time"] = f"{time.year}-{time.month}-{time.day}-{time.hour}-{time.minute}"
 					entry["id"] = x
 					entry["name"] = data[serverName]["USERS"][x]
