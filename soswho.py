@@ -15,6 +15,6 @@ def respond(message):
 
 	member = message.guild.members[id].name
 
-	responses = ["for sure!", "definitely!", "!"]
+	responses = [" for sure!", " definitely!", "!"]
 
-	return f"{member} {searchTerm} {random.choice(responses)}"
+	return f"{member} {searchTerm}{random.choice(responses)}"
