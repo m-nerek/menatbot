@@ -13,6 +13,7 @@ import sosfuture
 import sosquiz
 import sosleeg
 import sosspace
+import sosquitlog
 import json
 import frames
 import minecraft_manage
@@ -184,6 +185,7 @@ class Menato(discord.Client):
                 responses = self.responses['idle']
 
         sosemojicount.logEmoji(str(message.content), message.guild, message.author)
+        sosquitlog.QuitLog(message.guild)
 
         if responses and "with context" in message.content.lower():
             add_nemph = True
