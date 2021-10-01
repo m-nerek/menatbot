@@ -57,7 +57,7 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
     badge_count=0;
 
     if compress_badges:
-        badge_output = " - Badges:\n"
+        badge_output = " - Badges:\n   "
 
     row_count=0
     for a in badge_names:
@@ -66,10 +66,10 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
                 badge_output += f"  [{a}]"
                 row_count+=1
                 if row_count>2:
-                    badge_output +="\n"
+                    badge_output +="\n   "
                     row_count=0;
             else:
-                badge_output += f" - [{a}] badge\n"
+                badge_output += f" - [{a}] badge\n   "
 
             badge_count+=1
 
@@ -79,10 +79,10 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
                 badge_output += f"  [{a}]"
                 row_count+=1
                 if row_count>2:
-                    badge_output +="\n"
+                    badge_output +="\n   "
                     row_count=0;
             else:
-                badge_output += f" - [{a}] badge\n"
+                badge_output += f" - [{a}] badge\n   "
 
             badge_count+=1
 
@@ -93,10 +93,10 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
                 badge_output += f"  [{a}]"
                 row_count+=1
                 if row_count>2:
-                    badge_output +="\n"
+                    badge_output +="\n   "
                     row_count=0;
             else:
-                badge_output += f" - [{a}] badge\n"
+                badge_output += f" - [{a}] badge\n   "
             badge_count+=1
 
     if compress_badges:
@@ -114,7 +114,7 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
     total_fish = 0
     counter = 0
     for a in data[name]["catchlog"].keys():
-        fish_output += f"[{a} ({data[name]['catchlog'][a]})] "
+        fish_output += f"{a} ({data[name]['catchlog'][a]}) "
         total_fish += data[name]['catchlog'][a]
         if (counter % 3) == 2:
         	fish_output += "\n   "
