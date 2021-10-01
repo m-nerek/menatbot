@@ -117,7 +117,7 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
         total_fish += data[name]['catchlog'][a]
         if (total_fish % 3) == 2:
         	fish_output += "\n   "
-        else
+        else:
         	fish_output += ", "
     
     fish_output += f"\nTotal: {total_fish} Catches\n"
