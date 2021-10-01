@@ -112,13 +112,15 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
     fish_output = f"Catches:\n   "
 
     total_fish = 0
+    counter = 0
     for a in data[name]["catchlog"].keys():
-        fish_output += f"{a} ({data[name]['catchlog'][a]}) "
+        fish_output += f"[{a} ({data[name]['catchlog'][a]})] "
         total_fish += data[name]['catchlog'][a]
-        if (total_fish % 3) == 2:
+        if (counter % 3) == 2:
         	fish_output += "\n   "
         else:
         	fish_output += ", "
+        counter+=1
     
     fish_output += f"\nTotal: {total_fish} Catches\n"
 
