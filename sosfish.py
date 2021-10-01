@@ -685,7 +685,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 
 		if len(status_output.splitlines()) > 22 and DEBUG == False:
 			status_output = Status(name, data, True)
-			if len(status_output.splitlines()) > 22:
+			#commented out because server down
+			if False and len(status_output.splitlines()) > 22:
 				status_output = Status(name, data, True, False, True)
 				if len(status_output.splitlines()) > 22:
 					status_output = Status(name, data, True, True, True)
