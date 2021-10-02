@@ -185,6 +185,8 @@ class Menato(discord.Client):
                 responses = [soscharselect.CharSelect(message.author.name, message.content)]
             elif "goblin what" in message.content.lower():
                 responses = ["GOBLIN DEEZ NUTS"]
+            elif "recent activity" in message.content.lower():
+                responses = [sosquitlog.RecentActivity(message.guild, message.content)]
             else:
                 responses = self.responses['idle']
 
