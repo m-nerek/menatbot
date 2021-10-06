@@ -109,7 +109,8 @@ def randomItem(name, location):
 
 		if "Mead and Madness" in visit and "Dwarven Hold" not in location:
 			return f"a flyer, but the water has damaged it to the point where you can't read what it says any more"
-
+		if "Cafe" in visit and "Leslie" not in location:
+			return f"a flyer, but the water has damaged it to the point where all you can see is a smudged kawaii picture"
 		if f"Visited {visit}" in data[name]["flags"]:
 			return f"a flyer for '{visit}'"
 
@@ -284,6 +285,8 @@ def ArrivalText(location):
 		return "unlocks the door and enters, "
 	elif "crampons" in data[location]["requires"]:
 		return "scales the sheer cliffs and hikes to the water, "
+	elif "catears" in data[location]["requires"]:
+		return "dons their cat ears, "
 	return ""
 
 def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
@@ -354,6 +357,8 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 
 	if "pub" in data[location]["requires"]:
 		output = f"{base_description}heads over to the raucous packed bar, and orders a drink from the grumpy old dwarven barkeep"
+	elif "catears" in data[location]["requires"]:
+		output = f"{base_description}decides to explore and find someone to sit and have coffee with"
 	else:
 		output = f"{base_description}settles down to fish and casts a rod baited with {data[name]['currentbait']} into the water"
 
@@ -457,14 +462,21 @@ def Catch(name):
 				output = f"The barman returns and hands {name} another glass of {caught_fish_name}"
 				if random.randrange(0,100)<60:
 					sosfish_buffs.progressAlcohol(name, data)
+			if "catears" in data[location]["requires"]:
+				output = f"{caught_fish_name} happily waves {name} to come sit next to them and they have a lovely chat"
 		else:
 			data[name]["catchlog"][caught_fish_name]=1
 			output = f"A bite! {name} has caught a {caught_fish_name}, congratulations on catching one!"
 			if "pub" in data[location]["requires"]:
 				output = f"The barman returns and hands {name} a glass of {caught_fish_name}, time to drink!"
+			if "catears" in data[location]["requires"]:
+				output = f"A spare seat! {name} has met {caught_fish_name} and they are very friendly!"
 
 	elif "pub" in data[location]["requires"]:
 		output = "It seems like the barman has forgotten about you, better order again!"
+	elif "catears" in data[location]["requires"]:
+		output = "You can't see anyone with a spare seat, maybe keep looking!"
+		
 	elif "bike" not in data[name]["flags"]:
 		data[name]["flags"]["bike"] = True
 		output = f"A bite! {name} reels in the catch, only to discover an old bicycle! A bit of oil gets it working again, and you can now '!fish at [location]'. Try visiting other angler's locations and sharing your bait with them using '!sharebait'"
@@ -480,10 +492,13 @@ def Catch(name):
 	elif "flintsteel" not in data[name]["flags"] and random.randrange(0,100)<10:
 		data[name]["flags"]["flintsteel"] = True
 		output = f"A bite! {name} reels in the catch, only to discover a flint and steel. You can now light a campfire with '!fish light campfire'"
+	elif "catears" not in data[name]["flags"] and random.randrange(0,100)<10:
+		data[name]["flags"]["catears"] = True
+		output = f"A bite! {name} reels in the catch, only to discover a headband with a pair of adorable cat ears, most peculiar!"
 	else:
 		output = f"A bite! {name} reels in the catch, only to discover {randomItem(name, location)}"
 
-	if "pub" not in data[location]["requires"]:
+	if "pub" not in data[location]["requires"] and "catears" not in data[location]["requires"]:
 		if (highest_common_percentage<25 and highest_noncommon_percentage<25) or (highest_common_percentage>75 and highest_noncommon_percentage>75):
 			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching any fish"
 		elif (highest_common_percentage<25 or highest_common_percentage>75) and (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
@@ -555,6 +570,8 @@ def CheckBadgeQualification(name):
 		data[name]["flags"][location_all_badge_name] = True
 		if "pub" in data[location]["requires"]:
 			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on sampling all the alcohol at this location!"
+		if "catears" in data[location]["requires"]:
+			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on catching all the locals at this location!"
 		else:
 			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on catching all the fish at this location!"
 
@@ -766,6 +783,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 				return f"There doesn't seem to be any way for {name} to climb up to this location"
 			if req == "platinumkey" and "platinumkey" not in data[name]["flags"]:
 				return f"{name} is not yet a friend of the dwarves, so cannot pass this way"
+			if req == "catears" and "catears" not in data[name]["flags"]:
+				return f"{name} spots a cute looking cafe and approaches, but is too embarassed to walk in without proper attire"
 
 
 	if changed_bait:
@@ -831,9 +850,10 @@ premadelocations = updatePremadeLocations()
 #	print(a)
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish at tech"))
-	print(Fish("technicalty", "!fish leaderboards"))
-	print(Fish("technicalty", "!fish status"))
+	#print(Fish("technicalty", "!fish at Leslie"))
+	print(Fish("technicalty", "!fish at cat cafe"))
+	#print(Fish("technicalty", "!fish leaderboards"))
+	#print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
