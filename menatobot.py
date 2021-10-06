@@ -183,6 +183,8 @@ class Menato(discord.Client):
                 responses = ["https://media.discordapp.net/attachments/728684452603232327/741708975539617902/kong_jr2.png"]
             elif "random select" in message.content.lower():
                 responses = [soscharselect.CharSelect(message.author.name, message.content)]
+            elif "goblin what" in message.content.lower():
+                responses = ["GOBLIN DEEZ NUTS"]
             elif "recent activity" in message.content.lower():
                 responses = [sosquitlog.RecentActivity(message.guild, message.content)]
             else:
