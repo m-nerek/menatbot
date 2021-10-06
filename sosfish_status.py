@@ -22,6 +22,8 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
         output += " - Crampons\n"
     if "platinumkey" in data[name]["flags"]:
         output += " - A platinum key\n"
+    if "catears" in data[name]["flags"]:
+        output += " - A headband with cat ears\n"   
     if "log" in data[name]["flags"]:
         output += " - A log\n"
     if "flintsteel" in data[name]["flags"]:
