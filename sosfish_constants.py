@@ -5,11 +5,12 @@ SUNSET_END = 21
 SUNRISE_START = 6
 SUNRISE_END = 9
 
-other_badge_names = ["Go Team!","Achievement Get!", "Relentless", "Master Explorer", "Disaster Artist", "Masterchef", "Cook", "Pyromaniac"]
+other_badge_names = ["Go Team!","Achievement Get!", "Relentless", "Master Explorer", "Disaster Artist", "Masterchef", "Cook", "Pyromaniac", "Evil Monster"]
 badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God", "Fish Whisperer", "Grandmaster Angler" ]
 badge_scores = [3,3,1,1,10,20,60]
 badge_text = "You have been awarded a shiny new badge that reads: "
 
+forbidden_ingredients = ["uwucat","ayunda risu","catpop","nyandalf","leslie"]
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -18,6 +19,16 @@ def PokemonURL(poke):
 	poke = poke.replace(".","")
 	poke = poke.lower()
 	return f"https://raw.githubusercontent.com/msikma/pokesprite/master/pokemon-gen8/regular/{poke}.png"
+
+def loadData(file):
+	try:
+		with open(f"{dir_path}/{file}.json", "r") as file:
+			try:
+				return json.load(file)
+			except json.decoder.JSONDecodeError:
+				return {}
+	except:
+		return {}
 
 def loadList(file, keepcaps = False):
 	f = open(f"{dir_path}/fishingdata/{file}.txt", "r")
@@ -32,3 +43,5 @@ def loadList(file, keepcaps = False):
 
 herbs = loadList("herbs")
 spices = loadList("spices")
+
+pokemon = []
