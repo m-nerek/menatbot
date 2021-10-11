@@ -4,6 +4,8 @@ import sosfish_constants
 from sosfish_constants import herbs
 from sosfish_constants import spices
 from sosfish_constants import badge_text
+from sosfish_constants import forbidden_ingredients
+from sosfish_constants import pokemon
 
 def checkAlcoholExpiry(name, data):
 	if "alcohol" in data[name]["buffs"]:
@@ -160,6 +162,18 @@ def addToStew(ingredient, name, location, data):
 	if "Disaster Artist" not in data[name]["flags"] and int(stewscore)<=-5:
 		data[name]["flags"]["Disaster Artist"] = True
 		output += f"\n{badge_text}[Disaster Artist]"
+
+	forbidden = False
+
+	if ingredient in forbidden_ingredients:
+		forbidden = True
+
+	if ingredient.lower() in (name.lower() for name in sosfish_constants.pokemon["ALL"]):
+		forbidden = True
+
+	if "Evil Monster" not in data[name]["flags"] and forbidden == True:
+		data[name]["flags"]["Evil Monster"] = True
+		output += f"\n{badge_text}[Evil Monster]"
 
 	return output
 

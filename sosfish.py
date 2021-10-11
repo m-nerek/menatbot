@@ -19,6 +19,7 @@ from sosfish_constants import dir_path
 from sosfish_constants import loadList
 from sosfish_constants import PokemonURL
 from sosfish_constants import badge_text
+from sosfish_constants import pokemon
 
 from sosfish_board import CheckLeaderBoard
 
@@ -106,10 +107,16 @@ def randomItem(name, location):
 
 	if i<=1:
 		visit = random.choice(premadelocations)
+		#print(f"randomly selected {visit}")
+		retry = 0
+		while f"Visited {visit}" in data[name]["flags"].keys() and retry < 50:
+			retry += 1
+			visit = random.choice(premadelocations)
+			#print(f"randomly selected {visit}")
 
 		if "Mead and Madness" in visit and "Dwarven Hold" not in location:
-			return f"a flyer, but the water has damaged it to the point where you can't read what it says any more"
-		if "Cafe" in visit and "Leslie" not in location:
+			return f"a flyer, but the water has damaged it to the point where you can't read what the runes say any more"
+		if "Cafe" in visit and ("leslie" not in location.lower() or "saiyuri" not in location.lower()):
 			return f"a flyer, but the water has damaged it to the point where all you can see is a smudged kawaii picture"
 		if f"Visited {visit}" in data[name]["flags"]:
 			return f"a flyer for '{visit}'"
@@ -519,9 +526,9 @@ def Catch(name):
 	if random.randrange(0,100)<10:
 		for p in data[location]["requires"]:
 			if "P_" in p:
-				for poketype in pokemon:
+				for poketype in sosfish_constants.pokemon:
 					if poketype in p:
-						poke = random.choice( pokemon[poketype] )
+						poke = random.choice( sosfish_constants.pokemon[poketype] )
 						data[name]["nearbycompanion"] = poke
 						output += f"\nA {poke} peeks out at you from its hiding place! Make friends with '!fish companion {poke}'\n{PokemonURL(poke)}"
 
@@ -648,7 +655,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	if " companion " in parameters:
 
 		chosenPoke = ""
-		for poke in pokemon["ALL"]:
+		for poke in sosfish_constants.pokemon["ALL"]:
 			if poke.lower() in parameters:
 				chosenPoke = poke
 
@@ -843,15 +850,13 @@ waterbodies = loadList("waterbodies")
 fish = loadList("fish")
 bait = loadList("bait")
 baitoftheweek = loadList("baitoftheweek")
-pokemon = loadData("/fishingdata/pokemon")
 premadelocations = updatePremadeLocations()
+sosfish_constants.pokemon = loadData("/fishingdata/pokemon")
 
-#for a in pokemon.keys():
-#	print(a)
 
 if DEBUG==True:
 	#print(Fish("technicalty", "!fish at Leslie"))
-	print(Fish("technicalty", "!fish at cat cafe"))
+	print(Fish("technicalty", "!fish cook catpop"))
 	#print(Fish("technicalty", "!fish leaderboards"))
 	#print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
