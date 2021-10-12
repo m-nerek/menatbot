@@ -276,10 +276,10 @@ def amendProfile(name):
 	if "companions" not in data[name]:
 		data[name]["companions"] = []
 
-async def BiteMessageCallback(mention_author, channel, time):
+async def BiteMessageCallback(mention_author, channel, time, text):
 	try:
 		await asyncio.sleep(time)
-		await channel.send(f"{mention_author} your line twitches")
+		await channel.send(f"{mention_author} {text}")
 	except:
 		return
 
@@ -364,7 +364,7 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 
 	if "pub" in data[location]["requires"]:
 		output = f"{base_description}heads over to the raucous packed bar, and orders a drink from the grumpy old dwarven barkeep"
-	elif "catears" in data[location]["requires"]:
+	elif "cafe" in data[location]["requires"]:
 		output = f"{base_description}decides to explore and find someone to sit and have coffee with"
 	else:
 		output = f"{base_description}settles down to fish and casts a rod baited with {data[name]['currentbait']} into the water"
@@ -376,13 +376,18 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 
 	#print(f"seconds: {secs}")
 	catchtime = datetime.datetime.now() + datetime.timedelta(seconds = secs)
+	check_text = "your line twitches"
+
+	if "cat cafe" in location.lower():
+		check_text = "you finish checking around"
+
 
 	if channel != None:
 		if name in timer_tasks:
 			timer_tasks[name].cancel()
 			del timer_tasks[name]
 
-		timer_tasks[name] = asyncio.get_event_loop().create_task(BiteMessageCallback(mention_author, channel, secs))
+		timer_tasks[name] = asyncio.get_event_loop().create_task(BiteMessageCallback(mention_author, channel, secs, check_text))
 
 	data[name]["catchtime"] = f"{catchtime.year}-{catchtime.month}-{catchtime.day}-{catchtime.hour}-{catchtime.minute}"
 	return output
@@ -410,7 +415,9 @@ def FishingOdds(name):
 		baitscore = min(3, matchScore(fishname, currentbait, 3)) / 3
 		if "pub" in data[location]["requires"]:
 			baitscore = 1
-		
+		if "cafe" in data[location]["requires"]:
+			baitscore = 1
+
 		hoursfromoptimal = abs(datetime.datetime.now().hour-int(data[location]['fish'][f]['TOD']))
 
 		if hoursfromoptimal>12:
@@ -481,7 +488,7 @@ def Catch(name):
 
 	elif "pub" in data[location]["requires"]:
 		output = "It seems like the barman has forgotten about you, better order again!"
-	elif "catears" in data[location]["requires"]:
+	elif "cafe" in data[location]["requires"]:
 		output = "You can't see anyone with a spare seat, maybe keep looking!"
 		
 	elif "bike" not in data[name]["flags"]:
@@ -505,7 +512,7 @@ def Catch(name):
 	else:
 		output = f"A bite! {name} reels in the catch, only to discover {randomItem(name, location)}"
 
-	if "pub" not in data[location]["requires"] and "catears" not in data[location]["requires"]:
+	if "pub" not in data[location]["requires"] and "cafe" not in data[location]["requires"]:
 		if (highest_common_percentage<25 and highest_noncommon_percentage<25) or (highest_common_percentage>75 and highest_noncommon_percentage>75):
 			output +=f"\nUsing this bait at this time of day seems to be {describeEffectiveness(highest_common_percentage)} for catching any fish"
 		elif (highest_common_percentage<25 or highest_common_percentage>75) and (highest_noncommon_percentage<25 or highest_noncommon_percentage>75):
@@ -577,7 +584,7 @@ def CheckBadgeQualification(name):
 		data[name]["flags"][location_all_badge_name] = True
 		if "pub" in data[location]["requires"]:
 			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on sampling all the alcohol at this location!"
-		if "catears" in data[location]["requires"]:
+		if "cafe" in data[location]["requires"]:
 			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on catching all the locals at this location!"
 		else:
 			output += f"\n{badge_text}[{location_all_badge_name}] Congratulations on catching all the fish at this location!"
@@ -841,6 +848,8 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	else:
 		if "pub" in data[data[name]["currentlocation"]]["requires"]:
 			output = f"{name} waits for a drink.."
+		elif "cafe" in data[data[name]["currentlocation"]]["requires"]:
+			output = f"{name} looks around.."
 		else:
 			output = f"{name} waits for a fish.."
 	return output
@@ -861,7 +870,7 @@ sosfish_constants.pokemon = loadData("/fishingdata/pokemon")
 
 if DEBUG==True:
 	#print(Fish("technicalty", "!fish at Leslie"))
-	print(Fish("technicalty", "!fish leaderboards"))
+	print(Fish("technicalty", "!fish at cat cafe"))
 	#print(Fish("technicalty", "!fish leaderboards"))
 	#print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
