@@ -5,7 +5,7 @@ SUNSET_END = 21
 SUNRISE_START = 6
 SUNRISE_END = 9
 
-other_badge_names = ["Go Team!","Achievement Get!", "Relentless", "Master Explorer", "Disaster Artist", "Masterchef", "Cook", "Pyromaniac", "Evil Monster"]
+other_badge_names = ["Go Team!","Achievement Get!", "Relentless", "Master Explorer", "Disaster Artist", "Masterchef", "Cook", "Pyromaniac", "Evil Monster", "Pokemon Master"]
 badge_names = ["Common People", "Uncommon Phenomonon", "A Rare Talent", "Absolute Legend", "Rod God", "Fish Whisperer", "Grandmaster Angler" ]
 badge_scores = [3,3,1,1,10,20,60]
 badge_text = "You have been awarded a shiny new badge that reads: "

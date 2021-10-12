@@ -174,6 +174,8 @@ def addToStew(ingredient, name, location, data):
 	if "Evil Monster" not in data[name]["flags"] and forbidden == True:
 		data[name]["flags"]["Evil Monster"] = True
 		output += f"\n{badge_text}[Evil Monster]"
+	elif forbidden == True:
+		output += f"\nYour [Evil Monster] badge glows a sinister red"
 
 	return output
 
