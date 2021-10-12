@@ -818,8 +818,13 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		saveUserData(name, data)
 		return camp
 	
-	if " leaderboards" in parameters and ("Salt Mine" in location or "Salt Mine" in data[name]["currentlocation"]):
-		return CheckLeaderBoard(data, name)	
+	if " leaderboards" in parameters:
+		if ("Salt Mine" in location or "Salt Mine" in data[name]["currentlocation"]):
+			output = CheckLeaderBoard(data, name)	
+			saveUserData(name, data)
+			return output
+		else:
+			return "You must visit the Salt Mine to check the leaderboards"
 
 	output = ""
 	if catch_time == 0 or changed_location or changed_bait:
@@ -856,7 +861,7 @@ sosfish_constants.pokemon = loadData("/fishingdata/pokemon")
 
 if DEBUG==True:
 	#print(Fish("technicalty", "!fish at Leslie"))
-	print(Fish("technicalty", "!fish cook catpop"))
+	print(Fish("technicalty", "!fish leaderboards"))
 	#print(Fish("technicalty", "!fish leaderboards"))
 	#print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
