@@ -116,7 +116,7 @@ def randomItem(name, location):
 
 		if "Mead and Madness" in visit and "Dwarven Hold" not in location:
 			return f"a flyer, but the water has damaged it to the point where you can't read what the runes say any more"
-		if "Cafe" in visit and ("leslie" not in location.lower() or "saiyuri" not in location.lower()):
+		if "Cafe" in visit and "leslie" not in location.lower() and "saiyuri" not in location.lower():
 			return f"a flyer, but the water has damaged it to the point where all you can see is a smudged kawaii picture"
 		if f"Visited {visit}" in data[name]["flags"]:
 			return f"a flyer for '{visit}'"
