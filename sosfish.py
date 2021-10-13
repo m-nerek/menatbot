@@ -530,12 +530,17 @@ def Catch(name):
 
 	output+=CheckBadgeQualification(name)
 
-	if random.randrange(0,100)<10:
+	if random.randrange(0,100)<15:
 		for p in data[location]["requires"]:
 			if "P_" in p:
 				for poketype in sosfish_constants.pokemon:
 					if poketype in p:
 						poke = random.choice( sosfish_constants.pokemon[poketype] )
+						timeout = 0
+						while poke in data[name]["companions"] and timeout<100:
+							poke = random.choice( sosfish_constants.pokemon[poketype] )
+							timeout += 1
+
 						data[name]["nearbycompanion"] = poke
 						output += f"\nA {poke} peeks out at you from its hiding place! Make friends with '!fish companion {poke}'\n{PokemonURL(poke)}"
 
@@ -594,6 +599,18 @@ def CheckBadgeQualification(name):
 			data[name]["flags"][location_any_badge_name] = True
 			output += f"\n{badge_text}[{location_any_badge_name}]"
 
+
+	if data[name]["currentcompanion"].lower() in sosfish_constants.pokemon_badges.keys():
+		pokebadge = sosfish_constants.pokemon_badges[ data[name]["currentcompanion"].lower() ]
+		if pokebadge not in data[name]["flags"]:
+			data[name]["flags"][pokebadge] = True
+			output += f"\n{badge_text}[{pokebadge}]"
+
+	if name.lower() in sosfish_constants.helpful_people and "Helpful" not in data[name]["flags"]:
+		data[name]["flags"]["Helpful"] = True
+		output += f"\n{badge_text}[Helpful]"
+
+	saveUserData(name, data)
 	return output
 	
 def HasCaughtAllFishAtCurrentLocation(name):
@@ -672,21 +689,21 @@ def Fish(name, parameters, mention_author=None, channel=None):
 		if chosenPoke in data[name]["companions"]:
 			data[name]["currentcompanion"] = chosenPoke
 			saveUserData(name, data)
-			return f"{chosenPoke} is now the companion of {name}\n{PokemonURL(chosenPoke)}"
+			return f"{chosenPoke} is now the companion of {name}\n{PokemonURL(chosenPoke)}{CheckBadgeQualification(name)}"
 
 		for catch in data[name]["catchlog"].keys():
 			if chosenPoke.lower() in catch.lower():
 				data[name]["currentcompanion"] = chosenPoke
 				data[name]["companions"].append(chosenPoke)
 				saveUserData(name, data)
-				return f"{name} makes friends with a {chosenPoke} that was caught, it is now a companion\n{PokemonURL(chosenPoke)}"
+				return f"{name} makes friends with a {chosenPoke} that was caught, it is now a companion\n{PokemonURL(chosenPoke)}{CheckBadgeQualification(name)}"
 
 		if data[name]["nearbycompanion"] == chosenPoke:
 			data[name]["currentcompanion"] = chosenPoke
 			data[name]["companions"].append(chosenPoke)
 			data[name]["nearbycompanion"] = ""
 			saveUserData(name, data)
-			return f"{name} makes friends with the {chosenPoke}, it is now a companion\n{PokemonURL(chosenPoke)}"
+			return f"{name} makes friends with the {chosenPoke}, it is now a companion\n{PokemonURL(chosenPoke)}{CheckBadgeQualification(name)}"
 
 		if chosenPoke!="":
 			return f"{chosenPoke} does not appear to be anywhere near {name}"
@@ -870,7 +887,7 @@ sosfish_constants.pokemon = loadData("/fishingdata/pokemon")
 
 if DEBUG==True:
 	#print(Fish("technicalty", "!fish at Leslie"))
-	print(Fish("technicalty", "!fish at cat cafe"))
+	print(Fish("technicalty", "!fish"))
 	#print(Fish("technicalty", "!fish leaderboards"))
 	#print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
