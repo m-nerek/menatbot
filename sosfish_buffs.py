@@ -185,8 +185,8 @@ def campfire_main_loop(name, location, parameters, data):
 	if data[name]["currentlocation"] == "":
 		data[name]["currentlocation"] = name
 
-	if location!="" and data[name]["currentlocation"]!=location:
-		data[name]["currentlocation"] = location
+	#if location!="" and data[name]["currentlocation"]!=location:
+	#	data[name]["currentlocation"] = location
 
 	if location == "":
 		location = data[name]["currentlocation"]

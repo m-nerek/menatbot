@@ -101,7 +101,7 @@ def randomUser():
 	return usr
 
 def randomItem(name, location):
-	i = random.randrange(0,5+1)
+	i = random.randrange(0,6+1)
 
 	equiptext = "\n(you can equip this item with !fish equip)"
 
@@ -132,13 +132,48 @@ def randomItem(name, location):
 		data[name]["last_item"] = f"a keyring with a tag that says '{word}' in worn letters"
 		return f"a keyring with a tag that says '{word}' in worn letters!{equiptext}"
 	if i<=4:
+		randpoke = random.choice(sosfish_constants.pokemon['ALL'])
+		randmat = random.choice(["plastic","metal","cloth","wooden"])
+		data[name]["last_item"] = f"a keyring with a little {randmat} {randpoke}"
+		return f"a keyring with a little {randmat} {randpoke}!{equiptext}"
+	if i<=5:
 		word = urbandictionary.random()[0].word
 		data[name]["last_item"] = f"a hat with '{word}' emblazoned across the front"
 		return f"a hat with '{word}' emblazoned across the front!{equiptext}"
-	if i<=5:
+	if i<=6:
 		return f"a bottle containing a message that reads '{sosmarkov.sentence(sosmarkov.models['general'])} '"
 
+def randomCafeExp(name, location):
+	i = random.randrange(0,3+1)
+	i = 2
+	equiptext = "\n(you can equip this item with !fish equip)"
 
+	if i<=1:
+		data[name]["last_item"] = f"a t-shirt with a kawaii cat on the front"
+		return f"At the counter there are t-shirts with a kawaii cat on the front for sale {equiptext}"
+	if i<=2:
+		advice_location = random.choice(list(data.keys()))
+		while "Mead and Madness" in advice_location or "Cat Cafe" in advice_location:
+			advice_location = random.choice(list(data.keys()))
+		
+		fid = random.randrange(4)
+		
+		amendProfile(advice_location)
+
+		advice_fish = data[advice_location]["fish"][str(fid)]["name"]
+		advice_time = data[advice_location]["fish"][str(fid)]["TOD"]
+
+		if advice_location not in premadelocations:
+			advice_location = f"{advice_location}'s"
+
+		if int(advice_time)>12:
+			advice_time = f"{(int(advice_time)-12)}pm"
+		else:
+			advice_time = f"{advice_time}am"
+		
+		return f"You stop for a chat and a coffee with a grizzled old fisherman, who tells you that the best place to catch {advice_fish} is at {advice_location} at around {advice_time}"
+
+	return "You can't see anyone with a spare seat, maybe keep looking!"
 
 def matchFish(tomatch, index):
 	array = fish
@@ -223,10 +258,10 @@ def updatePremadeLocations():
 				continue
 			data[name]["fish"] = {}
 			for f in range(5):
-				data[name]["fish"][f] = {}
-				data[name]["fish"][f]["name"] = lines[i]
-				data[name]["fish"][f]["TOD"] = numberFromString(data[name]["fish"][f]["name"],24)
-				data[name]["fish"][f]["rarity"] = describeRarity(f)
+				data[name]["fish"][str(f)] = {}
+				data[name]["fish"][str(f)]["name"] = lines[i]
+				data[name]["fish"][str(f)]["TOD"] = numberFromString(data[name]["fish"][str(f)]["name"],24)
+				data[name]["fish"][str(f)]["rarity"] = describeRarity(f)
 				i+=1
 		else:
 			i+=1
@@ -252,10 +287,10 @@ def buildProfile(name):
 	data[name]["requires"] = ["bike"]
 	data[name]["fish"] = {}
 	for i in range(5):
-		data[name]["fish"][i] = {}
-		data[name]["fish"][i]["name"] = matchFish(name, i)
-		data[name]["fish"][i]["TOD"] = numberFromString(data[name]["fish"][i]["name"],24)
-		data[name]["fish"][i]["rarity"] = describeRarity(i)
+		data[name]["fish"][str(i)] = {}
+		data[name]["fish"][str(i)]["name"] = matchFish(name, i)
+		data[name]["fish"][str(i)]["TOD"] = numberFromString(data[name]["fish"][str(i)]["name"],24)
+		data[name]["fish"][str(i)]["rarity"] = describeRarity(i)
 	amendProfile(name)
 	return ""
 
@@ -314,8 +349,7 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 		data[name]["currentlocation"] = new_location
 		location = new_location
 		arrival_text = ArrivalText(location)
-	
-	
+		
 	additional_description = ""
 
 	if data[location]["campfire"]["fuel"] == "Y":
@@ -489,8 +523,7 @@ def Catch(name):
 	elif "pub" in data[location]["requires"]:
 		output = "It seems like the barman has forgotten about you, better order again!"
 	elif "cafe" in data[location]["requires"]:
-		output = "You can't see anyone with a spare seat, maybe keep looking!"
-		
+		output = randomCafeExp(name, location)
 	elif "bike" not in data[name]["flags"]:
 		data[name]["flags"]["bike"] = True
 		output = f"A bite! {name} reels in the catch, only to discover an old bicycle! A bit of oil gets it working again, and you can now '!fish at [location]'. Try visiting other angler's locations and sharing your bait with them using '!sharebait'"
@@ -544,6 +577,11 @@ def Catch(name):
 						data[name]["nearbycompanion"] = poke
 						output += f"\nA {poke} peeks out at you from its hiding place! Make friends with '!fish companion {poke}'\n{PokemonURL(poke)}"
 
+	monsterTime = numberFromString(location, 23)
+	hour = current_time.hour
+
+	if int(monsterTime) == int(hour):
+		output+="\nA vast shadow slowly drifts beneath the water..."
 
 	output+="\n\n"
 	#output += f"\ncommon effectiveness: {highest_common_percentage}  noncommon effectiveness: {highest_noncommon_percentage}\n\n"
@@ -817,6 +855,7 @@ def Fish(name, parameters, mention_author=None, channel=None):
 			if req == "catears" and "catears" not in data[name]["flags"]:
 				return f"{name} spots a cute looking cafe and approaches, but is too embarassed to walk in without proper attire"
 
+	
 
 	if changed_bait:
 		hasBait = False
@@ -830,8 +869,9 @@ def Fish(name, parameters, mention_author=None, channel=None):
 	# --- campfire stuff ---
 	if location != "":
 		amendProfile(location)
-	camp = sosfish_buffs.campfire_main_loop(name, location, parameters, data)
 
+	camp = sosfish_buffs.campfire_main_loop(name, location, parameters, data)
+	
 	if camp != None:
 
 
@@ -886,8 +926,8 @@ sosfish_constants.pokemon = loadData("/fishingdata/pokemon")
 
 
 if DEBUG==True:
-	#print(Fish("technicalty", "!fish at Leslie"))
-	print(Fish("technicalty", "!fish"))
+	print(Fish("technicalty", "!fish at Leslie"))
+	#print(Fish("technicalty", "!fish at Cat Cafe"))
 	#print(Fish("technicalty", "!fish leaderboards"))
 	#print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
