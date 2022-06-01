@@ -372,6 +372,8 @@ def respond(user, string):
 	save("money", money)
 	return output
 
+def saveMoney():
+	save("money", money)
 
 
 bets = load("bets")
