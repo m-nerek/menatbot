@@ -116,7 +116,12 @@ def Status(name, data, compress_badges=False, hide_badges=False, hide_fish=False
     total_fish = 0
     counter = 0
     for a in data[name]["catchlog"].keys():
-        fish_output += f"{a} ({data[name]['catchlog'][a]}) "
+
+        unsold = ""
+        if a in data[name]["sell_log"] and int(data[name]["sell_log"][a])>0:
+            unsold = f"{int(data[name]['catchlog'][a]) - int(data[name]['sell_log'][a]) }/"
+
+        fish_output += f"{a} ({unsold}{data[name]['catchlog'][a]}) "
         total_fish += data[name]['catchlog'][a]
         if (counter % 3) == 2:
         	fish_output += "\n   "

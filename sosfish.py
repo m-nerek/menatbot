@@ -11,6 +11,7 @@ import asyncio
 from sosfish_status import Status
 import sosfish_buffs
 import sosfish_constants
+import sosfish_market
 from sosfish_constants import badge_scores
 from sosfish_constants import badge_names 
 from sosfish_constants import herbs
@@ -311,6 +312,9 @@ def amendProfile(name):
 	if "companions" not in data[name]:
 		data[name]["companions"] = []
 
+	sosfish_market.amendProfile(data, name)
+
+
 async def BiteMessageCallback(mention_author, channel, time, text):
 	try:
 		await asyncio.sleep(time)
@@ -402,6 +406,10 @@ def CastRod(name, new_location, new_bait, mention_author=None, channel=None):
 		output = f"{base_description}decides to explore and find someone to sit and have coffee with"
 	else:
 		output = f"{base_description}settles down to fish and casts a rod baited with {data[name]['currentbait']} into the water"
+
+	if "market" in location.lower():
+		output += "\n\n"+sosfish_market.SellerText(data, name)
+
 
 	secs = 60*5 + (100-max(FishingOdds(name))) * 3
 
@@ -751,6 +759,14 @@ def Fish(name, parameters, mention_author=None, channel=None):
 
 		return "I do not recognize that name"
 	
+	if " sell" in parameters:
+		if "Market" not in data[name]["currentlocation"]:
+			return "You must be at the market to sell!"
+
+		output = sosfish_market.Sell(data, name)
+		saveUserData(name, data)
+		return output
+
 	if " equip" in parameters:
 		if "last_item" not in data[name]:
 			return "No item to equip!"
@@ -926,10 +942,10 @@ sosfish_constants.pokemon = loadData("/fishingdata/pokemon")
 
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish at Leslie"))
-	#print(Fish("technicalty", "!fish at Cat Cafe"))
+	print(Fish("technicalty", "!fish at Market"))
+	print(Fish("technicalty", "!fish sell"))
 	#print(Fish("technicalty", "!fish leaderboards"))
-	#print(Fish("technicalty", "!fish status"))
+	print(Fish("technicalty", "!fish status"))
 	#print(helpString("technicalty"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
