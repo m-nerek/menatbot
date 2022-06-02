@@ -12,6 +12,7 @@ from sosfish_status import Status
 import sosfish_buffs
 import sosfish_constants
 import sosfish_market
+import sosfish_clues
 from sosfish_constants import badge_scores
 from sosfish_constants import badge_names 
 from sosfish_constants import herbs
@@ -21,6 +22,7 @@ from sosfish_constants import loadList
 from sosfish_constants import PokemonURL
 from sosfish_constants import badge_text
 from sosfish_constants import pokemon
+from sosfish_constants import matchScore
 
 from sosfish_board import CheckLeaderBoard
 
@@ -102,7 +104,7 @@ def randomUser():
 	return usr
 
 def randomItem(name, location):
-	i = random.randrange(0,6+1)
+	i = random.randrange(0,7+1)
 
 	equiptext = "\n(you can equip this item with !fish equip)"
 
@@ -143,6 +145,15 @@ def randomItem(name, location):
 		return f"a hat with '{word}' emblazoned across the front!{equiptext}"
 	if i<=6:
 		return f"a bottle containing a message that reads '{sosmarkov.sentence(sosmarkov.models['general'])} '"
+	if i<=7:
+		word = randomUser()
+		word2 = randomUser()
+		randpoke = random.choice(sosfish_constants.pokemon['ALL'])
+
+		if random.randrange(0,100)>50:
+			word2 = f"a {randpoke}"
+
+		return f"a lewd drawing of {word2} signed by {word}"
 
 def randomCafeExp(name, location):
 	i = random.randrange(0,3+1)
@@ -208,10 +219,6 @@ def matchFromArray(tomatch, array):
 			highest = i
 	return highest
 
-def matchScore(tomatch, string, maxlen):
-	tomatchlower = re.sub(r'\W+', '', tomatch.lower())[:maxlen]
-	stringlower = string.lower()
-	return len(re.findall(f"[{tomatchlower}]", stringlower))
 
 
 def describeTime(hour):
@@ -591,7 +598,9 @@ def Catch(name):
 	if int(monsterTime) == int(hour):
 		output+="\nA vast shadow slowly drifts beneath the water..."
 
-	output+="\n\n"
+	output += sosfish_clues.companionAdvice(data, name)
+
+	#output+="\n\n"
 	#output += f"\ncommon effectiveness: {highest_common_percentage}  noncommon effectiveness: {highest_noncommon_percentage}\n\n"
 
 	return output
@@ -942,10 +951,10 @@ sosfish_constants.pokemon = loadData("/fishingdata/pokemon")
 
 
 if DEBUG==True:
-	print(Fish("technicalty", "!fish at Market"))
-	print(Fish("technicalty", "!fish sell"))
-	#print(Fish("technicalty", "!fish leaderboards"))
-	print(Fish("technicalty", "!fish status"))
+	print(Fish("technicalty", "!fish at kanna"))
+	#print(Fish("technicalty", "!fish campfire"))
+	#print(Fish("technicalty", "!fish light campfire"))
+	#print(Fish("technicalty", "!fish cook oregano"))
 	#print(helpString("technicalty"))
 #print(Fish("dovah chief", "!fish"))
 #print(Fish("dovah chief", "!fish at surf shack"))
