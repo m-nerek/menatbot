@@ -1,4 +1,5 @@
 import os
+import re
 
 SUNSET_START = 18
 SUNSET_END = 21
@@ -44,6 +45,12 @@ def loadList(file, keepcaps = False):
 
 	f.close()
 	return data 
+
+def matchScore(tomatch, string, maxlen):
+	tomatchlower = re.sub(r'\W+', '', tomatch.lower())[:maxlen]
+	stringlower = string.lower()
+	return len(re.findall(f"[{tomatchlower}]", stringlower))
+
 
 herbs = loadList("herbs")
 spices = loadList("spices")

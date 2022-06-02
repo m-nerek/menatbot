@@ -73,6 +73,21 @@ def describeCampfire(name, data, hour):
 	else:
 		return " A campfire is ready to be lit. "
 
+def calcIngredientCompatibility(prev_ingredient, ingredient, score):
+
+	if ingredient in prev_ingredient:
+		return 0
+	if prev_ingredient == "":
+		return 1
+
+	matches = len(re.findall(f"[{prev_ingredient}]", ingredient))
+
+	if matches>=len(ingredient)/2 + score:
+		return 1
+	elif matches<len(ingredient)/2-1 + score:
+		return -1
+	return 0
+
 def calculateStew(location, data):
 
 	score = 0
@@ -85,17 +100,8 @@ def calculateStew(location, data):
 		#print(f"comparing {ingredient} to {prev_ingredient}")
 		if ingredient in prev_ingredient:
 			score += 0
-		elif prev_ingredient == "":
-			score += 1;
-			prev_ingredient = ingredient
-			prev_ingredients.append(ingredient)
 		else:
-			matches = len(re.findall(f"[{prev_ingredient}]", ingredient))
-			#print(f"matches: {matches} len: {len(ingredient)}")
-			if matches>=len(ingredient)/2 + score:
-				score+=1;
-			elif matches<len(ingredient)/2-1 + score:
-				score-=1;
+			score+=calcIngredientCompatibility(prev_ingredient, ingredient, score)
 			prev_ingredient = ingredient
 			prev_ingredients.append(ingredient)
 		
