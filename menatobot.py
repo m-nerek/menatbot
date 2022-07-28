@@ -115,7 +115,13 @@ class Menato(discord.Client):
             responses = [sosfish.Fish(message.author.name, message.content.lower(),message.author.mention, message.channel)]
         elif message.content.lower().startswith("!sharebait"):
             responses = [sosfish.ShareBait(message.author.name)]
-
+        elif message.content.contains("<:"):
+            # Check for emojis logic
+            custom_emojis = re.findall(r'<:\w*:\d*>', message.content)
+            custom_emojis = [int(e.split(':')[1].replace('>', '')) for e in custom_emojis]
+            if "sniff" in custom_emojis:
+                # fuck you I hate you all
+                message.add_reaction(" <:megupuke:1002250821272096858>")
         #elif message.channel.contains("nsfw") and message.contains("<@360897040986800130>"):
         #    responses = [""]
         
