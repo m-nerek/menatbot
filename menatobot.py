@@ -122,7 +122,7 @@ class Menato(discord.Client):
             for emoji in custom_emojis:
                 if "sniff" in emoji:
                     # fuck you I hate you all
-                    await message.add_reaction(" <:megupuke:1002250821272096858>")
+                    await message.add_reaction(" <:sniff:943544097522741268>")
         #elif message.channel.contains("nsfw") and message.contains("<@360897040986800130>"):
         #    responses = [""]
         
