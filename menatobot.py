@@ -20,6 +20,7 @@ import frames
 import minecraft_manage
 import re
 import asyncio
+import dice
 dir_path = os.path.dirname(os.path.realpath(__file__))
 # todo set up logging
 
@@ -96,12 +97,16 @@ class Menato(discord.Client):
 
         if message.content.startswith("!frames"):
             responses = self.frames(message)
+        elif "croissant" in message.content.lower():
+            responses = ["https://cdn.discordapp.com/attachments/579421918248304641/1059987023148109854/image.png quaso"]
         elif "eekum bokum" in message.content.lower():
             responses = ["eekum bokum"]
         elif message.content.startswith("!help"):
             responses = [self.help_string]
         elif message.content.startswith("!bethelp"):
             responses = [sosbet.help_string]
+        elif message.content.startswith("!roll"):
+            responses = [self.dice_roll(message.content)]
         elif message.content.startswith("!bet") or message.content.startswith("!concede"):
             responses = [sosbet.respond(str(message.author.name), str(message.content))]
         elif message.content.startswith("!balance") or message.content.startswith("!pay"):
@@ -228,6 +233,14 @@ class Menato(discord.Client):
     async def delayed_message(self, channel, user, delay, responseCallback):
         await asyncio.sleep(delay)
         await channel.send(responseCallback(user))
+
+    def dice_roll(self,message):
+        roll = message.lower().replace("!roll ", "")
+        try:
+            response = dice.utilities.verbose_print(dice.roll(roll))
+        except dice.DiceBaseException as e:
+            response = e
+        return response
 
     def test_response(self, user):
         return f"{user.mention} this is {user.name}'s test delayed response"
